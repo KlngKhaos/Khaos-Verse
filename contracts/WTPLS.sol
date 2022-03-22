@@ -15,7 +15,7 @@
 
 pragma solidity =0.6.6;
 
-contract WTPLS {
+contract Khaos {
     string public name     = "Wrapped TPLS";
     string public symbol   = "WTPLS";
     uint8  public decimals = 18;
