@@ -7,21 +7,21 @@ type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
 
-export const CAKE = new Token(ChainId.BSCTESTNET, '0xb1d05c39B1bC7184537283c58813C3c29Ad39De2', 18, 'CAKE', 'PancakeSwap Token')
-export const WBNB = new Token(ChainId.BSCTESTNET, '0xa405edD998eac068F51269D06615c38FEfFDcaCf', 18, 'WBNB', 'Wrapped BNB')
-export const DAI = new Token(ChainId.BSCTESTNET, '0x4D67200261cDD46834e2cA44B6eE38A9Eb330272', 18, 'DAI', 'Dai Stablecoin')
-export const BUSD = new Token(ChainId.BSCTESTNET, '0xc8cbF2af4BC6DEafb998b2f6CFb4e97439a68E28', 18, 'BUSD', 'Binance USD')
-export const BTCB = new Token(ChainId.BSCTESTNET, '0x61872FbC9f7e58095F65e23339a0027F4b51a3D0', 18, 'BTCB', 'Binance BTC')
-export const USDT = new Token(ChainId.BSCTESTNET, '0xf598765Af61E513F985e871f1778F9ef18247c58', 18, 'USDT', 'Tether USD')
+export const CAKE = new Token(ChainId.TESTNET, '0xb1d05c39B1bC7184537283c58813C3c29Ad39De2', 18, 'CAKE', 'PancakeSwap Token')
+export const WBNB = new Token(ChainId.TESTNET, '0xa405edD998eac068F51269D06615c38FEfFDcaCf', 18, 'WBNB', 'Wrapped BNB')
+export const DAI = new Token(ChainId.TESTNET, '0x4D67200261cDD46834e2cA44B6eE38A9Eb330272', 18, 'DAI', 'Dai Stablecoin')
+export const BUSD = new Token(ChainId.TESTNET, '0xc8cbF2af4BC6DEafb998b2f6CFb4e97439a68E28', 18, 'BUSD', 'Binance USD')
+export const BTCB = new Token(ChainId.TESTNET, '0x61872FbC9f7e58095F65e23339a0027F4b51a3D0', 18, 'BTCB', 'Binance BTC')
+export const USDT = new Token(ChainId.TESTNET, '0xf598765Af61E513F985e871f1778F9ef18247c58', 18, 'USDT', 'Tether USD')
 export const UST = new Token(
-  ChainId.BSCTESTNET,
+  ChainId.TESTNET,
   '0x2B57AbA057CA170c4451C6FdF8Df71033209d7C7',
   18,
   'UST',
   'Wrapped UST Token'
 )
 export const ETH = new Token(
-  ChainId.BSCTESTNET,
+  ChainId.TESTNET,
   '0x40CD9Bd0F1162074DC78211C02eEf4998c6D9C17',
   18,
   'ETH',
@@ -30,13 +30,13 @@ export const ETH = new Token(
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.BSCTESTNET]: [WETH[ChainId.BSCTESTNET]],
+  [ChainId.TESTNET]: [WETH[ChainId.TESTNET]],
 }
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.BSCTESTNET]: [...WETH_ONLY[ChainId.BSCTESTNET], DAI, BUSD, BTCB, USDT, UST, ETH],
+  [ChainId.TESTNET]: [...WETH_ONLY[ChainId.TESTNET], DAI, BUSD, BTCB, USDT, UST, ETH],
 }
 
 /**
@@ -44,23 +44,23 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  * tokens.
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.BSCTESTNET]: {},
+  [ChainId.TESTNET]: {},
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.BSCTESTNET]: [...WETH_ONLY[ChainId.BSCTESTNET], DAI, BUSD, USDT],
+  [ChainId.TESTNET]: [...WETH_ONLY[ChainId.TESTNET], DAI, BUSD, USDT],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.BSCTESTNET]: [...WETH_ONLY[ChainId.BSCTESTNET], DAI, BUSD, BTCB, USDT],
+  [ChainId.TESTNET]: [...WETH_ONLY[ChainId.TESTNET], DAI, BUSD, BTCB, USDT],
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
-  [ChainId.BSCTESTNET]: [
+  [ChainId.TESTNET]: [
     [CAKE, WBNB],
     [BUSD, USDT],
     [DAI, USDT],
