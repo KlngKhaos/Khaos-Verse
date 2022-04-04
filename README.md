@@ -1,9 +1,19 @@
 # 🥞 Pancake Swap Exchange
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/c6ef7e73-4a84-410d-83b0-b89326787dff/deploy-status)](https://app.netlify.com/sites/swap-master/deploys)
+Forked exchange module of pancakeswap finance with rebranded contracts for KhaosSwap
 
-[PancakeSwap](https://pancakeswap.finance/) is an automated market maker (“**AMM**”) that allows two tokens to be exchanged on the [Binance Smart Chain](https://www.binance.org/en/smartChain) (BSC). It is fast, cheap, and allows anyone to participate.
+to start this project make sure you have both UI and toolkit folders in same directory. You can clone the toolkit form toolkit branch.
 
-This repo is responsible for the **exchange** interface of the AMM: [exchange.pancakeswap.finance](https://exchange.pancakeswap.finance/)
+node versison 10 to 15
 
-If you want to contribute, please refer to the [contributing guidelines](./CONTRIBUTING.md) of this project.
+commands.
+cd toolkit
+yarn
+yarn run build
+cd ..
+cd pancake-swap-interface-v1
+yarn
+
+Make sure you are on Ubuntu or MacOS. Some of commands doesn't work on windows.
+
+
