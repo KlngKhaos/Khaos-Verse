@@ -1,19 +1,10 @@
-# 🥞 Pancake Swap Exchange
+# 🥞 Pancake Frontend
 
-Forked exchange module of pancakeswap finance with rebranded contracts for KhaosSwap
+This project contains the main features of the pancake application.
 
-to start this project make sure you have both UI and toolkit folders in same directory. You can clone the toolkit form toolkit branch.
+If you want to contribute, please refer to the [contributing guidelines](./CONTRIBUTING.md) of this project.
 
-node versison 10 to 15
+## Documentation
 
-commands.
-cd toolkit
-yarn
-yarn run build
-cd ..
-cd pancake-swap-interface-v1
-yarn
-
-Make sure you are on Ubuntu or MacOS. Some of commands doesn't work on windows.
-
-
+- [Info](doc/Info.md)
+- [Cypress tests](doc/Cypress.md)

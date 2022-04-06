@@ -1,13 +1,11 @@
+/* eslint-disable no-continue */
+/* eslint-disable no-await-in-loop */
 import { TokenList } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
 import contenthashToUri from './contenthashToUri'
-import { parseENSAddress } from './parseENSAddress'
+import { parseENSAddress } from './ENS/parseENSAddress'
 import uriToHttp from './uriToHttp'
-
-// bakeryswap defaultTokenJson
-import { DEFAULT_TOKEN_LIST_URL } from '../constants/lists'
-import defaultTokenJson from '../constants/token/pancakeswap.json'
 
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 
@@ -18,13 +16,9 @@ const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
  */
 export default async function getTokenList(
   listUrl: string,
-  resolveENSContentHash: (ensName: string) => Promise<string>
+  resolveENSContentHash: (ensName: string) => Promise<string>,
 ): Promise<TokenList> {
-  if (listUrl === DEFAULT_TOKEN_LIST_URL) {
-    return defaultTokenJson
-  }
   const parsedENS = parseENSAddress(listUrl)
-
   let urls: string[]
   if (parsedENS) {
     let contentHashUri
@@ -54,13 +48,11 @@ export default async function getTokenList(
     } catch (error) {
       console.error('Failed to fetch list', listUrl, error)
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)
-      // eslint-disable-next-line no-continue
       continue
     }
 
     if (!response.ok) {
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)
-      // eslint-disable-next-line no-continue
       continue
     }
 
@@ -68,12 +60,12 @@ export default async function getTokenList(
     if (!tokenListValidator(json)) {
       const validationErrors: string =
         tokenListValidator.errors?.reduce<string>((memo, error) => {
-          const add = `${error.dataPath} ${error.message ?? ''}`
+          const add = `${(error as any).dataPath} ${error.message ?? ''}`
           return memo.length > 0 ? `${memo}; ${add}` : `${add}`
         }, '') ?? 'unknown error'
       throw new Error(`Token list failed validation: ${validationErrors}`)
     }
-    return json
+    return json as TokenList
   }
   throw new Error('Unrecognized list URL protocol.')
 }
