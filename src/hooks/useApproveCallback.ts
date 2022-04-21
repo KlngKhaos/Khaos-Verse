@@ -1,15 +1,16 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@pancakeswap-libs/sdk'
+import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@pancakeswap/sdk'
 import { useCallback, useMemo } from 'react'
-import { ROUTER_ADDRESS } from '../constants'
-import { useTokenAllowance } from '../data/Allowances'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { ROUTER_ADDRESS } from '../config/constants'
+import useTokenAllowance from './useTokenAllowance'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
-import { useActiveWeb3React } from './index'
+import { useCallWithGasPrice } from './useCallWithGasPrice'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -21,9 +22,10 @@ export enum ApprovalState {
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
-  spender?: string
+  spender?: string,
 ): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
+  const { callWithGasPrice } = useCallWithGasPrice()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
@@ -72,6 +74,7 @@ export function useApproveCallback(
     }
 
     let useExact = false
+
     const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useExact = true
@@ -79,10 +82,14 @@ export function useApproveCallback(
     })
 
     // eslint-disable-next-line consistent-return
-    return tokenContract
-      .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
+    return callWithGasPrice(
+      tokenContract,
+      'approve',
+      [spender, useExact ? amountToApprove.raw.toString() : MaxUint256],
+      {
         gasLimit: calculateGasMargin(estimatedGas),
-      })
+      },
+    )
       .then((response: TransactionResponse) => {
         addTransaction(response, {
           summary: `Approve ${amountToApprove.currency.symbol}`,
@@ -93,7 +100,7 @@ export function useApproveCallback(
         console.error('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction, callWithGasPrice])
 
   return [approvalState, approve]
 }
@@ -102,7 +109,8 @@ export function useApproveCallback(
 export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) {
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
-    [trade, allowedSlippage]
+    [trade, allowedSlippage],
   )
+
   return useApproveCallback(amountToApprove, ROUTER_ADDRESS)
 }

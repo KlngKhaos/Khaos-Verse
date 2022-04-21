@@ -1,10 +1,11 @@
+/* eslint-disable no-param-reassign */
 import { createReducer } from '@reduxjs/toolkit'
 import {
   addTransaction,
   checkedTransaction,
   clearAllTransactions,
   finalizeTransaction,
-  SerializableTransactionReceipt
+  SerializableTransactionReceipt,
 } from './actions'
 
 const now = () => new Date().getTime()
@@ -13,6 +14,7 @@ export interface TransactionDetails {
   hash: string
   approval?: { tokenAddress: string; spender: string }
   summary?: string
+  claim?: { recipient: string }
   receipt?: SerializableTransactionReceipt
   lastCheckedBlockNumber?: number
   addedTime: number
@@ -28,14 +30,14 @@ export interface TransactionState {
 
 export const initialState: TransactionState = {}
 
-export default createReducer(initialState, builder =>
+export default createReducer(initialState, (builder) =>
   builder
-    .addCase(addTransaction, (transactions, { payload: { chainId, from, hash, approval, summary } }) => {
+    .addCase(addTransaction, (transactions, { payload: { chainId, from, hash, approval, summary, claim } }) => {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
       const txs = transactions[chainId] ?? {}
-      txs[hash] = { hash, approval, summary, from, addedTime: now() }
+      txs[hash] = { hash, approval, summary, claim, from, addedTime: now() }
       transactions[chainId] = txs
     })
     .addCase(clearAllTransactions, (transactions, { payload: { chainId } }) => {
@@ -60,5 +62,5 @@ export default createReducer(initialState, builder =>
       }
       tx.receipt = receipt
       tx.confirmedTime = now()
-    })
+    }),
 )

@@ -2,7 +2,8 @@ import CID from 'cids'
 import { getCodec, rmPrefix } from 'multicodec'
 import { decode, toB58String } from 'multihashes'
 
-export function hexToUint8Array(hex: string): Uint8Array {
+function hexToUint8Array(hex: string): Uint8Array {
+  // eslint-disable-next-line no-param-reassign
   hex = hex.startsWith('0x') ? hex.substr(2) : hex
   if (hex.length % 2 !== 0) throw new Error('hex must have length that is multiple of 2')
   const arr = new Uint8Array(hex.length / 2)
@@ -33,9 +34,8 @@ export default function contenthashToUri(contenthash: string): string {
       const multihash = decode(cid.multihash)
       if (multihash.name === 'identity') {
         return `ipns://${UTF_8_DECODER.decode(multihash.digest).trim()}`
-      } 
-        return `ipns://${toB58String(cid.multihash)}`
-      
+      }
+      return `ipns://${toB58String(cid.multihash)}`
     }
     default:
       throw new Error(`Unrecognized codec: ${codec}`)

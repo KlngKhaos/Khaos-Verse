@@ -1,7 +1,18 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
-
-import application from './application/reducer'
+import { useDispatch } from 'react-redux'
+import farmsReducer from './farms'
+import poolsReducer from './pools'
+import predictionsReducer from './predictions'
+import profileReducer from './profile'
+import teamsReducer from './teams'
+import achievementsReducer from './achievements'
+import blockReducer from './block'
+import collectiblesReducer from './collectibles'
+import galleryReducer from './gallery'
+import votingReducer from './voting'
+import lotteryReducer from './lottery'
+import infoReducer from './info'
 import { updateVersion } from './global/actions'
 import user from './user/reducer'
 import transactions from './transactions/reducer'
@@ -10,26 +21,28 @@ import mint from './mint/reducer'
 import lists from './lists/reducer'
 import burn from './burn/reducer'
 import multicall from './multicall/reducer'
-import toasts from './toasts'
-import { getThemeCache } from '../utils/theme'
+import nftMarketReducer from './nftMarket/reducer'
 
-type MergedState = {
-  user: {
-    [key: string]: any
-  }
-  transactions: {
-    [key: string]: any
-  }
-}
-const PERSISTED_KEYS: string[] = ['user', 'transactions']
-const loadedState = load({ states: PERSISTED_KEYS }) as MergedState
-if (loadedState.user) {
-  loadedState.user.userDarkMode = getThemeCache()
-}
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'profile', 'collectibles']
 
 const store = configureStore({
+  devTools: process.env.NODE_ENV !== 'production',
   reducer: {
-    application,
+    achievements: achievementsReducer,
+    block: blockReducer,
+    farms: farmsReducer,
+    pools: poolsReducer,
+    predictions: predictionsReducer,
+    profile: profileReducer,
+    teams: teamsReducer,
+    collectibles: collectiblesReducer,
+    gallery: galleryReducer,
+    voting: votingReducer,
+    lottery: lotteryReducer,
+    info: infoReducer,
+    nftMarket: nftMarketReducer,
+
+    // Exchange
     user,
     transactions,
     swap,
@@ -37,15 +50,18 @@ const store = configureStore({
     burn,
     multicall,
     lists,
-    toasts
   },
-  middleware: [...getDefaultMiddleware({ thunk: false }), save({ states: PERSISTED_KEYS })],
-  preloadedState: loadedState,
+  middleware: [...getDefaultMiddleware({ thunk: true }), save({ states: PERSISTED_KEYS })],
+  preloadedState: load({ states: PERSISTED_KEYS }),
 })
 
 store.dispatch(updateVersion())
 
-export default store
-
-export type AppState = ReturnType<typeof store.getState>
+/**
+ * @see https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type
+ */
 export type AppDispatch = typeof store.dispatch
+export type AppState = ReturnType<typeof store.getState>
+export const useAppDispatch = () => useDispatch()
+
+export default store
