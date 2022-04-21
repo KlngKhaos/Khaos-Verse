@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Box, Flex } from '@pancakeswap/uikit'
 import { useGetPredictionsStatus, useIsChartPaneOpen, useIsHistoryPaneOpen } from 'state/predictions/hooks'
@@ -6,7 +6,7 @@ import { PredictionStatus } from 'state/types'
 import MobileMenu from './components/MobileMenu'
 import History from './History'
 import Positions from './Positions'
-import MobileChart from './MobileChart'
+import Chart from './Chart'
 import { ErrorNotification, PauseNotification } from './components/Notification'
 import { PageView } from './types'
 
@@ -59,7 +59,7 @@ const Mobile: React.FC = () => {
           </Flex>
         </View>
         <View isVisible={view === PageView.CHART}>
-          <MobileChart />
+          <Chart />
         </View>
         <View isVisible={view === PageView.HISTORY}>
           <History />
@@ -70,4 +70,4 @@ const Mobile: React.FC = () => {
   )
 }
 
-export default memo(Mobile)
+export default Mobile

@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { BigNumber } from '@ethersproject/bignumber'
-import { formatUnits } from '@ethersproject/units'
+import { ethers } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import maxBy from 'lodash/maxBy'
 import merge from 'lodash/merge'
 import range from 'lodash/range'
-import pickBy from 'lodash/pickBy'
+import { BIG_ZERO } from 'utils/bigNumber'
 import {
   Bet,
   LedgerData,
@@ -16,7 +16,6 @@ import {
   PredictionUser,
   LeaderboardFilter,
   State,
-  PredictionsChartView,
 } from 'state/types'
 import { getPredictionsContract } from 'utils/contractHelpers'
 import { FetchStatus } from 'config/constants/types'
@@ -46,11 +45,9 @@ import {
   LEADERBOARD_RESULTS_PER_PAGE,
   getPredictionUser,
 } from './helpers'
-import { resetUserState } from '../global/actions'
 
 const initialState: PredictionsState = {
   status: PredictionStatus.INITIAL,
-  chartView: PredictionsChartView.Chainlink,
   isLoading: false,
   isHistoryPaneOpen: false,
   isChartPaneOpen: false,
@@ -60,6 +57,7 @@ const initialState: PredictionsState = {
   intervalSeconds: 300,
   minBetAmount: '10000000000000',
   bufferSeconds: 60,
+  lastOraclePrice: BIG_ZERO.toJSON(),
   rounds: {},
   history: [],
   totalHistory: 0,
@@ -85,35 +83,50 @@ const initialState: PredictionsState = {
 // Thunks
 type PredictionInitialization = Pick<
   PredictionsState,
-  'status' | 'currentEpoch' | 'intervalSeconds' | 'minBetAmount' | 'rounds' | 'ledgers' | 'claimableStatuses'
+  | 'status'
+  | 'currentEpoch'
+  | 'intervalSeconds'
+  | 'minBetAmount'
+  | 'rounds'
+  | 'ledgers'
+  | 'claimableStatuses'
+  | 'bufferSeconds'
 >
 export const initializePredictions = createAsyncThunk<PredictionInitialization, string>(
   'predictions/initialize',
   async (account = null) => {
     // Static values
     const marketData = await getPredictionData()
+    // console.log("marketDatamarketDatamarketData", marketData)
     const epochs =
       marketData.currentEpoch > PAST_ROUND_COUNT
         ? range(marketData.currentEpoch, marketData.currentEpoch - PAST_ROUND_COUNT)
         : [marketData.currentEpoch]
 
+    //
+      
+    // console.log("epochsepochs epochsepochs epochsepochs", epochs)
     // Round data
+    // console.log("before roundsResponse")
     const roundsResponse = await getRoundsData(epochs)
+    // console.log("after roundsResponse")
+    // console.log("roundsResponseroundsResponseroundsResponse", roundsResponse)    // Round data
     const initialRoundData: { [key: string]: ReduxNodeRound } = roundsResponse.reduce((accum, roundResponse) => {
       const reduxNodeRound = serializePredictionsRoundsResponse(roundResponse)
-
+// console.log("reduxNodeRoundreduxNodeRoundreduxNodeRound", reduxNodeRound)
       return {
         ...accum,
         [reduxNodeRound.epoch.toString()]: reduxNodeRound,
       }
     }, {})
-
+// console.log("initialRoundDatainitialRoundData", initialRoundData)
     const initializedData = {
       ...marketData,
       rounds: initialRoundData,
       ledgers: {},
       claimableStatuses: {},
     }
+    // console.log("initializedDatainitializedData", initializedData, account)
 
     if (!account) {
       return initializedData
@@ -121,9 +134,10 @@ export const initializePredictions = createAsyncThunk<PredictionInitialization, 
 
     // Bet data
     const ledgerResponses = await getLedgerData(account, epochs)
-
+// console.log("ledgerResponsesledgerResponses", ledgerResponses)
     // Claim statuses
     const claimableStatuses = await getClaimStatuses(account, epochs)
+    // console.log("claimableStatusesclaimableStatuses", claimableStatuses)
 
     return merge({}, initializedData, {
       ledgers: makeLedgerData(account, ledgerResponses, epochs),
@@ -159,6 +173,7 @@ export const fetchRounds = createAsyncThunk<{ [key: string]: ReduxNodeRound }, n
 
 export const fetchMarketData = createAsyncThunk<MarketData>('predictions/fetchMarketData', async () => {
   const marketData = await getPredictionData()
+  // console.log("marketDatamarketData", marketData)
   return marketData
 })
 
@@ -230,7 +245,7 @@ export const fetchNodeHistory = createAsyncThunk<
   const bets: Bet[] = roundData.reduce((accum, round) => {
     const reduxRound = serializePredictionsRoundsResponse(round)
     const ledger = userRounds[reduxRound.epoch]
-    const ledgerAmount = BigNumber.from(ledger.amount)
+    const ledgerAmount = ethers.BigNumber.from(ledger.amount)
     const closePrice = round.closePrice ? parseFloat(formatUnits(round.closePrice, 8)) : null
     const lockPrice = round.lockPrice ? parseFloat(formatUnits(round.lockPrice, 8)) : null
 
@@ -357,11 +372,11 @@ export const predictionsSlice = createSlice({
     setChartPaneState: (state, action: PayloadAction<boolean>) => {
       state.isChartPaneOpen = action.payload
     },
-    setChartView: (state, action: PayloadAction<PredictionsChartView>) => {
-      state.chartView = action.payload
-    },
     setHistoryFilter: (state, action: PayloadAction<HistoryFilter>) => {
       state.historyFilter = action.payload
+    },
+    setLastOraclePrice: (state, action: PayloadAction<string>) => {
+      state.lastOraclePrice = action.payload
     },
     markAsCollected: (state, action: PayloadAction<{ [key: string]: boolean }>) => {
       state.claimableStatuses = { ...state.claimableStatuses, ...action.payload }
@@ -371,15 +386,6 @@ export const predictionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(resetUserState, (state) => {
-      state.claimableStatuses = {}
-      state.ledgers = {}
-      state.isFetchingHistory = false
-      state.history = []
-      state.hasHistoryLoaded = false
-      state.totalHistory = 0
-      state.currentHistoryPage = 1
-    })
     // Leaderboard filter
     builder.addCase(filterLeaderboard.pending, (state) => {
       // Only mark as loading if we come from Fetched. This allows initialization.
@@ -451,6 +457,8 @@ export const predictionsSlice = createSlice({
 
     // Get static market data
     builder.addCase(fetchMarketData.fulfilled, (state, action) => {
+      // console.log("fetchMarketDatafetchMarketDatafetchMarketData", fetchMarketData.fulfilled)
+      // console.log("fetchMarketDatafetchMarketDatafetchMarketData", action)
       const { status, currentEpoch, intervalSeconds, minBetAmount } = action.payload
 
       // If the round has change add a new future round
@@ -472,19 +480,23 @@ export const predictionsSlice = createSlice({
 
     // Initialize predictions
     builder.addCase(initializePredictions.fulfilled, (state, action) => {
-      const { status, currentEpoch, intervalSeconds, rounds, claimableStatuses, ledgers } = action.payload
+      const { status, currentEpoch, intervalSeconds, bufferSeconds, rounds, claimableStatuses, ledgers } =
+        action.payload
+        // console.log("action.payloadaction.payloadaction.payloadaction.payload", action.payload)
+        // console.log("roundsroundsrounds", rounds)
       const futureRounds: ReduxNodeRound[] = []
       const currentRound = rounds[currentEpoch]
-
-      for (let i = 1; i <= FUTURE_ROUND_COUNT; i++) {
-        futureRounds.push(makeFutureRoundResponse(currentEpoch + i, currentRound.startTimestamp + intervalSeconds * i))
-      }
+// console.log("currentRoundcurrentRound", currentRound)
+      // for (let i = 1; i <= FUTURE_ROUND_COUNT; i++) {
+      //   futureRounds.push(makeFutureRoundResponse(currentEpoch + i, currentRound.startTimestamp + intervalSeconds * i))
+      // }
 
       return {
         ...state,
         status,
         currentEpoch,
         intervalSeconds,
+        bufferSeconds,
         claimableStatuses,
         ledgers,
         rounds: merge({}, rounds, makeRoundData(futureRounds)),
@@ -500,11 +512,7 @@ export const predictionsSlice = createSlice({
 
     // Get multiple rounds
     builder.addCase(fetchRounds.fulfilled, (state, action) => {
-      const allRoundData = merge({}, state.rounds, action.payload)
-      // Take always last PAST_ROUND_COUNT items
-      state.rounds = pickBy(allRoundData, (value, key) => {
-        return Number(key) > state.currentEpoch - PAST_ROUND_COUNT
-      })
+      state.rounds = merge({}, state.rounds, action.payload)
     })
 
     // Show History
@@ -544,9 +552,9 @@ export const predictionsSlice = createSlice({
 // Actions
 export const {
   setChartPaneState,
-  setChartView,
   setHistoryFilter,
   setHistoryPaneState,
+  setLastOraclePrice,
   markAsCollected,
   setLeaderboardFilter,
   setSelectedAddress,

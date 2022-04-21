@@ -1,9 +1,40 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FetchStatus } from 'config/constants/types'
 import isEmpty from 'lodash/isEmpty'
-import { pancakeBunniesAddress } from 'views/Nft/market/constants'
-import { fetchNftsFiltered, getMarketDataForTokenIds, getNftsFromCollectionApi, getNftsMarketData } from './helpers'
-import { MarketEvent, NftActivityFilter, NftAttribute, NftFilter, NftToken, State } from './types'
+import { gladiatorCollectiblesAddress } from 'views/Nft/market/constants'
+import {
+  combineApiAndSgResponseToNftToken,
+  combineCollectionData,
+  fetchNftsFiltered,
+  getCollectionApi,
+  getCollectionsApi,
+  getCollectionSg,
+  getCollectionsSg,
+  getCompleteAccountNftData,
+  getMarketDataForTokenIds,
+  getMetadataWithFallback,
+  getNftsByGladiatorCollectibleIdSg,
+  getNftsFromCollectionApi,
+  getNftsFromDifferentCollectionsApi,
+  getNftsMarketData,
+  getGladiatorCollectiblesAttributesField,
+  getUserActivity,
+} from './helpers'
+import {
+  ApiCollections,
+  ApiSingleTokenData,
+  Collection,
+  MarketEvent,
+  NftActivityFilter,
+  NftAttribute,
+  NftFilter,
+  NftLocation,
+  NFTMarketInitializationState,
+  NftToken,
+  State,
+  TokenIdWithCollectionAddress,
+  UserNftInitializationState,
+} from './types'
 
 const initialNftFilterState: NftFilter = {
   loadingState: FetchStatus.Idle,
@@ -21,13 +52,52 @@ const initialNftActivityFilterState: NftActivityFilter = {
 }
 
 const initialState: State = {
+  initializationState: NFTMarketInitializationState.UNINITIALIZED,
   data: {
+    collections: {},
     nfts: {},
     filters: {},
     activityFilters: {},
-    tryVideoNftMedia: true,
+    loadingState: {
+      isUpdatingGladiatorCollectibles: false,
+      latestGladiatorCollectiblesUpdateAt: 0,
+    },
+    users: {},
+    user: {
+      userNftsInitializationState: UserNftInitializationState.UNINITIALIZED,
+      nfts: [],
+      activity: {
+        initializationState: UserNftInitializationState.UNINITIALIZED,
+        askOrderHistory: [],
+        buyTradeHistory: [],
+        sellTradeHistory: [],
+      },
+    },
   },
 }
+
+/**
+ * Fetch all collections data by combining data from the API (static metadata) and the Subgraph (dynamic market data)
+ */
+export const fetchCollections = createAsyncThunk<Record<string, Collection>>('nft/fetchCollections', async () => {
+  const [collections, collectionsMarket] = await Promise.all([getCollectionsApi(), getCollectionsSg()])
+  return combineCollectionData(collections?.data ?? [], collectionsMarket)
+})
+
+/**
+ * Fetch collection data by combining data from the API (static metadata) and the Subgraph (dynamic market data)
+ */
+export const fetchCollection = createAsyncThunk<Record<string, Collection>, string>(
+  'nft/fetchCollection',
+  async (collectionAddress) => {
+    const [collection, collectionMarket] = await Promise.all([
+      getCollectionApi(collectionAddress),
+      getCollectionSg(collectionAddress),
+    ])
+
+    return combineCollectionData([collection], [collectionMarket])
+  },
+)
 
 /**
  * Fetch all NFT data for a collections by combining data from the API (static metadata)
@@ -39,8 +109,8 @@ export const fetchNftsFromCollections = createAsyncThunk<
   { collectionAddress: string; page: number; size: number }
 >('nft/fetchNftsFromCollections', async ({ collectionAddress, page, size }) => {
   try {
-    if (collectionAddress === pancakeBunniesAddress) {
-      // PancakeBunnies don't need to pre-fetch "all nfts" from the collection
+    if (collectionAddress === gladiatorCollectiblesAddress) {
+      // GladiatorCollectibles don't need to pre-fetch "all nfts" from the collection
       // When user visits IndividualNFTPage required nfts will be fetched via bunny id
       return []
     }
@@ -117,22 +187,119 @@ export const filterNftsFromCollection = createAsyncThunk<
   }
 })
 
+/**
+ * This action keeps data on the individual GladiatorCollectible page up-to-date. Operation is a twofold
+ * 1. Update existing NFTs in the state in case some were sold or got price modified
+ * 2. Fetch 30 more NFTs with specified bunny id
+ */
+export const fetchNewPBAndUpdateExisting = createAsyncThunk<
+  NftToken[],
+  {
+    bunnyId: string
+    existingTokensWithGladiatorCollectibleId: string[]
+    allExistingPBTokenIds: string[]
+    existingMetadata: ApiSingleTokenData
+    orderDirection: 'asc' | 'desc'
+  }
+>(
+  'nft/fetchNewPBAndUpdateExisting',
+  async ({ bunnyId, existingTokensWithGladiatorCollectibleId, allExistingPBTokenIds, existingMetadata, orderDirection }) => {
+    try {
+      // 1. Update existing NFTs in the state in case some were sold or got price modified
+      const [updatedNfts, updatedNftsMarket] = await Promise.all([
+        getNftsFromCollectionApi(gladiatorCollectiblesAddress),
+        getMarketDataForTokenIds(gladiatorCollectiblesAddress, allExistingPBTokenIds),
+      ])
+
+      if (!updatedNfts?.data) {
+        return []
+      }
+      const updatedTokens = updatedNftsMarket.map((marketData) => {
+        const apiMetadata = getMetadataWithFallback(updatedNfts.data, marketData.otherId)
+        const attributes = getGladiatorCollectiblesAttributesField(marketData.otherId)
+        return combineApiAndSgResponseToNftToken(apiMetadata, marketData, attributes)
+      })
+
+      // 2. Fetch 30 more NFTs with specified bunny id
+      let newNfts = { data: [existingMetadata] }
+
+      if (!existingMetadata) {
+        newNfts = await getNftsFromCollectionApi(gladiatorCollectiblesAddress)
+      }
+      const nftsMarket = await getNftsByGladiatorCollectibleIdSg(bunnyId, existingTokensWithGladiatorCollectibleId, orderDirection)
+
+      if (!newNfts?.data) {
+        return updatedTokens
+      }
+
+      const moreTokensWithRequestedGladiatorCollectibleId = nftsMarket.map((marketData) => {
+        const apiMetadata = getMetadataWithFallback(newNfts.data, marketData.otherId)
+        const attributes = getGladiatorCollectiblesAttributesField(marketData.otherId)
+        return combineApiAndSgResponseToNftToken(apiMetadata, marketData, attributes)
+      })
+      return [...updatedTokens, ...moreTokensWithRequestedGladiatorCollectibleId]
+    } catch (error) {
+      console.error(`Failed to update GladiatorCollectibles NFTs`, error)
+      return []
+    }
+  },
+)
+
+export const fetchUserNfts = createAsyncThunk<
+  NftToken[],
+  { account: string; profileNftWithCollectionAddress?: TokenIdWithCollectionAddress; collections: ApiCollections }
+>('nft/fetchUserNfts', async ({ account, profileNftWithCollectionAddress, collections }) => {
+  const completeNftData = await getCompleteAccountNftData(account, collections, profileNftWithCollectionAddress)
+  return completeNftData
+})
+
+export const updateUserNft = createAsyncThunk<
+  NftToken,
+  { tokenId: string; collectionAddress: string; location?: NftLocation }
+>('nft/updateUserNft', async ({ tokenId, collectionAddress, location = NftLocation.WALLET }) => {
+  const marketDataForNft = await getNftsMarketData({
+    tokenId_in: [tokenId],
+    collection: collectionAddress.toLowerCase(),
+  })
+  const metadataForNft = await getNftsFromDifferentCollectionsApi([{ tokenId, collectionAddress }])
+  const completeNftData = { ...metadataForNft[0], location, marketData: marketDataForNft[0] }
+
+  return completeNftData
+})
+
+export const removeUserNft = createAsyncThunk<string, { tokenId: string }>(
+  'nft/removeUserNft',
+  async ({ tokenId }) => tokenId,
+)
+
+export const addUserNft = createAsyncThunk<
+  NftToken,
+  { tokenId: string; collectionAddress: string; nftLocation?: NftLocation }
+>('nft/addUserNft', async ({ tokenId, collectionAddress, nftLocation = NftLocation.WALLET }) => {
+  const marketDataForNft = await getNftsMarketData({
+    tokenId_in: [tokenId],
+    collection: collectionAddress.toLowerCase(),
+  })
+  const metadataForNft = await getNftsFromDifferentCollectionsApi([{ tokenId, collectionAddress }])
+
+  return {
+    ...metadataForNft[0],
+    location: nftLocation,
+    marketData: marketDataForNft[0],
+  }
+})
+
+export const fetchUserActivity = createAsyncThunk('nft/fetchUserActivity', async (address: string) => {
+  const userActivity = await getUserActivity(address.toLocaleLowerCase())
+  return userActivity
+})
+
 export const NftMarket = createSlice({
   name: 'NftMarket',
   initialState,
   reducers: {
-    removeAllItemFilters: (state, action: PayloadAction<string>) => {
-      if (state.data.filters[action.payload]) {
-        const { ordering, showOnlyOnSale } = state.data.filters[action.payload]
-        state.data.filters[action.payload] = {
-          ...initialNftFilterState,
-          ordering,
-          showOnlyOnSale,
-        }
-      } else {
-        state.data.filters[action.payload] = { ...initialNftFilterState }
-      }
-
+    removeAllFilters: (state, action: PayloadAction<string>) => {
+      state.data.filters[action.payload] = { ...initialNftFilterState }
       state.data.nfts[action.payload] = []
     },
     addActivityTypeFilters: (state, action: PayloadAction<{ collection: string; field: MarketEvent }>) => {
@@ -203,8 +370,8 @@ export const NftMarket = createSlice({
         }
       }
     },
-    setTryVideoNftMedia: (state, action: PayloadAction<boolean>) => {
-      state.data.tryVideoNftMedia = action.payload
+    resetUserNftState: (state) => {
+      state.data.user = { ...initialState.data.user }
     },
   },
   extraReducers: (builder) => {
@@ -228,6 +395,14 @@ export const NftMarket = createSlice({
         activeFilters: nftFilters,
       }
       state.data.nfts[collectionAddress] = action.payload
+    })
+
+    builder.addCase(fetchCollection.fulfilled, (state, action) => {
+      state.data.collections = { ...state.data.collections, ...action.payload }
+    })
+    builder.addCase(fetchCollections.fulfilled, (state, action) => {
+      state.data.collections = action.payload
+      state.initializationState = NFTMarketInitializationState.INITIALIZED
     })
     builder.addCase(fetchNftsFromCollections.pending, (state, action) => {
       const { collectionAddress } = action.meta.arg
@@ -254,12 +429,61 @@ export const NftMarket = createSlice({
       }
       state.data.nfts[collectionAddress] = [...existingNftsWithoutNewOnes, ...action.payload]
     })
+    builder.addCase(fetchNewPBAndUpdateExisting.pending, (state) => {
+      state.data.loadingState.isUpdatingGladiatorCollectibles = true
+    })
+    builder.addCase(fetchNewPBAndUpdateExisting.fulfilled, (state, action) => {
+      if (action.payload.length > 0) {
+        state.data.nfts[gladiatorCollectiblesAddress] = action.payload
+      }
+      state.data.loadingState.isUpdatingGladiatorCollectibles = false
+      state.data.loadingState.latestGladiatorCollectiblesUpdateAt = Date.now()
+    })
+    builder.addCase(fetchNewPBAndUpdateExisting.rejected, (state) => {
+      state.data.loadingState.isUpdatingGladiatorCollectibles = false
+      state.data.loadingState.latestGladiatorCollectiblesUpdateAt = Date.now()
+    })
+    builder.addCase(fetchUserNfts.rejected, (state) => {
+      state.data.user.userNftsInitializationState = UserNftInitializationState.ERROR
+    })
+    builder.addCase(fetchUserNfts.pending, (state) => {
+      state.data.user.userNftsInitializationState = UserNftInitializationState.INITIALIZING
+    })
+    builder.addCase(fetchUserNfts.fulfilled, (state, action) => {
+      state.data.user.nfts = action.payload
+      state.data.user.userNftsInitializationState = UserNftInitializationState.INITIALIZED
+    })
+    builder.addCase(updateUserNft.fulfilled, (state, action) => {
+      const userNftsState: NftToken[] = state.data.user.nfts
+      const nftToUpdate = userNftsState.find((nft) => nft.tokenId === action.payload.tokenId)
+      const indexInState = userNftsState.indexOf(nftToUpdate)
+      state.data.user.nfts[indexInState] = action.payload
+    })
+    builder.addCase(removeUserNft.fulfilled, (state, action) => {
+      const copyOfState: NftToken[] = [...state.data.user.nfts]
+      const nftToRemove = copyOfState.find((nft) => nft.tokenId === action.payload)
+      const indexInState = copyOfState.indexOf(nftToRemove)
+      copyOfState.splice(indexInState, 1)
+      state.data.user.nfts = copyOfState
+    })
+    builder.addCase(addUserNft.fulfilled, (state, action) => {
+      state.data.user.nfts = [...state.data.user.nfts, action.payload]
+    })
+    builder.addCase(fetchUserActivity.fulfilled, (state, action) => {
+      state.data.user.activity = { ...action.payload, initializationState: UserNftInitializationState.INITIALIZED }
+    })
+    builder.addCase(fetchUserActivity.rejected, (state) => {
+      state.data.user.activity.initializationState = UserNftInitializationState.ERROR
+    })
+    builder.addCase(fetchUserActivity.pending, (state) => {
+      state.data.user.activity.initializationState = UserNftInitializationState.INITIALIZING
+    })
   },
 })
 
 // Actions
 export const {
-  removeAllItemFilters,
+  removeAllFilters,
   removeAllActivityFilters,
   removeActivityTypeFilters,
   removeActivityCollectionFilters,
@@ -268,7 +492,7 @@ export const {
   addActivityCollectionFilters,
   setOrdering,
   setShowOnlyOnSale,
-  setTryVideoNftMedia,
+  resetUserNftState,
 } = NftMarket.actions
 
 export default NftMarket.reducer

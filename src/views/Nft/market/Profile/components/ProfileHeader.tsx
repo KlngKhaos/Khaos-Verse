@@ -1,4 +1,6 @@
-import { NextLinkFromReactRouter as ReactRouterLink } from 'components/NextLink'
+import React from 'react'
+import { Link as ReactRouterLink } from 'react-router-dom'
+import styled from 'styled-components'
 import { BscScanIcon, Flex, IconButton, Link, Button, useModal } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { getBscScanLink } from 'utils'
@@ -21,8 +23,11 @@ interface HeaderProps {
   isAchievementsLoading: boolean
   isNftLoading: boolean
   isProfileLoading: boolean
-  onSuccess?: () => void
 }
+
+const StyledIconButton = styled(IconButton)`
+  width: fit-content;
+`
 
 // Account and profile passed down as the profile could be used to render _other_ users' profiles.
 const ProfileHeader: React.FC<HeaderProps> = ({
@@ -33,20 +38,10 @@ const ProfileHeader: React.FC<HeaderProps> = ({
   isAchievementsLoading,
   isNftLoading,
   isProfileLoading,
-  onSuccess,
 }) => {
   const { t } = useTranslation()
   const { account } = useWeb3React()
-  const [onEditProfileModal] = useModal(
-    <EditProfileModal
-      onSuccess={() => {
-        if (onSuccess) {
-          onSuccess()
-        }
-      }}
-    />,
-    false,
-  )
+  const [onEditProfileModal] = useModal(<EditProfileModal />, false)
 
   const isConnectedAccount = account?.toLowerCase() === accountPath?.toLowerCase()
   const numNftCollected = !isNftLoading ? (nftCollected ? formatNumber(nftCollected, 0, 0) : '-') : null
@@ -64,11 +59,11 @@ const ProfileHeader: React.FC<HeaderProps> = ({
     if (profile) {
       switch (profile.teamId) {
         case 1:
-          return `${imagePath}/storm-banner.png`
+          return `${imagePath}/hermes-banner.png`
         case 2:
-          return `${imagePath}/flippers-banner.png`
+          return `${imagePath}/flamma-banner.png`
         case 3:
-          return `${imagePath}/cakers-banner.png`
+          return `${imagePath}/spartacus-banner.png`
         default:
           break
       }
@@ -82,18 +77,14 @@ const ProfileHeader: React.FC<HeaderProps> = ({
         // TODO: Share functionality once user profiles routed by ID
         <Flex display="inline-flex">
           {accountPath && (
-            <IconButton
-              as="a"
+            <StyledIconButton
               target="_blank"
-              style={{
-                width: 'fit-content',
-              }}
-              href={getBscScanLink(accountPath, 'address') || ''}
-              // @ts-ignore
-              alt={t('View BscScan for user address')}
+              as="a"
+              href={getBscScanLink(accountPath, 'address')}
+              // alt={t('View BscScan for user address')}
             >
               <BscScanIcon width="20px" color="primary" />
-            </IconButton>
+            </StyledIconButton>
           )}
         </Flex>
       )
@@ -103,15 +94,7 @@ const ProfileHeader: React.FC<HeaderProps> = ({
       return (
         <>
           {profile && accountPath && isConnectedAccount ? (
-            <EditProfileAvatar
-              src={avatarImage}
-              alt={t('User profile picture')}
-              onSuccess={() => {
-                if (onSuccess) {
-                  onSuccess()
-                }
-              }}
-            />
+            <EditProfileAvatar src={avatarImage} alt={t('User profile picture')} />
           ) : (
             <AvatarImage src={avatarImage} alt={t('User profile picture')} />
           )}

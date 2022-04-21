@@ -1,10 +1,19 @@
-import { BlockIcon, CheckmarkCircleIcon, Flex, Image, Skeleton, Text } from '@pancakeswap/uikit'
-import { useTranslation } from 'contexts/Localization'
-
+import React from 'react'
 import styled from 'styled-components'
-import { getRewardGroupAchievements, useCompetitionRewards } from '../../helpers'
+import {
+  BlockIcon,
+  CheckmarkCircleIcon,
+  Flex,
+  CrownIcon,
+  Text,
+  TeamPlayerIcon,
+  TrophyGoldIcon,
+  Skeleton,
+} from '@pancakeswap/uikit'
+import { useTranslation } from 'contexts/Localization'
 import { UserTradingInformationProps } from '../../types'
-import { BoldTd, StyledPrizeTable, Td } from '../StyledPrizeTable'
+import { useCompetitionCakeRewards, getRewardGroupAchievements } from '../../helpers'
+import { BoldTd, Td, StyledPrizeTable } from '../StyledPrizeTable'
 
 const StyledThead = styled.thead`
   border-bottom: 2px solid ${({ theme }) => theme.colors.cardBorder};
@@ -14,29 +23,15 @@ const UserPrizeGrid: React.FC<{ userTradingInformation?: UserTradingInformationP
   userTradingInformation,
 }) => {
   const { t } = useTranslation()
-  const {
-    userRewardGroup,
-    userCakeRewards,
-    userLazioRewards,
-    userPortoRewards,
-    userSantosRewards,
-    userPointReward,
-    canClaimNFT,
-  } = userTradingInformation
-  const { cakeReward, lazioReward, portoReward, santosReward, dollarValueOfTokensReward } = useCompetitionRewards({
-    userCakeRewards,
-    userLazioRewards,
-    userPortoRewards,
-    userSantosRewards,
-  })
-
-  const achievement = getRewardGroupAchievements(userRewardGroup, userPointReward)
+  const { userRewardGroup, userCakeRewards, userPointReward, canClaimNFT } = userTradingInformation
+  const { cakeReward, dollarValueOfCakeReward } = useCompetitionCakeRewards(userCakeRewards)
+  const { champion, teamPlayer } = getRewardGroupAchievements(userRewardGroup)
 
   return (
     <StyledPrizeTable>
       <StyledThead>
         <tr>
-          <th>{t('Token Prizes')}</th>
+          <th>{t('CAKE Prizes')}</th>
           <th>{t('Achievements')}</th>
           <th>{t('NFT')}</th>
         </tr>
@@ -45,13 +40,10 @@ const UserPrizeGrid: React.FC<{ userTradingInformation?: UserTradingInformationP
         <tr>
           <BoldTd>
             <Flex flexDirection="column">
-              <Text bold>{cakeReward.toFixed(4)} CAKE</Text>
-              <Text bold>{lazioReward.toFixed(4)} LAZIO</Text>
-              <Text bold>{portoReward.toFixed(4)} PORTO</Text>
-              <Text bold>{santosReward.toFixed(4)} SANTOS</Text>
-              {dollarValueOfTokensReward !== null ? (
+              <Text bold>{cakeReward.toFixed(2)}</Text>
+              {dollarValueOfCakeReward ? (
                 <Text fontSize="12px" color="textSubtle">
-                  ~{dollarValueOfTokensReward.toFixed(2)} USD
+                  ~{dollarValueOfCakeReward} USD
                 </Text>
               ) : (
                 <Skeleton height={24} width={80} />
@@ -60,7 +52,9 @@ const UserPrizeGrid: React.FC<{ userTradingInformation?: UserTradingInformationP
           </BoldTd>
           <Td>
             <Flex alignItems="center" flexWrap="wrap" justifyContent="center" width="100%">
-              <Image src={`/images/achievements/${achievement.image}`} width={25} height={25} />
+              {champion && <CrownIcon mr={[0, '4px']} />}
+              {teamPlayer && <TeamPlayerIcon mr={[0, '4px']} />}
+              <TrophyGoldIcon mr={[0, '4px']} />
               <Text fontSize="12px" color="textSubtle" textTransform="lowercase">
                 + {userPointReward} {t('Points')}
               </Text>

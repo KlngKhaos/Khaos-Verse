@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Grid, useModal, Text, Flex } from '@pancakeswap/uikit'
-import { NftLocation, NftToken } from 'state/nftMarket/types'
+import { useUserNfts } from 'state/nftMarket/hooks'
+import { NftLocation, UserNftInitializationState, NftToken } from 'state/nftMarket/types'
 import { useTranslation } from 'contexts/Localization'
 import { CollectibleActionCard } from '../../components/CollectibleCard'
 import GridPlaceholder from '../../components/GridPlaceholder'
@@ -19,25 +20,12 @@ interface SellNftProps {
   variant: 'sell' | 'edit'
 }
 
-const UserNfts: React.FC<{
-  nfts: NftToken[]
-  isLoading: boolean
-  onSuccessSale: () => void
-  onSuccessEditProfile: () => void
-}> = ({ nfts, isLoading, onSuccessSale, onSuccessEditProfile }) => {
+const UserNfts = () => {
+  const { nfts, userNftsInitializationState } = useUserNfts()
   const [clickedProfileNft, setClickedProfileNft] = useState<ProfileNftProps>({ nft: null, location: null })
   const [clickedSellNft, setClickedSellNft] = useState<SellNftProps>({ nft: null, location: null, variant: null })
-  const [onPresentProfileNftModal] = useModal(
-    <ProfileNftModal nft={clickedProfileNft.nft} onSuccess={onSuccessEditProfile} />,
-  )
-  const [onPresentSellModal] = useModal(
-    <SellModal
-      variant={clickedSellNft.variant}
-      nftToSell={clickedSellNft.nft}
-      onSuccessSale={onSuccessSale}
-      onSuccessEditProfile={onSuccessEditProfile}
-    />,
-  )
+  const [onPresentProfileNftModal] = useModal(<ProfileNftModal nft={clickedProfileNft.nft} />)
+  const [onPresentSellModal] = useModal(<SellModal variant={clickedSellNft.variant} nftToSell={clickedSellNft.nft} />)
   const { t } = useTranslation()
 
   const handleCollectibleClick = (nft: NftToken, location: NftLocation) => {
@@ -75,7 +63,7 @@ const UserNfts: React.FC<{
   return (
     <>
       {/* User has no NFTs */}
-      {nfts.length === 0 && !isLoading ? (
+      {nfts.length === 0 && userNftsInitializationState === UserNftInitializationState.INITIALIZED ? (
         <Flex p="24px" flexDirection="column" alignItems="center">
           <NoNftsImage />
           <Text pt="8px" bold>
@@ -96,10 +84,10 @@ const UserNfts: React.FC<{
               <CollectibleActionCard
                 isUserNft
                 onClick={() => handleCollectibleClick(nft, location)}
-                key={`${nft?.tokenId}-${nft?.collectionName}`}
+                key={`${nft.tokenId}-${nft.collectionName}`}
                 nft={nft}
                 currentAskPrice={
-                  marketData?.currentAskPrice && marketData?.isTradable && parseFloat(marketData?.currentAskPrice)
+                  marketData?.currentAskPrice && marketData?.isTradable && parseFloat(marketData.currentAskPrice)
                 }
                 nftLocation={location}
               />

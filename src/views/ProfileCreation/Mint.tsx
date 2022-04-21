@@ -1,48 +1,52 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { formatUnits } from '@ethersproject/units'
 import { Card, CardBody, Heading, Text } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
-import { useCake, useBunnyFactory } from 'hooks/useContract'
-import { useGetCakeBalance } from 'hooks/useTokenBalance'
+import { useNrt, useGladiatorCollectibleFactory } from 'hooks/useContract'
+import { useGetNrtBalance } from 'hooks/useTokenBalance'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import ApproveConfirmButtons from 'components/ApproveConfirmButtons'
 import useToast from 'hooks/useToast'
+import { useAppDispatch } from 'state'
+import { fetchUserNfts } from 'state/nftMarket/reducer'
+import { useGetCollections } from 'state/nftMarket/hooks'
 import { getNftsFromCollectionApi } from 'state/nftMarket/helpers'
 import { ApiSingleTokenData } from 'state/nftMarket/types'
-import { pancakeBunniesAddress } from 'views/Nft/market/constants'
-import { requiresApproval } from 'utils/requiresApproval'
+import { gladiatorCollectiblesAddress } from 'views/Nft/market/constants'
 import { FetchStatus } from 'config/constants/types'
 import SelectionCard from './SelectionCard'
 import NextStepButton from './NextStepButton'
 import useProfileCreation from './contexts/hook'
-import { MINT_COST, STARTER_NFT_BUNNY_IDS } from './config'
+import { MINT_COST, STARTER_NFT_GLADIATOR_COLLECTIBLE_IDS } from './config'
 
 interface MintNftData extends ApiSingleTokenData {
-  bunnyId?: string
+  gladiatorCollectibleId?: string
 }
 
 const Mint: React.FC = () => {
   const [selectedBunnyId, setSelectedBunnyId] = useState<string>('')
   const [starterNfts, setStarterNfts] = useState<MintNftData[]>([])
-  const { actions, minimumCakeRequired, allowance } = useProfileCreation()
+  const { actions, minimumNrtRequired, allowance } = useProfileCreation()
+  const collections = useGetCollections()
   const { toastSuccess } = useToast()
+  const dispatch = useAppDispatch()
 
   const { account } = useWeb3React()
-  const { reader: cakeContractReader, signer: cakeContractApprover } = useCake()
-  const bunnyFactoryContract = useBunnyFactory()
+  const nrtContract = useNrt()
+  const gladiatorCollectibleFactoryContract = useGladiatorCollectibleFactory()
   const { t } = useTranslation()
-  const { balance: cakeBalance, fetchStatus } = useGetCakeBalance()
-  const hasMinimumCakeRequired = fetchStatus === FetchStatus.Fetched && cakeBalance.gte(MINT_COST)
+  const { balance: nrtBalance, fetchStatus } = useGetNrtBalance()
+  const hasMinimumNrtRequired = fetchStatus === FetchStatus.Fetched && nrtBalance.gte(MINT_COST)
   const { callWithGasPrice } = useCallWithGasPrice()
 
   useEffect(() => {
     const getStarterNfts = async () => {
-      const { data: allPbTokens } = await getNftsFromCollectionApi(pancakeBunniesAddress)
-      const nfts = STARTER_NFT_BUNNY_IDS.map((bunnyId) => {
-        if (allPbTokens && allPbTokens[bunnyId]) {
-          return { ...allPbTokens[bunnyId], bunnyId }
+      const { data: allPbTokens } = await getNftsFromCollectionApi(gladiatorCollectiblesAddress)
+      const nfts = STARTER_NFT_GLADIATOR_COLLECTIBLE_IDS.map((gladiatorCollectibleId) => {
+        if (allPbTokens && allPbTokens[gladiatorCollectibleId]) {
+          return { ...allPbTokens[gladiatorCollectibleId], gladiatorCollectibleId }
         }
         return undefined
       })
@@ -56,19 +60,26 @@ const Mint: React.FC = () => {
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        return requiresApproval(cakeContractReader, account, bunnyFactoryContract.address, minimumCakeRequired)
+        // TODO: Move this to a helper, this check will be probably be used many times
+        try {
+          const response = await nrtContract.allowance(account, gladiatorCollectibleFactoryContract.address)
+          return response.gte(minimumNrtRequired)
+        } catch (error) {
+          return false
+        }
       },
       onApprove: () => {
-        return callWithGasPrice(cakeContractApprover, 'approve', [bunnyFactoryContract.address, allowance.toString()])
+        return callWithGasPrice(nrtContract, 'approve', [gladiatorCollectibleFactoryContract.address, allowance.toString()])
       },
       onConfirm: () => {
-        return callWithGasPrice(bunnyFactoryContract, 'mintNFT', [selectedBunnyId])
+        return callWithGasPrice(gladiatorCollectibleFactoryContract, 'mintNFT', [selectedBunnyId])
       },
       onApproveSuccess: () => {
         toastSuccess(t('Enabled'), t("Press 'confirm' to mint this NFT"))
       },
       onSuccess: () => {
         toastSuccess(t('Success'), t('You have minted your starter NFT'))
+        dispatch(fetchUserNfts({ account, collections }))
         actions.nextStep()
       },
     })
@@ -84,7 +95,7 @@ const Mint: React.FC = () => {
       <Text as="p">{t('Every profile starts by making a “starter” collectible (NFT).')}</Text>
       <Text as="p">{t('This starter will also become your first profile picture.')}</Text>
       <Text as="p" mb="24px">
-        {t('You can change your profile pic later if you get another approved Pancake Collectible.')}
+        {t('You can change your profile pic later if you get another approved Gladiators Collectible.')}
       </Text>
       <Card mb="24px">
         <CardBody>
@@ -95,7 +106,7 @@ const Mint: React.FC = () => {
             {t('Choose wisely: you can only ever make one starter collectible!')}
           </Text>
           <Text as="p" mb="24px" color="textSubtle">
-            {t('Cost: %num% CAKE', { num: formatUnits(MINT_COST) })}
+            {t('Cost: %num% NRT', { num: formatUnits(MINT_COST) })}
           </Text>
           {starterNfts.map((nft) => {
             const handleChange = (value: string) => setSelectedBunnyId(value)
@@ -104,25 +115,25 @@ const Mint: React.FC = () => {
               <SelectionCard
                 key={nft?.name}
                 name="mintStarter"
-                value={nft?.bunnyId}
+                value={nft?.gladiatorCollectibleId}
                 image={nft?.image.thumbnail}
-                isChecked={selectedBunnyId === nft?.bunnyId}
+                isChecked={selectedBunnyId === nft?.gladiatorCollectibleId}
                 onChange={handleChange}
-                disabled={isApproving || isConfirming || isConfirmed || !hasMinimumCakeRequired}
+                disabled={isApproving || isConfirming || isConfirmed || !hasMinimumNrtRequired}
               >
                 <Text bold>{nft?.name}</Text>
               </SelectionCard>
             )
           })}
-          {!hasMinimumCakeRequired && (
+          {!hasMinimumNrtRequired && (
             <Text color="failure" mb="16px">
-              {t('A minimum of %num% CAKE is required', { num: formatUnits(MINT_COST) })}
+              {t('A minimum of %num% NRT is required', { num: formatUnits(MINT_COST) })}
             </Text>
           )}
           <ApproveConfirmButtons
             isApproveDisabled={selectedBunnyId === null || isConfirmed || isConfirming || isApproved}
             isApproving={isApproving}
-            isConfirmDisabled={!isApproved || isConfirmed || !hasMinimumCakeRequired}
+            isConfirmDisabled={!isApproved || isConfirmed || !hasMinimumNrtRequired}
             isConfirming={isConfirming}
             onApprove={handleApprove}
             onConfirm={handleConfirm}

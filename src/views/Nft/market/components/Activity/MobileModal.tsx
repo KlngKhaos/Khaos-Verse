@@ -1,3 +1,4 @@
+import React from 'react'
 import { InjectedModalProps, Modal, Flex, Text, Button, Link, BinanceIcon, Box } from '@pancakeswap/uikit'
 import { Price } from '@pancakeswap/sdk'
 import useTheme from 'hooks/useTheme'
@@ -42,7 +43,7 @@ const MobileModal: React.FC<MobileModalProps> = ({
           </Box>
           <Flex flexDirection="column">
             <Text fontSize="12px" color="textSubtle" textAlign="right">
-              {nft?.collectionName}
+              {nft.collectionName}
             </Text>
             <Text bold textAlign="right">
               {nft.name}

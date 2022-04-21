@@ -1,3 +1,4 @@
+import React from 'react'
 import { useWeb3React } from '@web3-react/core'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import { Flex, Text, Button, ButtonMenu, ButtonMenuItem, Message, Link } from '@pancakeswap/uikit'
@@ -39,7 +40,7 @@ const ReviewStage: React.FC<ReviewStageProps> = ({
           <RoundedImage src={nftToBuy.image.thumbnail} height={68} width={68} mr="16px" />
           <Flex flexDirection="column" justifyContent="space-evenly">
             <Text color="textSubtle" fontSize="12px">
-              {nftToBuy?.collectionName}
+              {nftToBuy.collectionName}
             </Text>
             <Text bold>{nftToBuy.name}</Text>
             <Flex alignItems="center">

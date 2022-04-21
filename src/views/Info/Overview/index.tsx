@@ -1,13 +1,13 @@
-import { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 import { Flex, Box, Text, Heading, Card, Skeleton } from '@pancakeswap/uikit'
-import { fromUnixTime } from 'date-fns'
+import { format, fromUnixTime } from 'date-fns'
 import { useTranslation } from 'contexts/Localization'
 import Page from 'components/Layout/Page'
 import LineChart from 'views/Info/components/InfoCharts/LineChart'
 import TokenTable from 'views/Info/components/InfoTables/TokensTable'
 import PoolTable from 'views/Info/components/InfoTables/PoolsTable'
-import { formatAmount } from 'utils/formatInfoNumbers'
+import { formatAmount } from 'views/Info/utils/formatInfoNumbers'
 import BarChart from 'views/Info/components/InfoCharts/BarChart'
 import {
   useAllPoolData,
@@ -35,10 +35,7 @@ export const ChartCardsContainer = styled(Flex)`
 `
 
 const Overview: React.FC = () => {
-  const {
-    t,
-    currentLanguage: { locale },
-  } = useTranslation()
+  const { t } = useTranslation()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [liquidityDateHover, setLiquidityDateHover] = useState<string | undefined>()
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
@@ -48,7 +45,7 @@ const Overview: React.FC = () => {
   const [chartData] = useProtocolChartData()
   const [transactions] = useProtocolTransactions()
 
-  const currentDate = new Date().toLocaleString(locale, { month: 'short', year: 'numeric', day: 'numeric' })
+  const currentDate = format(new Date(), 'MMM d, yyyy')
 
   // Getting latest liquidity and volumeUSD to display on top of chart when not hovered
   useEffect(() => {

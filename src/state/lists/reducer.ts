@@ -34,7 +34,7 @@ const NEW_LIST_STATE: ListState = {
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
-export const initialState: ListsState = {
+const initialState: ListsState = {
   lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
   byUrl: {
     ...DEFAULT_LIST_OF_LISTS.concat(...UNSUPPORTED_LIST_URLS).reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
@@ -177,7 +177,7 @@ export default createReducer(initialState, (builder) =>
         state.activeListUrls = DEFAULT_ACTIVE_LIST_URLS
 
         // for each list on default list, initialize if needed
-        DEFAULT_ACTIVE_LIST_URLS.forEach((listUrl: string) => {
+        DEFAULT_ACTIVE_LIST_URLS.map((listUrl: string) => {
           if (!state.byUrl[listUrl]) {
             state.byUrl[listUrl] = NEW_LIST_STATE
           }

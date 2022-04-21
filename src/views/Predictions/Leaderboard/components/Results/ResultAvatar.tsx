@@ -1,8 +1,9 @@
+import React from 'react'
 import { Box, Flex, FlexProps, Link, ProfileAvatar, SubMenu, SubMenuItem, useModal, Text } from '@pancakeswap/uikit'
 import styled from 'styled-components'
 import { getBscScanLink } from 'utils'
 import { PredictionUser } from 'state/types'
-import { useProfileForAddress } from 'state/profile/hooks'
+import { useGetProfileAvatar } from 'state/profile/hooks'
 import truncateHash from 'utils/truncateHash'
 import { useTranslation } from 'contexts/Localization'
 import WalletStatsModal from '../WalletStatsModal'
@@ -32,7 +33,7 @@ const UsernameWrapper = styled(Box)`
 
 const ResultAvatar: React.FC<ResultAvatarProps> = ({ user, ...props }) => {
   const { t } = useTranslation()
-  const { profile } = useProfileForAddress(user.id)
+  const profileAvatar = useGetProfileAvatar(user.id)
   const [onPresentWalletStatsModal] = useModal(<WalletStatsModal account={user.id} />)
 
   return (
@@ -41,14 +42,14 @@ const ResultAvatar: React.FC<ResultAvatarProps> = ({ user, ...props }) => {
         <Flex alignItems="center" {...props}>
           <UsernameWrapper>
             <Text color="primary" fontWeight="bold">
-              {profile?.username || truncateHash(user.id)}
+              {profileAvatar.username || truncateHash(user.id)}
             </Text>{' '}
           </UsernameWrapper>
           <AvatarWrapper
             width={['32px', null, null, null, null, '40px']}
             height={['32px', null, null, null, null, '40px']}
           >
-            <ProfileAvatar src={profile?.nft?.image?.thumbnail} height={40} width={40} />
+            <ProfileAvatar src={profileAvatar.nft?.image?.thumbnail} height={40} width={40} />
           </AvatarWrapper>
         </Flex>
       }

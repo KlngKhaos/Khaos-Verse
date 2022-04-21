@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   AutoRenewIcon,
   Card,
@@ -14,6 +14,7 @@ import orderBy from 'lodash/orderBy'
 import { useTranslation } from 'contexts/Localization'
 import { Vote } from 'state/types'
 import { FetchStatus } from 'config/constants/types'
+import { useGetVotingStateLoadingStatus } from 'state/voting/hooks'
 import VotesLoading from '../components/Proposal/VotesLoading'
 import VoteRow from '../components/Proposal/VoteRow'
 
@@ -21,8 +22,6 @@ const VOTES_PER_VIEW = 20
 
 interface VotesProps {
   votes: Vote[]
-  totalVotes?: number
-  votesLoadingStatus: FetchStatus
 }
 
 const parseVotePower = (incomingVote: Vote) => {
@@ -31,13 +30,14 @@ const parseVotePower = (incomingVote: Vote) => {
   return votingPower
 }
 
-const Votes: React.FC<VotesProps> = ({ votes, votesLoadingStatus, totalVotes }) => {
+const Votes: React.FC<VotesProps> = ({ votes }) => {
   const [showAll, setShowAll] = useState(false)
   const { t } = useTranslation()
   const { account } = useWeb3React()
   const orderedVotes = orderBy(votes, [parseVotePower, 'created'], ['desc', 'desc'])
   const displayVotes = showAll ? orderedVotes : orderedVotes.slice(0, VOTES_PER_VIEW)
-  const isFetched = votesLoadingStatus === FetchStatus.Fetched
+  const voteStatus = useGetVotingStateLoadingStatus()
+  const isFinished = voteStatus === FetchStatus.Fetched
 
   const handleClick = () => {
     setShowAll(!showAll)
@@ -48,14 +48,14 @@ const Votes: React.FC<VotesProps> = ({ votes, votesLoadingStatus, totalVotes }) 
       <CardHeader>
         <Flex alignItems="center" justifyContent="space-between">
           <Heading as="h3" scale="md">
-            {t('Votes (%count%)', { count: totalVotes ? totalVotes.toLocaleString() : '-' })}
+            {t('Votes (%count%)', { count: votes.length.toLocaleString() })}
           </Heading>
-          {!isFetched && <AutoRenewIcon spin width="22px" />}
+          {!isFinished && <AutoRenewIcon spin width="22px" />}
         </Flex>
       </CardHeader>
-      {!isFetched && <VotesLoading />}
+      {!isFinished && <VotesLoading />}
 
-      {isFetched && displayVotes.length > 0 && (
+      {isFinished && displayVotes.length > 0 && (
         <>
           {displayVotes.map((vote) => {
             const isVoter = account && vote.voter.toLowerCase() === account.toLowerCase()
@@ -73,7 +73,7 @@ const Votes: React.FC<VotesProps> = ({ votes, votesLoadingStatus, totalVotes }) 
                   <ChevronDownIcon color="primary" width="21px" />
                 )
               }
-              disabled={!isFetched}
+              disabled={!isFinished}
             >
               {showAll ? t('Hide') : t('See All')}
             </Button>
@@ -81,7 +81,7 @@ const Votes: React.FC<VotesProps> = ({ votes, votesLoadingStatus, totalVotes }) 
         </>
       )}
 
-      {isFetched && displayVotes.length === 0 && (
+      {isFinished && displayVotes.length === 0 && (
         <Flex alignItems="center" justifyContent="center" py="32px">
           <Heading as="h5">{t('No votes found')}</Heading>
         </Flex>

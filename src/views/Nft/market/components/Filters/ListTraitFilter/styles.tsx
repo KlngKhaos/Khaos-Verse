@@ -1,3 +1,4 @@
+import React from 'react'
 import { Radio, Text } from '@pancakeswap/uikit'
 import noop from 'lodash/noop'
 import { formatNumber } from 'utils/formatBalance'

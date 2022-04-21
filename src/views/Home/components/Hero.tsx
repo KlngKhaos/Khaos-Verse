@@ -1,26 +1,14 @@
-import { Button, Flex, Heading } from '@pancakeswap/uikit'
-import { useWeb3React } from '@web3-react/core'
-import ConnectWalletButton from 'components/ConnectWalletButton'
-import { NextLinkFromReactRouter } from 'components/NextLink'
-import { useTranslation } from 'contexts/Localization'
-import useTheme from 'hooks/useTheme'
-import Image from 'next/image'
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import bunnyImage from '../../../../public/images/home/lunar-bunny/bunny@2x.png'
-import CompositeImage, { CompositeImageProps } from './CompositeImage'
+import { Link } from 'react-router-dom'
+import { Flex, Heading, Button } from '@pancakeswap/uikit'
+import { useWeb3React } from '@web3-react/core'
+import { useTranslation } from 'contexts/Localization'
+import ConnectWalletButton from 'components/ConnectWalletButton'
+import useTheme from 'hooks/useTheme'
 import { SlideSvgDark, SlideSvgLight } from './SlideSvg'
+import CompositeImage, { getSrcSet, CompositeImageProps } from './CompositeImage'
 
-const flyingAnim = () => keyframes`
-  from {
-    transform: translate(0,  0px);
-  }
-  50% {
-    transform: translate(-5px, -5px);
-  }
-  to {
-    transform: translate(0, 0px);
-  }
-`
 
 const fading = () => keyframes`
   from {
@@ -31,7 +19,7 @@ const fading = () => keyframes`
   }
   to {
     opacity: 0.9;
-  }
+  }  
 `
 
 const BgWrapper = styled.div`
@@ -42,6 +30,26 @@ const BgWrapper = styled.div`
   height: 100%;
   bottom: 0px;
   left: 0px;
+  background-color: #000;
+  `
+
+const BgImage = styled.img`
+    height: 100%;
+    width: 100%;
+    margin-top: 95px;
+    object-fit: contain;
+    @media (min-width: 320px) and (max-width: 480px) {
+      margin-top: -100px;
+      object-fit: contain;
+    }
+    @media (min-width: 480px) and (max-width: 786px) {
+      margin-top: 150px;
+    }
+    @media (min-width: 992px) and (max-width: 1024px) {
+      height: auto;
+      width: 100%;
+      margin-top: 245px;
+    }
 `
 
 const InnerWrapper = styled.div`
@@ -50,44 +58,40 @@ const InnerWrapper = styled.div`
   bottom: -3px;
 `
 
-const BunnyWrapper = styled.div`
-  width: 100%;
-  animation: ${flyingAnim} 3.5s ease-in-out infinite;
-  will-change: transform;
-  > span {
-    overflow: visible !important; // make sure the next-image pre-build blur image not be cropped
+const HeroWrapper = styled(Flex)`
+  width: 50%;
+  min-height: 700px;
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    width: 100%;
+    margin-top: 400px;
+    min-height: 400px;
+  }
+
+  @media (min-width: 480px) and (max-width: 786px) {
+    width: 100%;
+    margin-top: 175px;
+  }
+
+  // @media (min-width:767px) {
+  //   width: 50%;
+  //   margin-left: 172px;
+  //   margin-top: 35px;
+  // }
+
+  @media (min-width: 786px) and (max-width: 1024px) {
+    margin-left: 32px;
   }
 `
 
-const StarsWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  & :nth-child(2) {
-    animation: ${fading} 2s ease-in-out infinite;
-    animation-delay: 1s;
-  }
-
-  & :nth-child(3) {
-    animation: ${fading} 5s ease-in-out infinite;
-    animation-delay: 0.66s;
-  }
-
-  & :nth-child(4) {
-    animation: ${fading} 2.5s ease-in-out infinite;
-    animation-delay: 0.33s;
-  }
-`
-
-const starsImage: CompositeImageProps = {
-  path: '/images/home/lunar-bunny/',
-  attributes: [
-    { src: 'star-l', alt: '3D Star' },
-    { src: 'star-r', alt: '3D Star' },
-    { src: 'star-top-r', alt: '3D Star' },
-  ],
+const HeroHeading = styled(Flex)`
+@media (min-width:320px) {
+  font-size: 32px;
 }
+@media (min-width:520px) {
+    font-size: 64px;
+  }
+`
 
 const Hero = () => {
   const { t } = useTranslation()
@@ -97,45 +101,43 @@ const Hero = () => {
   return (
     <>
       <BgWrapper>
-        <InnerWrapper>{theme.isDark ? <SlideSvgDark width="100%" /> : <SlideSvgLight width="100%" />}</InnerWrapper>
+        <BgImage src='/images/home/gladiators/2.png' alt={t('Gladiator')} />
       </BgWrapper>
-      <Flex
+      <HeroWrapper
         position="relative"
         flexDirection={['column-reverse', null, null, 'row']}
         alignItems={['flex-end', null, null, 'center']}
         justifyContent="center"
-        mt={[account ? '280px' : '50px', null, 0]}
+        // mt={[account ? '280px' : '50px', null, 0]}
         id="homepage-hero"
       >
-        <Flex flex="1" flexDirection="column">
+        <Flex flex="1" flexDirection="column" height={['192px', null, null, '100%']}>
           <Heading scale="xxl" color="secondary" mb="24px">
-            {t('The moon is made of pancakes.')}
+            <HeroHeading>
+              {t('Gladiators.finance brings 3D NFTs to Binance Smart Chain.')}
+            </HeroHeading>
           </Heading>
           <Heading scale="md" mb="24px">
-            {t('Trade, earn, and win crypto on the most popular decentralized platform in the galaxy.')}
+            {t('Trade, earn, win crypto and have with our massive 3D ecosystem on the most popular decentralized platform.')}
           </Heading>
           <Flex>
             {!account && <ConnectWalletButton mr="8px" />}
-            <NextLinkFromReactRouter to="/swap">
-              <Button variant={!account ? 'secondary' : 'primary'}>{t('Trade Now')}</Button>
-            </NextLinkFromReactRouter>
+            {account &&
+              <Link to="/mygladiators">
+                <Button variant='primary' mr="8px" color="#890000">{t('My Gladiators')}</Button>
+              </Link>
+            }
+            {account &&
+              <Link to="/school">
+                <Button variant='primary' mr="8px" color="#890000">{t('School')}</Button>
+              </Link>
+            }
+            <Link to="/gallery">
+              <Button variant={!account ? 'secondary' : 'primary'}>{t('Explore Now')}</Button>
+            </Link>
           </Flex>
         </Flex>
-        <Flex
-          height={['192px', null, null, '100%']}
-          width={['192px', null, null, '100%']}
-          flex={[null, null, null, '1']}
-          mb={['24px', null, null, '0']}
-          position="relative"
-        >
-          <BunnyWrapper>
-            <Image src={bunnyImage} priority placeholder="blur" alt={t('Lunar bunny')} />
-          </BunnyWrapper>
-          <StarsWrapper>
-            <CompositeImage {...starsImage} />
-          </StarsWrapper>
-        </Flex>
-      </Flex>
+      </HeroWrapper>
     </>
   )
 }

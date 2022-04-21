@@ -1,14 +1,13 @@
+import React from 'react'
 import styled from 'styled-components'
-import { Card, CardHeader, CardBody, CommunityIcon, Heading, PrizeIcon, Text, Skeleton } from '@pancakeswap/uikit'
-import { FetchStatus } from 'config/constants/types'
-import useSWR from 'swr'
-import { getTeam } from 'state/teams/helpers'
+import { Card, CardHeader, CardBody, CommunityIcon, Heading, PrizeIcon, Text } from '@pancakeswap/uikit'
+import { Team } from 'config/constants/types'
 import { useTranslation } from 'contexts/Localization'
 import ComingSoon from './ComingSoon'
 import IconStatBox from './IconStatBox'
 
 interface TeamCardProps {
-  id: string
+  team: Team
 }
 
 const Wrapper = styled.div`
@@ -73,10 +72,8 @@ const StatRow = styled.div`
   }
 `
 
-const TeamCard: React.FC<TeamCardProps> = ({ id }) => {
+const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const { t } = useTranslation()
-  const idNumber = Number(id)
-  const { data: team, status } = useSWR(['team', id], async () => getTeam(idNumber))
 
   return (
     <Wrapper>
@@ -92,11 +89,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ id }) => {
         </StyledCardHeader>
         <CardBody>
           <StatRow>
-            {status !== FetchStatus.Fetched ? (
-              <Skeleton width="100px" />
-            ) : (
-              <IconStatBox icon={CommunityIcon} title={team.users} subtitle={t('Active Members')} />
-            )}
+            <IconStatBox icon={CommunityIcon} title={team.users} subtitle={t('Active Members')} />
             <IconStatBox icon={PrizeIcon} title={t('Coming Soon')} subtitle={t('Team Points')} isDisabled />
           </StatRow>
           <Heading as="h3">{t('Team Achievements')}</Heading>

@@ -1,6 +1,5 @@
 import { ChainId, Token } from '@pancakeswap/sdk'
 import { serializeToken } from 'state/user/hooks/helpers'
-import { CHAIN_ID } from './networks'
 import { SerializedToken } from './types'
 
 const { MAINNET, TESTNET } = ChainId
@@ -9,9 +8,11 @@ interface TokenList {
   [symbol: string]: Token
 }
 
-const defineTokens = <T extends TokenList>(t: T) => t
+interface SerializedTokenList {
+  [symbol: string]: SerializedToken
+}
 
-export const mainnetTokens = defineTokens({
+export const mainnetTokens = {
   wbnb: new Token(
     MAINNET,
     '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -30,16 +31,25 @@ export const mainnetTokens = defineTokens({
     'PancakeSwap Token',
     'https://pancakeswap.finance/',
   ),
-  gmi: new Token(MAINNET, '0x93D8d25E3C9A847a5Da79F79ecaC89461FEcA846', 18, 'GMI', 'Gamifi', 'https://gamifi.gg/'),
-  tlos: new Token(MAINNET, '0xb6C53431608E626AC81a9776ac3e999c5556717c', 18, 'TLOS', 'Telos', 'https://www.telos.net/'),
-  beta: new Token(
+
+  nrt: new Token(
     MAINNET,
-    '0xBe1a001FE942f96Eea22bA08783140B9Dcc09D28',
+    '0x1B2F67679798C764f2C0c69DFB6bDa8b30a094cf',
     18,
-    'BETA',
-    'Beta Finance',
-    'https://betafinance.org',
+    'NRT',
+    'NFT Royal Token',
+    'https://www.nftroyaltoken.com/',
   ),
+  dena: new Token(
+    MAINNET,
+    '0xB56fF089c8b44B42763F9867Dc5964C62096cd8E',
+    18,
+    'DENA',
+    'Denarius Token',
+    'https://dev.gladiators.finance/',
+  ),
+
+  tlos: new Token(MAINNET, '0xb6C53431608E626AC81a9776ac3e999c5556717c', 18, 'TLOS', 'Telos', 'https://www.telos.net/'),
   nft: new Token(MAINNET, '0x1fC9004eC7E5722891f5f38baE7678efCB11d34D', 6, 'NFT', 'APENFT', 'https://apenft.org'),
   stephero: new Token(
     MAINNET,
@@ -131,14 +141,6 @@ export const mainnetTokens = defineTokens({
     'Kalmar Token',
     'https://kalmar.io/',
   ),
-  dkt: new Token(
-    MAINNET,
-    '0x7Ceb519718A80Dd78a8545AD8e7f401dE4f2faA7',
-    18,
-    'DKT',
-    'Duelist King',
-    'https://duelistking.com/',
-  ),
   hotcross: new Token(
     MAINNET,
     '0x4FA7163E153419E0E1064e418dd7A99314Ed27b6',
@@ -213,7 +215,7 @@ export const mainnetTokens = defineTokens({
   ),
   syrup: new Token(
     MAINNET,
-    '0x009cF7bC57584b7998236eff51b98A168DceA9B0',
+    '0x28F0Af18394BD2660c8B1B8d363fBEF789eA2446',
     18,
     'SYRUP',
     'SyrupBar Token',
@@ -844,7 +846,7 @@ export const mainnetTokens = defineTokens({
     '0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47',
     18,
     'ADA',
-    'Binance-Peg Cardano Token',
+    ' Binance-Peg Cardano Token',
     'https://www.cardano.org/',
   ),
   band: new Token(
@@ -1249,12 +1251,12 @@ export const mainnetTokens = defineTokens({
     'Lympo Market Token',
     'https://lympo.io/lmt/',
   ),
-  bttold: new Token(
+  btt: new Token(
     MAINNET,
     '0x8595F9dA7b868b1822194fAEd312235E43007b49',
     18,
-    'BTTOLD',
-    'Binance-Peg BitTorrent Token (Old)',
+    'BTT',
+    'Binance-Peg BitTorrent Token',
     'https://www.bittorrent.com/',
   ),
   trx: new Token(
@@ -1652,439 +1654,12 @@ export const mainnetTokens = defineTokens({
     'NAOSToken',
     'https://naos.finance/',
   ),
-  cart: new Token(
-    MAINNET,
-    '0x5C8C8D560048F34E5f7f8ad71f2f81a89DBd273e',
-    18,
-    'CART',
-    'CryptoArt.ai',
-    'https://cryptoart.ai/',
-  ),
-  light: new Token(
-    MAINNET,
-    '0x037838b556d9c9d654148a284682C55bB5f56eF4',
-    18,
-    'LIGHT',
-    'Lightning',
-    'https://lightningprotocol.finance/',
-  ),
-  rpg: new Token(
-    MAINNET,
-    '0xc2098a8938119A52B1F7661893c0153A6CB116d5',
-    18,
-    'RPG',
-    'Rangers Protocol',
-    'https://www.rangersprotocol.com/',
-  ),
-  mcb: new Token(
-    MAINNET,
-    '0x5fE80d2CD054645b9419657d3d10d26391780A7B',
-    18,
-    'MCB',
-    'MCDEX',
-    'https://mcdex.io/homepage/',
-  ),
-  lazio: new Token(
-    MAINNET,
-    '0x77d547256A2cD95F32F67aE0313E450Ac200648d',
-    8,
-    'LAZIO',
-    'FC Lazio Fan Token',
-    'https://launchpad.binance.com/en/subscription/LAZIO_BNB',
-  ),
-  arv: new Token(MAINNET, '0x6679eB24F59dFe111864AEc72B443d1Da666B360', 8, 'ARV', 'ARIVA', 'https://ariva.digital'),
-  moni: new Token(
-    MAINNET,
-    '0x9573c88aE3e37508f87649f87c4dd5373C9F31e0',
-    18,
-    'MONI',
-    'Monsta Infinite',
-    'https://monstainfinite.com/',
-  ),
-  xms: new Token(
-    MAINNET,
-    '0x7859B01BbF675d67Da8cD128a50D155cd881B576',
-    18,
-    'XMS',
-    'Mars Ecosystem',
-    'https://marsecosystem.com/',
-  ),
-  zoo: new Token(
-    MAINNET,
-    '0x1D229B958D5DDFca92146585a8711aECbE56F095',
-    18,
-    'ZOO',
-    'ZOO Crypto World',
-    'https://zoogame.finance/',
-  ),
-  fina: new Token(
-    MAINNET,
-    '0x426c72701833fdDBdFc06c944737C6031645c708',
-    18,
-    'FINA',
-    'Defina Finance',
-    'https://defina.finance/',
-  ),
-  dar: new Token(
-    MAINNET,
-    '0x23CE9e926048273eF83be0A3A8Ba9Cb6D45cd978',
-    6,
-    'DAR',
-    'Mines of Dalarnia',
-    'https://www.minesofdalarnia.com/',
-  ),
-  xwg: new Token(
-    MAINNET,
-    '0x6b23C89196DeB721e6Fd9726E6C76E4810a464bc',
-    18,
-    'XWG',
-    'X World Games',
-    'https://xwg.games/',
-  ),
-  eternal: new Token(
-    MAINNET,
-    '0xD44FD09d74cd13838F137B590497595d6b3FEeA4',
-    18,
-    'ETERNAL',
-    'CryptoMines Eternal',
-    'https://cryptomines.app/',
-  ),
-  porto: new Token(
-    MAINNET,
-    '0x49f2145d6366099e13B10FbF80646C0F377eE7f6',
-    8,
-    'PORTO',
-    'FC Porto Fan Token',
-    'https://launchpad.binance.com/en/subscription/PORTO_BNB',
-  ),
-  kart: new Token(
-    MAINNET,
-    '0x8BDd8DBcBDf0C066cA5f3286d33673aA7A553C10',
-    18,
-    'KART',
-    'Dragon Kart',
-    'https://dragonkart.com/',
-  ),
-  qi: new Token(MAINNET, '0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5', 18, 'QI', 'BENQI', 'https://benqi.fi/'),
-  sheesha: new Token(
-    MAINNET,
-    '0x232FB065D9d24c34708eeDbF03724f2e95ABE768',
-    18,
-    'SHEESHA',
-    'Sheesha Finance',
-    'https://www.sheeshafinance.io/',
-  ),
-  bcoin: new Token(
-    MAINNET,
-    '0x00e1656e45f18ec6747F5a8496Fd39B50b38396D',
-    18,
-    'BCOIN',
-    'Bomb Crypto',
-    'https://bombcrypto.io/',
-  ),
-  quidd: new Token(
-    MAINNET,
-    '0x7961Ade0a767c0E5B67Dd1a1F78ba44F727642Ed',
-    18,
-    'QUIDD',
-    'Quidd Token',
-    'https://www.quiddtoken.com/',
-  ),
-  santos: new Token(
-    MAINNET,
-    '0xA64455a4553C9034236734FadDAddbb64aCE4Cc7',
-    8,
-    'SANTOS',
-    'FC Santos Fan Token',
-    'https://launchpad.binance.com/en/launchpool/SANTOS_BNB',
-  ),
-  nabox: new Token(
-    MAINNET,
-    '0x755f34709E369D37C6Fa52808aE84A32007d1155',
-    18,
-    'NABOX',
-    'Nabox Token',
-    'https://nabox.io/',
-  ),
-  xcv: new Token(
-    MAINNET,
-    '0x4be63a9b26EE89b9a3a13fd0aA1D0b2427C135f8',
-    18,
-    'XCV',
-    'XCarnival',
-    'https://xcarnival.fi/',
-  ),
-  idia: new Token(
-    MAINNET,
-    '0x0b15Ddf19D47E6a86A56148fb4aFFFc6929BcB89',
-    18,
-    'IDIA',
-    'Impossible Decentralized Incubator Access Token',
-    'https://impossible.finance/',
-  ),
-  tt: new Token(
-    MAINNET,
-    '0x990E7154bB999FAa9b2fa5Ed29E822703311eA85',
-    18,
-    'TT',
-    'Thunder Token',
-    'https://www.thundercore.com/',
-  ),
-  gmee: new Token(
-    MAINNET,
-    '0x84e9a6F9D240FdD33801f7135908BfA16866939A',
-    18,
-    'GMEE',
-    'GAMEE',
-    'https://www.gamee.com/token',
-  ),
-  htd: new Token(MAINNET, '0x5E2689412Fae5c29BD575fbe1d5C1CD1e0622A8f', 18, 'HTD', 'HeroesTD', 'https://heroestd.io/'),
-  dpt: new Token(
-    MAINNET,
-    '0xE69cAef10A488D7AF31Da46c89154d025546e990',
-    18,
-    'DPT',
-    'Diviner Protocol',
-    'https://diviner.finance/',
-  ),
-  thg: new Token(
-    MAINNET,
-    '0x9fD87aEfe02441B123c3c32466cD9dB4c578618f',
-    18,
-    'THG',
-    'Thetan Gem',
-    'https://thetanarena.com/',
-  ),
-  ccar: new Token(
-    MAINNET,
-    '0x50332bdca94673F33401776365b66CC4e81aC81d',
-    18,
-    'CCAR',
-    'CryptoCars',
-    'https://cryptocars.me/',
-  ),
-  high: new Token(
-    MAINNET,
-    '0x5f4Bde007Dc06b867f86EBFE4802e34A1fFEEd63',
-    18,
-    'HIGH',
-    'Highstreet Token',
-    'https://highstreet.market/',
-  ),
-  sdao: new Token(
-    MAINNET,
-    '0x90Ed8F1dc86388f14b64ba8fb4bbd23099f18240',
-    18,
-    'SDAO',
-    'Singularity Dao',
-    'https://app.singularitydao.ai/',
-  ),
-  antex: new Token(MAINNET, '0xCA1aCAB14e85F30996aC83c64fF93Ded7586977C', 8, 'ANTEX', 'Antex', 'https://antex.org/'),
-  bbt: new Token(
-    MAINNET,
-    '0xD48474E7444727bF500a32D5AbE01943f3A59A64',
-    8,
-    'BBT',
-    'BitBook',
-    'https://www.bitbook.network/',
-  ),
-  woop: new Token(
-    MAINNET,
-    '0x8b303d5BbfBbf46F1a4d9741E491e06986894e18',
-    18,
-    'WOOP',
-    'Woonkly Power',
-    'https://www.woonkly.com/',
-  ),
-  gm: new Token(
-    MAINNET,
-    '0xe2604C9561D490624AA35e156e65e590eB749519',
-    18,
-    'GM',
-    'GoldMiner',
-    'https://goldminer.games/',
-  ),
-  aog: new Token(
-    MAINNET,
-    '0x40C8225329Bd3e28A043B029E0D07a5344d2C27C',
-    18,
-    'AOG',
-    'AgeOfGods',
-    'https://ageofgods.net/',
-  ),
-  '8pay': new Token(
-    MAINNET,
-    '0xFeea0bDd3D07eb6FE305938878C0caDBFa169042',
-    18,
-    '8PAY',
-    '8PAY Network',
-    'https://8pay.network/',
-  ),
-  bath: new Token(
-    MAINNET,
-    '0x0bc89aa98Ad94E6798Ec822d0814d934cCD0c0cE',
-    18,
-    'BATH',
-    'Battle Hero',
-    'https://battlehero.io/',
-  ),
-  insur: new Token(
-    MAINNET,
-    '0x3192CCDdf1CDcE4Ff055EbC80f3F0231b86A7E30',
-    18,
-    'INSUR',
-    'Bsc-Peg INSUR Token',
-    'https://www.insurace.io/',
-  ),
-  froyo: new Token(
-    MAINNET,
-    '0xe369fec23380f9F14ffD07a1DC4b7c1a9fdD81c9',
-    18,
-    'FROYO',
-    'Froyo Games',
-    'https://froyo.games/',
-  ),
-  apx: new Token(
-    MAINNET,
-    '0x78F5d389F5CDCcFc41594aBaB4B0Ed02F31398b3',
-    18,
-    'APX',
-    'ApolloX Token',
-    'https://www.apollox.finance/',
-  ),
-  prl: new Token(
-    MAINNET,
-    '0xd07e82440A395f3F3551b42dA9210CD1Ef4f8B24',
-    18,
-    'PRL',
-    'Parallel Token',
-    'https://theparallel.io',
-  ),
-  fuse: new Token(MAINNET, '0x5857c96DaE9cF8511B08Cb07f85753C472D36Ea3', 18, 'FUSE', 'Fuse Token', 'https://fuse.io/'),
-  ertha: new Token(
-    MAINNET,
-    '0x62823659d09F9F9D2222058878f89437425eB261',
-    18,
-    'ERTHA',
-    'Ertha Token',
-    'https://ertha.io/',
-  ),
-  raca: new Token(
-    MAINNET,
-    '0x12BB890508c125661E03b09EC06E404bc9289040',
-    18,
-    'RACA',
-    'Radio Caca V2',
-    'https://www.radiocaca.com/#/home',
-  ),
-  gear: new Token(
-    MAINNET,
-    '0xb4404DaB7C0eC48b428Cf37DeC7fb628bcC41B36',
-    18,
-    'GEAR',
-    'MetaGear Token',
-    'https://metagear.game/',
-  ),
-  ach: new Token(
-    MAINNET,
-    '0xBc7d6B50616989655AfD682fb42743507003056D',
-    8,
-    'ACH',
-    'Alchemy Token',
-    'https://alchemytech.io/',
-  ),
-  btt: new Token(
-    MAINNET,
-    '0x352Cb5E19b12FC216548a2677bD0fce83BaE434B',
-    18,
-    'BTT',
-    'BitTorrent',
-    'https://bittorrent.com/',
-  ),
-  era: new Token(MAINNET, '0x6f9F0c4ad9Af7EbD61Ac5A1D4e0F2227F7B0E5f9', 18, 'ERA', 'Era Token', 'https://www.era7.io/'),
-  fight: new Token(
-    MAINNET,
-    '0x4f39c3319188A723003670c3F9B9e7EF991E52F3',
-    18,
-    'FIGHT',
-    'Fight Token',
-    'https://www.cryptofightclub.io/',
-  ),
-  loa: new Token(
-    MAINNET,
-    '0x94b69263FCA20119Ae817b6f783Fc0F13B02ad50',
-    18,
-    'LOA',
-    'League Of Ancients',
-    'https://www.leagueofancients.com/',
-  ),
-  duet: new Token(
-    MAINNET,
-    '0x95EE03e1e2C5c4877f9A298F1C0D6c98698FAB7B',
-    18,
-    'DUET',
-    'Duet Governance Token',
-    'https://duet.finance',
-  ),
-  gmt: new Token(
-    MAINNET,
-    '0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1',
-    8,
-    'GMT',
-    'Green Metaverse Token',
-    'https://www.stepn.com/',
-  ),
-  bsw: new Token(MAINNET, '0x965F527D9159dCe6288a2219DB51fc6Eef120dD1', 18, 'BSW', 'Biswap', 'https://biswap.org/'),
-  tem: new Token(
-    MAINNET,
-    '0x19e6BfC1A6e4B042Fb20531244D47E252445df01',
-    9,
-    'TEM',
-    'TemplarDAO',
-    'https://templar.finance/',
-  ),
-  pex: new Token(MAINNET, '0x6a0b66710567b6beb81A71F7e9466450a91a384b', 18, 'PEX', 'PearDAO', 'https://peardao.io/'),
-  yel: new Token(MAINNET, '0xD3b71117E6C1558c1553305b44988cd944e97300', 18, 'YEL', 'YEL', 'https://yel.finance/'),
-} as const)
+}
 
-// export const testnetTokens = defineTokens({
-//   wbnb: new Token(
-//     TESTNET,
-//     '0xa405edD998eac068F51269D06615c38FEfFDcaCf',
-//     18,
-//     'WBNB',
-//     'Wrapped BNB',
-//     'https://www.binance.com/',
-//   ),
-//   cake: new Token(
-//     TESTNET,
-//     '0xb1d05c39B1bC7184537283c58813C3c29Ad39De2',
-//     18,
-//     'CAKE',
-//     'PancakeSwap Token',
-//     'https://pancakeswap.finance/',
-//   ),
-//   busd: new Token(
-//     TESTNET,
-//     '0xc8cbF2af4BC6DEafb998b2f6CFb4e97439a68E28',
-//     18,
-//     'BUSD',
-//     'Binance USD',
-//     'https://www.paxos.com/busd/',
-//   ),=-0po9871   q12qa≈sder56tfc  v765redsfrt0-zASxdfiuop[]\1234
-//   bake: new Token(
-//     TESTNET,
-//     '0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5',
-//     18,
-//     'BAKE',
-//     'Bakeryswap Token',
-//     'https://www.bakeryswap.org/',
-//   ),
-// } as const)
-export const testnetTokens = defineTokens({
+export const testnetTokens = {
   wbnb: new Token(
     TESTNET,
-    '0xa405edD998eac068F51269D06615c38FEfFDcaCf',
+    '0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F',
     18,
     'WBNB',
     'Wrapped BNB',
@@ -2092,35 +1667,51 @@ export const testnetTokens = defineTokens({
   ),
   cake: new Token(
     TESTNET,
-    '0xb1d05c39B1bC7184537283c58813C3c29Ad39De2',
+    '0x618bE0EF9958A95055948c024A63152376099Fab',
     18,
-    'CAKE',
-    'PancakeSwap Token',
-    'https://pancakeswap.finance/',
-  ),
-  busd: new Token(
-    TESTNET,
-    '0xc8cbF2af4BC6DEafb998b2f6CFb4e97439a68E28',
-    18,
-    'BUSD',
-    'Binance USD',
-    'https://www.paxos.com/busd/',
-  ),
-  nrt: new Token(
-    TESTNET,
-    '0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D',
-    18,
-    'nrt',
-    'Binance USD',
-    'https://www.paxos.com/busd/',
+    'DENA',
+    'DENA Token',
+    'https://gladiators.finance/',
   ),
   dena: new Token(
     TESTNET,
     '0x60fbAd46F86939498316D04A508E958cD0AEF45d',
     18,
-    'dena',
+    'DENA',
+    'Gladiator Finance',
+    'https://gladiators.finance/',
+  ),
+  // nrt: new Token(
+  //   TESTNET,
+  //   '0x769Fb42ceddb77d75d9dfBcaf98EBB3D22F1f90F',
+  //   18,
+  //   'NRT',
+  //   'NRT',
+  //   'https://www.nftroyaltoken.com',
+  // ),
+  nrt: new Token(
+    TESTNET,
+    '0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D',
+    18,
+    'NRT',
+    'NRT',
+    'https://www.nftroyaltoken.com',
+  ),
+  busd: new Token(
+    TESTNET,
+    '0x78867bbeef44f2326bf8ddd1941a4439382ef2a7',
+    18,
+    'BUSD',
     'Binance USD',
     'https://www.paxos.com/busd/',
+  ),
+  syrup: new Token(
+    TESTNET,
+    '0x3CDAD33b31D4a4bFBCca5e7308D027C3D9BD35Ef',
+    18,
+    'SYRUP',
+    'SyrupBar Token',
+    'https://pancakeswap.finance/',
   ),
   bake: new Token(
     TESTNET,
@@ -2130,31 +1721,36 @@ export const testnetTokens = defineTokens({
     'Bakeryswap Token',
     'https://www.bakeryswap.org/',
   ),
-} as const)
+  khaos: new Token(
+    TESTNET,
+    '0x618bE0EF9958A95055948c024A63152376099Fab',
+    18,
+    'KHAOS',
+    'Khaos Token',
+    'https://www.khaos.org/',
+  ),
+}
 
-const tokens = () => {
-  const chainId = CHAIN_ID
+const tokens = (): TokenList => {
+  const chainId = process.env.REACT_APP_CHAIN_ID
 
   // If testnet - return list comprised of testnetTokens wherever they exist, and mainnetTokens where they don't
   if (parseInt(chainId, 10) === ChainId.TESTNET) {
     return Object.keys(mainnetTokens).reduce((accum, key) => {
       return { ...accum, [key]: testnetTokens[key] || mainnetTokens[key] }
-    }, {} as typeof testnetTokens & typeof mainnetTokens)
+    }, {})
   }
 
   return mainnetTokens
 }
 
-const unserializedTokens = tokens()
-
-type SerializedTokenList = Record<keyof typeof unserializedTokens, SerializedToken>
-
-export const serializeTokens = () => {
+export const serializeTokens = (): SerializedTokenList => {
+  const unserializedTokens = tokens()
   const serializedTokens = Object.keys(unserializedTokens).reduce((accum, key) => {
     return { ...accum, [key]: serializeToken(unserializedTokens[key]) }
-  }, {} as SerializedTokenList)
+  }, {})
 
   return serializedTokens
 }
 
-export default unserializedTokens
+export default tokens()

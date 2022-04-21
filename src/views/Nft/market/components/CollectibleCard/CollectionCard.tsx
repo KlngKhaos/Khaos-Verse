@@ -1,7 +1,6 @@
-import { Card, CardBody, Flex, Heading, ProfileAvatar } from '@pancakeswap/uikit'
-
-import Image from 'next/image'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import { Card, CardBody, Flex, Heading, Image, ProfileAvatar } from '@pancakeswap/uikit'
+import React from 'react'
+import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
 interface HotCollectionCardProps {
@@ -43,7 +42,9 @@ const StyledHotCollectionCard = styled(Card)<{ disabled?: boolean }>`
 `
 
 const StyledImage = styled(Image)`
-  border-radius: 4px;
+  img {
+    border-radius: 4px;
+  }
 `
 
 const CollectionCard: React.FC<HotCollectionCardProps> = ({
@@ -76,11 +77,7 @@ const CollectionCard: React.FC<HotCollectionCardProps> = ({
 
   return (
     <StyledHotCollectionCard disabled={disabled} data-test="hot-collection-card">
-      {url ? (
-        <NextLinkFromReactRouter to={url}>{renderBody()}</NextLinkFromReactRouter>
-      ) : (
-        <div style={{ cursor: 'default' }}>{renderBody()}</div>
-      )}
+      {url ? <Link to={url}>{renderBody()}</Link> : <div style={{ cursor: 'default' }}>{renderBody()}</div>}
     </StyledHotCollectionCard>
   )
 }

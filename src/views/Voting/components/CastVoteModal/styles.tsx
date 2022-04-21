@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, BoxProps } from '@pancakeswap/uikit'
 import styled from 'styled-components'
 

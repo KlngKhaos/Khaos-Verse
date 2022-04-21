@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@pancakeswap/sdk'
-import { Button, Text, AddIcon, CardBody, Message, useModal } from '@pancakeswap/uikit'
-import { logError } from 'utils/sentry'
+import { Button, Text, Flex, AddIcon, CardBody, Message, useModal } from '@pancakeswap/uikit'
+import { RouteComponentProps } from 'react-router-dom'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { useTranslation } from 'contexts/Localization'
 import UnsupportedCurrencyFooter from 'components/UnsupportedCurrencyFooter'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useDispatch } from 'react-redux'
-import { useRouter } from 'next/router'
-import { CHAIN_ID } from 'config/constants/networks'
 import { AppDispatch } from '../../state'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Layout/Column'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { DoubleCurrencyLogo } from '../../components/Logo'
 import { AppHeader, AppBody } from '../../components/App'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import { RowBetween } from '../../components/Layout/Row'
+import Row, { RowBetween } from '../../components/Layout/Row'
 import ConnectWalletButton from '../../components/ConnectWalletButton'
 
 import { ROUTER_ADDRESS } from '../../config/constants'
@@ -34,15 +34,17 @@ import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import Dots from '../../components/Loader/Dots'
+import ConfirmAddModalBottom from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import PoolPriceBar from './PoolPriceBar'
 import Page from '../Page'
-import ConfirmAddLiquidityModal from '../Swap/components/ConfirmAddLiquidityModal'
 
-export default function AddLiquidity() {
-  const router = useRouter()
-  const [currencyIdA, currencyIdB] = router.query.currency || []
-
+export default function AddLiquidity({
+  match: {
+    params: { currencyIdA, currencyIdB },
+  },
+  history,
+}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const { t } = useTranslation()
@@ -57,7 +59,7 @@ export default function AddLiquidity() {
     }
   }, [dispatch, currencyIdA, currencyIdB])
 
-  const oneCurrencyIsWBNB = Boolean(
+  const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
         (currencyB && currencyEquals(currencyB, WETH[chainId]))),
@@ -86,19 +88,12 @@ export default function AddLiquidity() {
   const isValid = !error
 
   // modal and loading
-  const [{ attemptingTxn, liquidityErrorMessage, txHash }, setLiquidityState] = useState<{
-    attemptingTxn: boolean
-    liquidityErrorMessage: string | undefined
-    txHash: string | undefined
-  }>({
-    attemptingTxn: false,
-    liquidityErrorMessage: undefined,
-    txHash: undefined,
-  })
+  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const [txHash, setTxHash] = useState<string>('')
 
   // get formatted amounts
   const formattedAmounts = {
@@ -128,14 +123,14 @@ export default function AddLiquidity() {
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS[CHAIN_ID])
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS[CHAIN_ID])
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 
   async function onAdd() {
     if (!chainId || !library || !account) return
-    const routerContract = getRouterContract(chainId, library, account)
+    const router = getRouterContract(chainId, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -152,21 +147,21 @@ export default function AddLiquidity() {
     let args: Array<string | string[] | number>
     let value: BigNumber | null
     if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsBNB = currencyB === ETHER
-      estimate = routerContract.estimateGas.addLiquidityETH
-      method = routerContract.addLiquidityETH
+      const tokenBIsETH = currencyB === ETHER
+      estimate = router.estimateGas.addLiquidityETH
+      method = router.addLiquidityETH
       args = [
-        wrappedCurrency(tokenBIsBNB ? currencyA : currencyB, chainId)?.address ?? '', // token
-        (tokenBIsBNB ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[tokenBIsBNB ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-        amountsMin[tokenBIsBNB ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
         deadline.toHexString(),
       ]
-      value = BigNumber.from((tokenBIsBNB ? parsedAmountB : parsedAmountA).raw.toString())
+      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
-      estimate = routerContract.estimateGas.addLiquidity
-      method = routerContract.addLiquidity
+      estimate = router.estimateGas.addLiquidity
+      method = router.addLiquidity
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
         wrappedCurrency(currencyB, chainId)?.address ?? '',
@@ -180,7 +175,7 @@ export default function AddLiquidity() {
       value = null
     }
 
-    setLiquidityState({ attemptingTxn: true, liquidityErrorMessage: undefined, txHash: undefined })
+    setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then((estimatedGasLimit) =>
         method(...args, {
@@ -188,26 +183,75 @@ export default function AddLiquidity() {
           gasLimit: calculateGasMargin(estimatedGasLimit),
           gasPrice,
         }).then((response) => {
-          setLiquidityState({ attemptingTxn: false, liquidityErrorMessage: undefined, txHash: response.hash })
+          setAttemptingTxn(false)
 
           addTransaction(response, {
             summary: `Add ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(3)} ${
               currencies[Field.CURRENCY_A]?.symbol
             } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(3)} ${currencies[Field.CURRENCY_B]?.symbol}`,
           })
+
+          setTxHash(response.hash)
         }),
       )
       .catch((err) => {
-        if (err && err.code !== 4001) {
-          logError(err)
-          console.error(`Add Liquidity failed`, err, args, value)
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (err?.code !== 4001) {
+          console.error(err)
         }
-        setLiquidityState({
-          attemptingTxn: false,
-          liquidityErrorMessage: err && err.code !== 4001 ? `Add Liquidity failed: ${err.message}` : undefined,
-          txHash: undefined,
-        })
       })
+  }
+
+  const modalHeader = () => {
+    return noLiquidity ? (
+      <Flex alignItems="center">
+        <Text fontSize="48px" marginRight="10px">
+          {`${currencies[Field.CURRENCY_A]?.symbol}/${currencies[Field.CURRENCY_B]?.symbol}`}
+        </Text>
+        <DoubleCurrencyLogo
+          currency0={currencies[Field.CURRENCY_A]}
+          currency1={currencies[Field.CURRENCY_B]}
+          size={30}
+        />
+      </Flex>
+    ) : (
+      <AutoColumn>
+        <Flex alignItems="center">
+          <Text fontSize="48px" marginRight="10px">
+            {liquidityMinted?.toSignificant(6)}
+          </Text>
+          <DoubleCurrencyLogo
+            currency0={currencies[Field.CURRENCY_A]}
+            currency1={currencies[Field.CURRENCY_B]}
+            size={30}
+          />
+        </Flex>
+        <Row>
+          <Text fontSize="24px">
+            {`${currencies[Field.CURRENCY_A]?.symbol}/${currencies[Field.CURRENCY_B]?.symbol} Pool Tokens`}
+          </Text>
+        </Row>
+        <Text small textAlign="left" my="24px">
+          {t('Output is estimated. If the price changes by more than %slippage%% your transaction will revert.', {
+            slippage: allowedSlippage / 100,
+          })}
+        </Text>
+      </AutoColumn>
+    )
+  }
+
+  const modalBottom = () => {
+    return (
+      <ConfirmAddModalBottom
+        price={price}
+        currencies={currencies}
+        parsedAmounts={parsedAmounts}
+        noLiquidity={noLiquidity}
+        onAdd={onAdd}
+        poolTokenPercentage={poolTokenPercentage}
+      />
+    )
   }
 
   const pendingText = t('Supplying %amountA% %symbolA% and %amountB% %symbolB%', {
@@ -221,29 +265,29 @@ export default function AddLiquidity() {
     (currencyA_: Currency) => {
       const newCurrencyIdA = currencyId(currencyA_)
       if (newCurrencyIdA === currencyIdB) {
-        router.replace(`/add/${currencyIdB}/${currencyIdA}`, undefined, { shallow: true })
+        history.push(`/add/${currencyIdB}/${currencyIdA}`)
       } else if (currencyIdB) {
-        router.replace(`/add/${newCurrencyIdA}/${currencyIdB}`, undefined, { shallow: true })
+        history.push(`/add/${newCurrencyIdA}/${currencyIdB}`)
       } else {
-        router.replace(`/add/${newCurrencyIdA}`, undefined, { shallow: true })
+        history.push(`/add/${newCurrencyIdA}`)
       }
     },
-    [currencyIdB, router, currencyIdA],
+    [currencyIdB, history, currencyIdA],
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB_: Currency) => {
       const newCurrencyIdB = currencyId(currencyB_)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
-          router.replace(`/add/${currencyIdB}/${newCurrencyIdB}`, undefined, { shallow: true })
+          history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
         } else {
-          router.replace(`/add/${newCurrencyIdB}`, undefined, { shallow: true })
+          history.push(`/add/${newCurrencyIdB}`)
         }
       } else {
-        router.replace(`/add/${currencyIdA || 'BNB'}/${newCurrencyIdB}`, undefined, { shallow: true })
+        history.push(`/add/${currencyIdA || 'BNB'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, router, currencyIdB],
+    [currencyIdA, history, currencyIdB],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -251,27 +295,20 @@ export default function AddLiquidity() {
     if (txHash) {
       onFieldAInput('')
     }
+    setTxHash('')
   }, [onFieldAInput, txHash])
 
   const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
   const [onPresentAddLiquidityModal] = useModal(
-    <ConfirmAddLiquidityModal
+    <TransactionConfirmationModal
       title={noLiquidity ? t('You are creating a pool') : t('You will receive')}
       customOnDismiss={handleDismissConfirmation}
       attemptingTxn={attemptingTxn}
       hash={txHash}
+      content={() => <ConfirmationModalContent topContent={modalHeader} bottomContent={modalBottom} />}
       pendingText={pendingText}
       currencyToAdd={pair?.liquidityToken}
-      allowedSlippage={allowedSlippage}
-      onAdd={onAdd}
-      parsedAmounts={parsedAmounts}
-      currencies={currencies}
-      liquidityErrorMessage={liquidityErrorMessage}
-      price={price}
-      noLiquidity={noLiquidity}
-      poolTokenPercentage={poolTokenPercentage}
-      liquidityMinted={liquidityMinted}
     />,
     true,
     true,
@@ -287,7 +324,7 @@ export default function AddLiquidity() {
           helper={t(
             'Liquidity providers earn a 0.17% trading fee on all trades made for that token pair, proportional to their share of the liquidity pool.',
           )}
-          backTo="/liquidity"
+          backTo="/pool"
         />
         <CardBody>
           <AutoColumn gap="20px">
@@ -403,11 +440,6 @@ export default function AddLiquidity() {
                     if (expertMode) {
                       onAdd()
                     } else {
-                      setLiquidityState({
-                        attemptingTxn: false,
-                        liquidityErrorMessage: undefined,
-                        txHash: undefined,
-                      })
                       onPresentAddLiquidityModal()
                     }
                   }}
@@ -423,7 +455,7 @@ export default function AddLiquidity() {
       {!addIsUnsupported ? (
         pair && !noLiquidity && pairState !== PairState.INVALID ? (
           <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
-            <MinimalPositionCard showUnwrapped={oneCurrencyIsWBNB} pair={pair} />
+            <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
           </AutoColumn>
         ) : null
       ) : (

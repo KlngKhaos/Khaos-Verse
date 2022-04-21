@@ -1,10 +1,10 @@
 // TODO PCS refactor ternaries
 /* eslint-disable no-nested-ternary */
-import { useCallback, useState, useMemo, useEffect, Fragment } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { Text, Flex, Box, Radio, Skeleton, LinkExternal, ArrowForwardIcon, ArrowBackIcon } from '@pancakeswap/uikit'
-import { formatAmount } from 'utils/formatInfoNumbers'
+import { formatAmount } from 'views/Info/utils/formatInfoNumbers'
 import { getBscScanLink } from 'utils'
 import truncateHash from 'utils/truncateHash'
 import { Transaction, TransactionType } from 'state/info/types'
@@ -139,18 +139,14 @@ const TransactionTable: React.FC<{
   const [txFilter, setTxFilter] = useState<TransactionType | undefined>(undefined)
 
   const sortedTransactions = useMemo(() => {
-    const toBeAbsList = [SORT_FIELD.amountToken0, SORT_FIELD.amountToken1]
     return transactions
       ? transactions
           .slice()
           .sort((a, b) => {
             if (a && b) {
-              const firstField = a[sortField as keyof Transaction]
-              const secondField = b[sortField as keyof Transaction]
-              const [first, second] = toBeAbsList.includes(sortField)
-                ? [Math.abs(firstField as number), Math.abs(secondField as number)]
-                : [firstField, secondField]
-              return first > second ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+              return a[sortField as keyof Transaction] > b[sortField as keyof Transaction]
+                ? (sortDirection ? -1 : 1) * 1
+                : (sortDirection ? -1 : 1) * -1
             }
             return -1
           })
@@ -287,10 +283,10 @@ const TransactionTable: React.FC<{
               if (transaction) {
                 return (
                   // eslint-disable-next-line react/no-array-index-key
-                  <Fragment key={index}>
+                  <React.Fragment key={index}>
                     <DataRow transaction={transaction} />
                     <Break />
-                  </Fragment>
+                  </React.Fragment>
                 )
               }
               return null

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Text, TextProps } from '@pancakeswap/uikit'
 
 export interface PercentProps extends TextProps {

@@ -1,24 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/router'
+import React, { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useModal } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
-import dynamic from 'next/dynamic'
 import { getAnniversaryAchievementContract } from 'utils/contractHelpers'
-
-const AnniversaryAchievementModal = dynamic(() => import('./AnniversaryAchievementModal'), { ssr: false })
+import AnniversaryAchievementModal from './AnniversaryAchievementModal'
 
 interface GlobalCheckClaimStatusProps {
   excludeLocations: string[]
-}
-
-// change it to true if we have events to check claim status
-const enable = false
-
-const GlobalCheckClaimStatus: React.FC<GlobalCheckClaimStatusProps> = (props) => {
-  if (!enable) {
-    return null
-  }
-  return <GlobalCheckClaim {...props} />
 }
 
 /**
@@ -27,11 +15,11 @@ const GlobalCheckClaimStatus: React.FC<GlobalCheckClaimStatusProps> = (props) =>
  *
  * TODO: Put global checks in redux or make a generic area to house global checks
  */
-const GlobalCheckClaim: React.FC<GlobalCheckClaimStatusProps> = ({ excludeLocations }) => {
+const GlobalCheckClaimStatus: React.FC<GlobalCheckClaimStatusProps> = ({ excludeLocations }) => {
   const hasDisplayedModal = useRef(false)
   const [canClaimAnniversaryPoints, setCanClaimAnniversaryPoints] = useState(false)
   const { account } = useWeb3React()
-  const { pathname } = useRouter()
+  const { pathname } = useLocation()
   const [onPresentAnniversaryModal] = useModal(<AnniversaryAchievementModal />)
 
   // Check claim status

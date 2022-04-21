@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import {
   Card,
@@ -56,7 +56,7 @@ const OpenRoundCard: React.FC<OpenRoundCardProps> = ({
   const { account } = useWeb3React()
   const dispatch = useAppDispatch()
   const { isSettingPosition, position } = state
-  const isBufferPhase = round.lockTimestamp * 1000 - Date.now() <= ROUND_BUFFER * 1000
+  const isBufferPhase = Date.now() > (round.lockTimestamp + ROUND_BUFFER) * 1000
   const positionDisplay = position === BetPosition.BULL ? t('Up').toUpperCase() : t('Down').toUpperCase()
   const { targetRef, tooltipVisible, tooltip } = useTooltip(
     <div style={{ whiteSpace: 'nowrap' }}>{`${formatBnbv2(betAmount)} BNB`}</div>,

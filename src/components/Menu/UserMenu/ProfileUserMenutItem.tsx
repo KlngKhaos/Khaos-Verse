@@ -1,34 +1,26 @@
+import React from 'react'
 import styled from 'styled-components'
 import { Flex, Skeleton, UserMenuItem } from '@pancakeswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
-import { nftsBaseUrl } from 'views/Nft/market/constants'
-import { useRouter } from 'next/router'
+import history from 'routerHistory'
 
 interface ProfileUserMenuItemProps {
   isLoading: boolean
   hasProfile: boolean
-  disabled: boolean
 }
 
 const Dot = styled.div`
-  background-color: ${({ theme }) => theme.colors.failure};
+  background-color: ${({ theme }) => theme.colors.secondary};
   border-radius: 50%;
   height: 8px;
   width: 8px;
 `
 
-const ProfileUserMenuItem: React.FC<ProfileUserMenuItemProps> = ({ isLoading, hasProfile, disabled }) => {
-  const { account } = useWeb3React()
-  const router = useRouter()
+const ProfileUserMenuItem: React.FC<ProfileUserMenuItemProps> = ({ isLoading, hasProfile }) => {
   const { t } = useTranslation()
 
   const handleClick = () => {
-    router.push(`${nftsBaseUrl}/profile/${account.toLowerCase()}/achievements`)
-  }
-
-  const handleNoProfileClick = () => {
-    router.push('/create-profile')
+    history.push('/profile')
   }
 
   if (isLoading) {
@@ -41,7 +33,7 @@ const ProfileUserMenuItem: React.FC<ProfileUserMenuItemProps> = ({ isLoading, ha
 
   if (!hasProfile) {
     return (
-      <UserMenuItem as="button" disabled={disabled} onClick={handleNoProfileClick}>
+      <UserMenuItem as="button" onClick={handleClick}>
         <Flex alignItems="center" justifyContent="space-between" width="100%">
           {t('Make a Profile')}
           <Dot />
@@ -51,7 +43,7 @@ const ProfileUserMenuItem: React.FC<ProfileUserMenuItemProps> = ({ isLoading, ha
   }
 
   return (
-    <UserMenuItem as="button" disabled={disabled} onClick={handleClick}>
+    <UserMenuItem as="button" onClick={handleClick}>
       {t('Your Profile')}
     </UserMenuItem>
   )

@@ -1,3 +1,4 @@
+import React from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { Box, Flex, Heading, Text, PrizeIcon, BlockIcon, LinkExternal, useTooltip, InfoIcon } from '@pancakeswap/uikit'
 import styled from 'styled-components'
@@ -74,7 +75,7 @@ const BetResult: React.FC<BetResultProps> = ({ bet, result }) => {
       case Result.LOSE:
         return t('Lose')
       case Result.CANCELED:
-        return t('Cancelled')
+        return t('Canceled')
       case Result.HOUSE:
         return t('To Burn')
       default:

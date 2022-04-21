@@ -1,6 +1,7 @@
+import React from 'react'
 import { Flex, Grid, Text, Button, Link, BinanceIcon, LinkExternal, useModal } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import { nftsBaseUrl, pancakeBunniesAddress } from 'views/Nft/market/constants'
+import { nftsBaseUrl, gladiatorCollectiblesAddress } from 'views/Nft/market/constants'
 import { NftToken } from 'state/nftMarket/types'
 import { getBscScanLinkForNft } from 'utils'
 import EditProfileModal from 'views/Nft/market/Profile/components/EditProfileModal'
@@ -12,7 +13,6 @@ interface SellStageProps {
   lowestPrice: number
   continueToNextStage: () => void
   continueToTransferStage: () => void
-  onSuccessEditProfile?: () => void
 }
 
 // Initial stage when user wants to put their NFT for sale or transfer to another wallet
@@ -21,16 +21,12 @@ const SellStage: React.FC<SellStageProps> = ({
   lowestPrice,
   continueToNextStage,
   continueToTransferStage,
-  onSuccessEditProfile,
 }) => {
   const { t } = useTranslation()
   const { hasProfile } = useProfile()
-  const itemPageUrlId =
-    nftToSell.collectionAddress.toLowerCase() === pancakeBunniesAddress.toLowerCase()
-      ? nftToSell.attributes[0].value
-      : nftToSell.tokenId
+  const itemPageUrlId = nftToSell.tokenId
 
-  const [onEditProfileModal] = useModal(<EditProfileModal onSuccess={onSuccessEditProfile} />, false)
+  const [onEditProfileModal] = useModal(<EditProfileModal />, false)
 
   return (
     <>
@@ -39,7 +35,7 @@ const SellStage: React.FC<SellStageProps> = ({
         <Grid flex="1" gridTemplateColumns="1fr 1fr" alignItems="center">
           <Text bold>{nftToSell.name}</Text>
           <Text fontSize="12px" color="textSubtle" textAlign="right">
-            {nftToSell?.collectionName}
+            {nftToSell.collectionName}
           </Text>
           {lowestPrice && (
             <>

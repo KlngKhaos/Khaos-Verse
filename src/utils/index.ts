@@ -1,18 +1,13 @@
 import { Contract } from '@ethersproject/contracts'
-import type { Signer } from '@ethersproject/abstract-signer'
-import type { Provider } from '@ethersproject/providers'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import IPancakeRouter02ABI from 'config/abi/IPancakeRouter02.json'
-import { IPancakeRouter02 } from 'config/abi/types/IPancakeRouter02'
-import { CHAIN_ID } from 'config/constants/networks'
-import { JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@pancakeswap/sdk'
+import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@pancakeswap/sdk'
 import { ROUTER_ADDRESS } from '../config/constants'
 import { BASE_BSC_SCAN_URLS } from '../config'
 import { TokenAddressMap } from '../state/lists/hooks'
-import { simpleRpcProvider } from './providers'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -26,9 +21,8 @@ export function isAddress(value: any): string | false {
 export function getBscScanLink(
   data: string | number,
   type: 'transaction' | 'token' | 'address' | 'block' | 'countdown',
-  chainIdOverride?: number,
+  chainId: ChainId = ChainId.MAINNET,
 ): string {
-  const chainId = chainIdOverride || CHAIN_ID
   switch (type) {
     case 'transaction': {
       return `${BASE_BSC_SCAN_URLS[chainId]}/tx/${data}`
@@ -48,8 +42,11 @@ export function getBscScanLink(
   }
 }
 
-export function getBscScanLinkForNft(collectionAddress: string, tokenId: string): string {
-  const chainId = CHAIN_ID
+export function getBscScanLinkForNft(
+  collectionAddress: string,
+  tokenId: string,
+  chainId: ChainId = ChainId.MAINNET,
+): string {
   return `${BASE_BSC_SCAN_URLS[chainId]}/token/${collectionAddress}?a=${tokenId}`
 }
 
@@ -84,21 +81,17 @@ export function getProviderOrSigner(library: Web3Provider, account?: string): We
 }
 
 // account is optional
-export function getContract(address: string, ABI: any, signer?: Signer | Provider): Contract {
+export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new Contract(address, ABI, signer ?? simpleRpcProvider)
+  return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string) {
-  return getContract(
-    ROUTER_ADDRESS[CHAIN_ID],
-    IPancakeRouter02ABI,
-    getProviderOrSigner(library, account),
-  ) as IPancakeRouter02
+export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
+  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {

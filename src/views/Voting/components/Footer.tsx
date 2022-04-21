@@ -1,7 +1,8 @@
+import React from 'react'
 import { Box, Button, Text, Heading, ProposalIcon, Flex } from '@pancakeswap/uikit'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'contexts/Localization'
-import Link from 'next/link'
 import Container from 'components/Layout/Container'
 import DesktopImage from './DesktopImage'
 
@@ -31,9 +32,13 @@ const Footer = () => {
               )}
             </Text>
 
-            <Link href="/voting/proposal/create" passHref>
-              <Button startIcon={<ProposalIcon color="currentColor" width="24px" />}>{t('Make a Proposal')}</Button>
-            </Link>
+            <Button
+              startIcon={<ProposalIcon color="currentColor" width="24px" />}
+              as={Link}
+              to="/voting/proposal/create"
+            >
+              {t('Make a Proposal')}
+            </Button>
           </Box>
           <DesktopImage src="/images/voting/voting-bunny.png" width={173} height={234} />
         </Flex>

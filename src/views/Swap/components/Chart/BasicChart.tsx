@@ -1,16 +1,15 @@
 import { Box, ButtonMenu, ButtonMenuItem, Flex, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import { useState, memo } from 'react'
+import React, { useState , lazy, Suspense} from 'react'
 import { useFetchPairPrices } from 'state/swap/hooks'
-import dynamic from 'next/dynamic'
 import { PairDataTimeWindowEnum } from 'state/swap/types'
+import { LineChartLoader } from 'views/Info/components/ChartLoaders'
 import NoChartAvailable from './NoChartAvailable'
-import PairPriceDisplay from '../../../../components/PairPriceDisplay'
+import TokenDisplay from './TokenDisplay'
 import { getTimeWindowChange } from './utils'
 
-const SwapLineChart = dynamic(() => import('./SwapLineChart'), {
-  ssr: false,
-})
+const SwapLineChart = lazy(() => import('./SwapLineChart'))
+
 
 const BasicChart = ({
   token0Address,
@@ -22,13 +21,13 @@ const BasicChart = ({
   currentSwapPrice,
 }) => {
   const [timeWindow, setTimeWindow] = useState<PairDataTimeWindowEnum>(0)
-
   const { pairPrices = [], pairId } = useFetchPairPrices({
     token0Address,
     token1Address,
     timeWindow,
     currentSwapPrice,
   })
+
   const [hoverValue, setHoverValue] = useState<number | undefined>()
   const [hoverDate, setHoverDate] = useState<string | undefined>()
   const valueToDisplay = hoverValue || pairPrices[pairPrices.length - 1]?.value
@@ -76,15 +75,15 @@ const BasicChart = ({
         px="24px"
       >
         <Flex flexDirection="column" pt="12px">
-          <PairPriceDisplay
+          <TokenDisplay
             value={pairPrices?.length > 0 && valueToDisplay}
             inputSymbol={inputCurrency?.symbol}
             outputSymbol={outputCurrency?.symbol}
           >
-            <Text color={isChangePositive ? 'success' : 'failure'} fontSize="20px" ml="4px" bold>
+            <Text color={isChangePositive ? 'success' : 'failure'} fontSize="20px" mt="-8px" mb="8px" bold>
               {`${isChangePositive ? '+' : ''}${changeValue.toFixed(3)} (${changePercentage}%)`}
             </Text>
-          </PairPriceDisplay>
+          </TokenDisplay>
           <Text small color="secondary">
             {hoverDate || currentDate}
           </Text>
@@ -99,19 +98,21 @@ const BasicChart = ({
         </Box>
       </Flex>
       <Box height={isMobile ? '100%' : chartHeight} p={isMobile ? '0px' : '16px'} width="100%">
-        <SwapLineChart
-          data={pairPrices}
-          setHoverValue={setHoverValue}
-          setHoverDate={setHoverDate}
-          isChangePositive={isChangePositive}
-          timeWindow={timeWindow}
-        />
+      <Suspense fallback={<LineChartLoader />}>
+          <SwapLineChart
+            data={pairPrices}
+            setHoverValue={setHoverValue}
+            setHoverDate={setHoverDate}
+            isChangePositive={isChangePositive}
+            timeWindow={timeWindow}
+          />
+        </Suspense>
       </Box>
     </>
   )
 }
 
-export default memo(BasicChart, (prev, next) => {
+export default React.memo(BasicChart, (prev, next) => {
   return (
     prev.token0Address === next.token0Address &&
     prev.token1Address === next.token1Address &&

@@ -1,16 +1,13 @@
-import { useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
-import { AutoRenewIcon, Button, Card, CardBody, Flex, Skeleton, Text, ArrowForwardIcon } from '@pancakeswap/uikit'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import { AutoRenewIcon, Button, Card, CardBody, Flex, Skeleton, Text, Link, ArrowForwardIcon } from '@pancakeswap/uikit'
 import BigNumber from 'bignumber.js'
 import { useTranslation } from 'contexts/Localization'
 import { usePriceCakeBusd } from 'state/farms/hooks'
 import useToast from 'hooks/useToast'
 import { useMasterchef } from 'hooks/useContract'
-import useCatchTxError from 'hooks/useCatchTxError'
 import { harvestFarm } from 'utils/calls'
 import Balance from 'components/Balance'
-import { ToastDescriptionWithTx } from 'components/Toast'
 import useFarmsWithBalance from 'views/Home/hooks/useFarmsWithBalance'
 import { getEarningsText } from './EarningsText'
 
@@ -20,9 +17,9 @@ const StyledCard = styled(Card)`
 `
 
 const HarvestCard = () => {
+  const [pendingTx, setPendingTx] = useState(false)
   const { t } = useTranslation()
-  const { toastSuccess } = useToast()
-  const { fetchWithCatchTxError, loading: pendingTx } = useCatchTxError()
+  const { toastSuccess, toastError } = useToast()
   const { farmsWithStakedBalance, earningsSum: farmEarningsSum } = useFarmsWithBalance()
 
   const masterChefContract = useMasterchef()
@@ -36,22 +33,22 @@ const HarvestCard = () => {
   const [preText, toCollectText] = earningsText.split(earningsBusd.toString())
 
   const harvestAllFarms = useCallback(async () => {
-    for (let i = 0; i < farmsWithStakedBalance.length; i++) {
-      const farmWithBalance = farmsWithStakedBalance[i]
-      // eslint-disable-next-line no-await-in-loop
-      const receipt = await fetchWithCatchTxError(() => {
-        return harvestFarm(masterChefContract, farmWithBalance.pid)
-      })
-      if (receipt?.status) {
+    setPendingTx(true)
+    // eslint-disable-next-line no-restricted-syntax
+    for (const farmWithBalance of farmsWithStakedBalance) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await harvestFarm(masterChefContract, farmWithBalance.pid)
         toastSuccess(
           `${t('Harvested')}!`,
-          <ToastDescriptionWithTx txHash={receipt.transactionHash}>
-            {t('Your %symbol% earnings have been sent to your wallet!', { symbol: 'CAKE' })}
-          </ToastDescriptionWithTx>,
+          t('Your %symbol% earnings have been sent to your wallet!', { symbol: 'DENA' }),
         )
+      } catch (error) {
+        toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
       }
     }
-  }, [farmsWithStakedBalance, masterChefContract, toastSuccess, t, fetchWithCatchTxError])
+    setPendingTx(false)
+  }, [farmsWithStakedBalance, masterChefContract, toastSuccess, toastError, t])
 
   return (
     <StyledCard>
@@ -80,14 +77,14 @@ const HarvestCard = () => {
             </Text>
           </Flex>
           {numTotalToCollect <= 0 ? (
-            <NextLinkFromReactRouter to="farms">
-              <Button width={['100%', null, null, 'auto']} variant="secondary">
+            <Link href="room/pools">
+              <Button width={['100%', null, null, 'auto']} variant="secondary" >
                 <Text color="primary" bold>
                   {t('Start earning')}
                 </Text>
                 <ArrowForwardIcon ml="4px" color="primary" />
               </Button>
-            </NextLinkFromReactRouter>
+            </Link>
           ) : (
             <Button
               width={['100%', null, null, 'auto']}

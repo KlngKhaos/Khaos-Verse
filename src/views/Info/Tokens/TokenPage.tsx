@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import { useMemo } from 'react'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import React, { useEffect, useMemo } from 'react'
+import { RouteComponentProps, Link } from 'react-router-dom'
 import { Duration } from 'date-fns'
 import styled from 'styled-components'
 import {
@@ -22,7 +22,7 @@ import { getBscScanLink } from 'utils'
 import truncateHash from 'utils/truncateHash'
 import useCMCLink from 'views/Info/hooks/useCMCLink'
 import { CurrencyLogo } from 'views/Info/components/CurrencyLogo'
-import { formatAmount } from 'utils/formatInfoNumbers'
+import { formatAmount } from 'views/Info/utils/formatInfoNumbers'
 import Percent from 'views/Info/components/Percent'
 import SaveIcon from 'views/Info/components/SaveIcon'
 import {
@@ -62,9 +62,18 @@ const StyledCMCLink = styled(UIKitLink)`
 `
 const DEFAULT_TIME_WINDOW: Duration = { weeks: 1 }
 
-const TokenPage: React.FC<{ routeAddress: string }> = ({ routeAddress }) => {
+const TokenPage: React.FC<RouteComponentProps<{ address: string }>> = ({
+  match: {
+    params: { address: routeAddress },
+  },
+}) => {
   const { isXs, isSm } = useMatchBreakpoints()
   const { t } = useTranslation()
+
+  // Needed to scroll up if user comes to this page by clicking on entry in the table
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   // In case somebody pastes checksummed address into url (since GraphQL expects lowercase address)
   const address = routeAddress.toLowerCase()
@@ -106,9 +115,9 @@ const TokenPage: React.FC<{ routeAddress: string }> = ({ routeAddress }) => {
             <Box p="16px">
               <Text>
                 {t('No pool has been created with this token yet. Create one')}
-                <NextLinkFromReactRouter style={{ display: 'inline', marginLeft: '6px' }} to={`/add/${address}`}>
+                <Link style={{ display: 'inline', marginLeft: '6px' }} to={`/add/${address}`}>
                   {t('here.')}
-                </NextLinkFromReactRouter>
+                </Link>
               </Text>
             </Box>
           </Card>
@@ -117,12 +126,12 @@ const TokenPage: React.FC<{ routeAddress: string }> = ({ routeAddress }) => {
             {/* Stuff on top */}
             <Flex justifyContent="space-between" mb="24px" flexDirection={['column', 'column', 'row']}>
               <Breadcrumbs mb="32px">
-                <NextLinkFromReactRouter to="/info">
+                <Link to="/info">
                   <Text color="primary">{t('Info')}</Text>
-                </NextLinkFromReactRouter>
-                <NextLinkFromReactRouter to="/info/tokens">
+                </Link>
+                <Link to="/info/tokens">
                   <Text color="primary">{t('Tokens')}</Text>
-                </NextLinkFromReactRouter>
+                </Link>
                 <Flex>
                   <Text mr="8px">{tokenData.symbol}</Text>
                   <Text>{`(${truncateHash(address)})`}</Text>
@@ -165,14 +174,14 @@ const TokenPage: React.FC<{ routeAddress: string }> = ({ routeAddress }) => {
                 </Flex>
               </Flex>
               <Flex>
-                <NextLinkFromReactRouter to={`/add/${address}`}>
+                <Link to={`/add/${address}`}>
                   <Button mr="8px" variant="secondary">
                     {t('Add Liquidity')}
                   </Button>
-                </NextLinkFromReactRouter>
-                <NextLinkFromReactRouter to={`/swap?inputCurrency=${address}`}>
+                </Link>
+                <Link to={`/swap?inputCurrency=${address}`}>
                   <Button>{t('Trade')}</Button>
-                </NextLinkFromReactRouter>
+                </Link>
               </Flex>
             </Flex>
 

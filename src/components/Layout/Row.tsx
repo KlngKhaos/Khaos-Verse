@@ -11,9 +11,10 @@ const Row = styled(Box)<{
 }>`
   width: ${({ width }) => width ?? '100%'};
   display: flex;
+  padding: 0;
   align-items: ${({ align }) => align ?? 'center'};
   justify-content: ${({ justify }) => justify ?? 'flex-start'};
-  padding: ${({ padding }) => padding ?? '0'};
+  padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
 `
@@ -30,7 +31,7 @@ export const RowFlat = styled.div`
 export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   flex-wrap: wrap;
   margin: ${({ gap }) => gap && `-${gap}`};
-  justify-content: ${({ justify }) => justify};
+  justify-content: ${({ justify }) => justify && justify};
 
   & > * {
     margin: ${({ gap }) => gap} !important;

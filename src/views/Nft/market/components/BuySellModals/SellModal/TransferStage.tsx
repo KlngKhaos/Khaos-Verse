@@ -1,3 +1,4 @@
+import React from 'react'
 import { Flex, Grid, Text, Button, Input, BinanceIcon, ErrorIcon } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
@@ -27,7 +28,7 @@ const TransferStage: React.FC<TransferStageProps> = ({
   const transferAddressEqualsConnectedAddress = transferAddress.toLowerCase() === account.toLowerCase()
   const getErrorText = () => {
     if (isInvalidTransferAddress) {
-      return t('That’s not a BNB Smart Chain wallet address.')
+      return t('That’s not a Binance Smart Chain wallet address.')
     }
     if (transferAddressEqualsConnectedAddress) {
       return t('This address is the one that is currently connected')
@@ -44,7 +45,7 @@ const TransferStage: React.FC<TransferStageProps> = ({
         <Grid flex="1" gridTemplateColumns="1fr 1fr" alignItems="center">
           <Text bold>{nftToSell.name}</Text>
           <Text fontSize="12px" color="textSubtle" textAlign="right">
-            {nftToSell?.collectionName}
+            {nftToSell.collectionName}
           </Text>
           {lowestPrice && (
             <>

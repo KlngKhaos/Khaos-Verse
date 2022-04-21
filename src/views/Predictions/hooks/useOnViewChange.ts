@@ -12,7 +12,7 @@ const useOnViewChange = (liveSwiperIndex: number, view?: PageView) => {
 
   useEffect(() => {
     if (swiper && view !== prevView && swiper.activeIndex !== liveSwiperIndex) {
-      swiper.slideTo(liveSwiperIndex, 0.1)
+      // swiper.slideTo(liveSwiperIndex, 0.1)
     }
   }, [swiper, prevView, view, liveSwiperIndex])
 }

@@ -1,16 +1,17 @@
+import React from 'react'
 import styled from 'styled-components'
 import { Skeleton, Text, useTooltip, HelpIcon, Flex, Box, useMatchBreakpoints } from '@pancakeswap/uikit'
 import { DeserializedPool } from 'state/types'
 import Balance from 'components/Balance'
-import { useVaultPoolByKey } from 'state/pools/hooks'
+import { useCakeVault } from 'state/pools/hooks'
 import { useTranslation } from 'contexts/Localization'
 import { getCakeVaultEarnings } from 'views/Pools/helpers'
 import BaseCell, { CellContent } from './BaseCell'
-import AutoEarningsBreakdown from '../../AutoEarningsBreakdown'
 
 interface AutoEarningsCellProps {
   pool: DeserializedPool
   account: string
+  userDataLoaded: boolean
 }
 
 const StyledCell = styled(BaseCell)`
@@ -24,15 +25,15 @@ const HelpIconWrapper = styled.div`
   align-self: center;
 `
 
-const AutoEarningsCell: React.FC<AutoEarningsCellProps> = ({ pool, account }) => {
+const AutoEarningsCell: React.FC<AutoEarningsCellProps> = ({ pool, account, userDataLoaded }) => {
   const { t } = useTranslation()
   const { isMobile } = useMatchBreakpoints()
   const { earningTokenPrice } = pool
 
   const {
-    userData: { isLoading: userDataLoading, cakeAtLastUserAction, userShares },
+    userData: { cakeAtLastUserAction, userShares, lastUserActionTime },
     pricePerFullShare,
-  } = useVaultPoolByKey(pool.vaultKey)
+  } = useCakeVault()
   const { hasAutoEarnings, autoCakeToDisplay, autoUsdToDisplay } = getCakeVaultEarnings(
     account,
     cakeAtLastUserAction,
@@ -41,14 +42,24 @@ const AutoEarningsCell: React.FC<AutoEarningsCellProps> = ({ pool, account }) =>
     earningTokenPrice,
   )
 
-  const labelText = t('Recent CAKE profit')
+  const labelText = t('Recent DENA profit')
   const earningTokenBalance = autoCakeToDisplay
   const hasEarnings = hasAutoEarnings
   const earningTokenDollarBalance = autoUsdToDisplay
 
-  const { targetRef, tooltip, tooltipVisible } = useTooltip(<AutoEarningsBreakdown pool={pool} account={account} />, {
-    placement: 'bottom',
-  })
+  const lastActionInMs = lastUserActionTime && parseInt(lastUserActionTime) * 1000
+  const dateTimeLastAction = new Date(lastActionInMs)
+  const dateStringToDisplay = dateTimeLastAction.toLocaleString()
+
+  const { targetRef, tooltip, tooltipVisible } = useTooltip(
+    <>
+      <Balance fontSize="16px" value={autoCakeToDisplay} decimals={3} bold unit=" CAKE" />
+      <Balance fontSize="16px" value={autoUsdToDisplay} decimals={2} bold prefix="~$" />
+      {t('Earned since your last action')}
+      <Text>{dateStringToDisplay}</Text>
+    </>,
+    { placement: 'bottom' },
+  )
 
   return (
     <StyledCell role="cell">
@@ -56,7 +67,7 @@ const AutoEarningsCell: React.FC<AutoEarningsCellProps> = ({ pool, account }) =>
         <Text fontSize="12px" color="textSubtle" textAlign="left">
           {labelText}
         </Text>
-        {userDataLoading && account ? (
+        {!userDataLoaded && account ? (
           <Skeleton width="80px" height="16px" />
         ) : (
           <>

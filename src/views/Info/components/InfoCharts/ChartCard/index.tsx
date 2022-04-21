@@ -1,17 +1,13 @@
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Text, Box, Card, Flex, Skeleton } from '@pancakeswap/uikit'
 import LineChart from 'views/Info/components/InfoCharts/LineChart'
 import BarChart from 'views/Info/components/InfoCharts/BarChart'
+import CandleChart from 'views/Info/components/InfoCharts/CandleChart'
 import { TabToggleGroup, TabToggle } from 'components/TabToggle'
 import { useTranslation } from 'contexts/Localization'
-import { formatAmount } from 'utils/formatInfoNumbers'
+import { formatAmount } from 'views/Info/utils/formatInfoNumbers'
 import { ChartEntry, TokenData, PriceChartEntry } from 'state/info/types'
-import { fromUnixTime } from 'date-fns'
-import dynamic from 'next/dynamic'
-
-const CandleChart = dynamic(() => import('views/Info/components/InfoCharts/CandleChart'), {
-  ssr: false,
-})
+import { format, fromUnixTime } from 'date-fns'
 
 enum ChartView {
   LIQUIDITY,
@@ -30,12 +26,9 @@ const ChartCard: React.FC<ChartCardProps> = ({ variant, chartData, tokenData, to
   const [view, setView] = useState(ChartView.VOLUME)
   const [hoverValue, setHoverValue] = useState<number | undefined>()
   const [hoverDate, setHoverDate] = useState<string | undefined>()
-  const {
-    t,
-    currentLanguage: { locale },
-  } = useTranslation()
+  const { t } = useTranslation()
 
-  const currentDate = new Date().toLocaleString(locale, { month: 'short', year: 'numeric', day: 'numeric' })
+  const currentDate = format(new Date(), 'MMM d, yyyy')
 
   const formattedTvlData = useMemo(() => {
     if (chartData) {

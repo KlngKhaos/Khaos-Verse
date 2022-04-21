@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-loss-of-precision */
 import {
   makeFutureRoundResponse,
   numberOrNull,

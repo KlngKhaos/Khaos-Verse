@@ -1,51 +1,23 @@
-import { FC } from 'react'
-import { useRouter } from 'next/router'
+import React from 'react'
+import { useWeb3React } from '@web3-react/core'
+import { useParams } from 'react-router'
 import { isAddress } from 'utils'
-import { useAchievementsForAddress, useProfileForAddress } from 'state/profile/hooks'
-import { Box, Flex, Text } from '@pancakeswap/uikit'
+import { Flex, Text } from '@pancakeswap/uikit'
 import Page from 'components/Layout/Page'
 import { useTranslation } from 'contexts/Localization'
-import styled from 'styled-components'
+import ConnectedProfile from './ConnectedProfile'
+import UnconnectedProfile from './UnconnectedProfile'
 import MarketPageHeader from '../components/MarketPageHeader'
 import ProfileHeader from './components/ProfileHeader'
 import NoNftsImage from '../components/Activity/NoNftsImage'
-import useNftsForAddress from '../hooks/useNftsForAddress'
-import TabMenu from './components/TabMenu'
 
-const TabMenuWrapper = styled(Box)`
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 0%);
-
-  ${({ theme }) => theme.mediaQueries.sm} {
-    left: auto;
-    transform: none;
-  }
-`
-
-const NftProfile: FC = ({ children }) => {
-  const accountAddress = useRouter().query.accountAddress as string
+const NftProfile = () => {
+  const { account } = useWeb3React()
+  const { accountAddress } = useParams<{ accountAddress: string }>()
   const { t } = useTranslation()
 
+  const isConnectedProfile = account?.toLowerCase() === accountAddress?.toLowerCase()
   const invalidAddress = !accountAddress || isAddress(accountAddress) === false
-
-  const {
-    profile,
-    isValidating: isProfileValidating,
-    isFetching: isProfileFetching,
-    refresh: refreshProfile,
-  } = useProfileForAddress(accountAddress, {
-    revalidateIfStale: true,
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
-  })
-  const { achievements, isFetching: isAchievementsFetching } = useAchievementsForAddress(accountAddress)
-  const {
-    nfts: userNfts,
-    isLoading: isNftLoading,
-    refresh: refreshUserNfts,
-  } = useNftsForAddress(accountAddress, profile, isProfileValidating)
 
   if (invalidAddress) {
     return (
@@ -73,33 +45,7 @@ const NftProfile: FC = ({ children }) => {
     )
   }
 
-  return (
-    <>
-      <MarketPageHeader position="relative">
-        <ProfileHeader
-          accountPath={accountAddress}
-          profile={profile}
-          achievements={achievements}
-          nftCollected={userNfts.length}
-          isProfileLoading={isProfileFetching}
-          isNftLoading={isNftLoading}
-          isAchievementsLoading={isAchievementsFetching}
-          onSuccess={async () => {
-            await refreshProfile()
-            refreshUserNfts()
-          }}
-        />
-        <TabMenuWrapper>
-          <TabMenu />
-        </TabMenuWrapper>
-      </MarketPageHeader>
-      <Page style={{ minHeight: 'auto' }}>{children}</Page>
-    </>
-  )
-}
-
-export const NftProfileLayout: FC = ({ children }) => {
-  return <NftProfile>{children}</NftProfile>
+  return <>{isConnectedProfile ? <ConnectedProfile /> : <UnconnectedProfile />}</>
 }
 
 export default NftProfile

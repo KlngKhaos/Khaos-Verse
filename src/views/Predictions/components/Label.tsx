@@ -1,14 +1,13 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useCountUp } from 'react-countup'
 import styled from 'styled-components'
 import { BnbUsdtPairTokenIcon, Box, Flex, PocketWatchIcon, Text } from '@pancakeswap/uikit'
 import { ROUND_BUFFER } from 'state/predictions/config'
 import { formatBigNumberToFixed } from 'utils/formatBalance'
-import { useGetCurrentRoundLockTimestamp } from 'state/predictions/hooks'
+import { useGetCurrentRoundLockTimestamp, useGetLastOraclePrice } from 'state/predictions/hooks'
 import { useTranslation } from 'contexts/Localization'
 import { formatRoundTime } from '../helpers'
 import useCountdown from '../hooks/useCountdown'
-import usePollOraclePrice from '../hooks/usePollOraclePrice'
 
 const Token = styled(Box)`
   margin-top: -24px;
@@ -72,8 +71,12 @@ const Interval = styled(Text)`
   }
 `
 
-const Label = styled(Flex)<{ dir: 'left' | 'right' }>`
-  background-color: ${({ theme }) => theme.card.background};
+const Label = styled(Flex) <{ dir: 'left' | 'right' }>`
+  // background-color: #007587;
+  background-image: url(/images/battles/clock01.png);
+  width: 180px;
+  height: 48px;
+  background-repeat: no-repeat;
   box-shadow: ${({ theme }) => theme.shadows.level1};
   align-items: ${({ dir }) => (dir === 'right' ? 'flex-end' : 'flex-start')};
   border-radius: ${({ dir }) => (dir === 'right' ? '8px 8px 8px 24px' : '8px 8px 24px 8px')};
@@ -90,16 +93,14 @@ const Label = styled(Flex)<{ dir: 'left' | 'right' }>`
 `
 
 export const PricePairLabel: React.FC = () => {
-  const { price } = usePollOraclePrice()
+  const price = useGetLastOraclePrice()
   const priceAsNumber = parseFloat(formatBigNumberToFixed(price, 3, 8))
-  const countUpState = useCountUp({
+  const { countUp, update } = useCountUp({
     start: 0,
     end: priceAsNumber,
     duration: 1,
     decimals: 3,
   })
-
-  const { countUp, update } = countUpState || {}
 
   const updateRef = useRef(update)
 
@@ -114,7 +115,7 @@ export const PricePairLabel: React.FC = () => {
       </Token>
       <Label dir="left">
         <Title bold textTransform="uppercase">
-          BNBUSD
+          DENA
         </Title>
         <Price fontSize="12px">{`$${countUp}`}</Price>
       </Label>
@@ -125,22 +126,21 @@ export const PricePairLabel: React.FC = () => {
 interface TimerLabelProps {
   interval: string
   unit: 'm' | 'h' | 'd'
+  remainingTime: number
 }
 
-export const TimerLabel: React.FC<TimerLabelProps> = ({ interval, unit }) => {
-  const currentRoundLockTimestamp = useGetCurrentRoundLockTimestamp()
-  const { secondsRemaining } = useCountdown(currentRoundLockTimestamp + ROUND_BUFFER)
+export const TimerLabel: React.FC<TimerLabelProps> = ({ interval, unit, remainingTime }) => {
+  // const currentRoundLockTimestamp = useGetCurrentRoundLockTimestamp()
+  // console.log("remainingTimeremainingTime", remainingTime)
+  const { secondsRemaining } = useCountdown(remainingTime)
   const countdown = formatRoundTime(secondsRemaining)
   const { t } = useTranslation()
-
-  if (!currentRoundLockTimestamp) {
-    return null
-  }
-
+  // console.log("secondsRemainingsecondsRemaining", secondsRemaining)
+  // console.log("ROUND_BUFFERROUND_BUFFERROUND_BUFFER", secondsRemaining - ROUND_BUFFER)
   return (
-    <Box pr="24px" position="relative">
+    <Box pr="4px" position="relative">
       <Label dir="right">
-        {secondsRemaining !== 0 ? (
+        {secondsRemaining > 0 ? (
           <Title bold color="secondary">
             {countdown}
           </Title>
@@ -152,7 +152,7 @@ export const TimerLabel: React.FC<TimerLabelProps> = ({ interval, unit }) => {
         <Interval fontSize="12px">{`${interval}${t(unit)}`}</Interval>
       </Label>
       <Token right={0}>
-        <PocketWatchIcon />
+        {/* <PocketWatchIcon /> */}
       </Token>
     </Box>
   )

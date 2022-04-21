@@ -7,31 +7,27 @@ export const footerLinks: (t: ContextApi['t']) => FooterLinkType[] = (t) => [
     items: [
       {
         label: t('Contact'),
-        href: 'https://docs.pancakeswap.finance/contact-us',
-        isHighlighted: true,
-      },
-      {
-        label: t('Brand'),
-        href: 'https://docs.pancakeswap.finance/brand',
+        href: 'https://docs.gladiators.finance/contact-us',
       },
       {
         label: t('Blog'),
-        href: 'https://medium.com/pancakeswap',
+        href: 'https://medium.com/@gladiators.finance/',
       },
       {
-        label: t('Community'),
-        href: 'https://docs.pancakeswap.finance/contact-us/telegram',
+        label: t('NRT token'),
+        href: 'https://www.nftroyaltoken.com/',
       },
       {
-        label: t('CAKE token'),
-        href: 'https://docs.pancakeswap.finance/tokenomics/cake',
+        label: t('DENA token'),
+        href: 'https://docs.gladiators.finance/tokenomics/denarius-dena',
       },
-      {
-        label: '—',
-      },
+      // {
+      //   label: '—',
+      // },
       {
         label: t('Online Store'),
-        href: 'https://pancakeswap.creator-spring.com/',
+        href: '/nfts',
+        isHighlighted: true,
       },
     ],
   },
@@ -40,15 +36,19 @@ export const footerLinks: (t: ContextApi['t']) => FooterLinkType[] = (t) => [
     items: [
       {
         label: t('Customer Support'),
-        href: 'https://docs.pancakeswap.finance/contact-us/customer-support',
+        href: 'https://docs.gladiators.finance/contact-us/customer-support',
       },
       {
         label: t('Troubleshooting'),
-        href: 'https://docs.pancakeswap.finance/help/troubleshooting',
+        href: 'https://docs.gladiators.finance/help/troubleshooting',
       },
       {
         label: t('Guides'),
-        href: 'https://docs.pancakeswap.finance/get-started',
+        href: 'https://docs.gladiators.finance',
+      },
+      {
+        label: t('Community'),
+        href: 'https://docs.gladiators.finance/contact-us/telegram',
       },
     ],
   },
@@ -57,24 +57,17 @@ export const footerLinks: (t: ContextApi['t']) => FooterLinkType[] = (t) => [
     items: [
       {
         label: 'Github',
-        href: 'https://github.com/pancakeswap',
+        href: 'https://github.com/gladiatorsfinance',
       },
       {
         label: t('Documentation'),
-        href: 'https://docs.pancakeswap.finance',
-      },
-      {
-        label: t('Bug Bounty'),
-        href: 'https://docs.pancakeswap.finance/code/bug-bounty',
+        href: 'https://docs.gladiators.finance',
       },
       {
         label: t('Audits'),
-        href: 'https://docs.pancakeswap.finance/help/faq#is-pancakeswap-safe-has-pancakeswap-been-audited',
+        href: 'https://docs.gladiators.finance/',
       },
-      {
-        label: t('Careers'),
-        href: 'https://docs.pancakeswap.finance/hiring/become-a-chef',
-      },
+      
     ],
   },
 ]

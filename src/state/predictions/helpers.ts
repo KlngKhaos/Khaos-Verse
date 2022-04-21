@@ -1,6 +1,6 @@
 import { request, gql } from 'graphql-request'
 import { GRAPH_API_PREDICTION } from 'config/constants/endpoints'
-import { BigNumber } from '@ethersproject/bignumber'
+import { ethers } from 'ethers'
 import {
   Bet,
   LedgerData,
@@ -18,7 +18,6 @@ import { multicallv2 } from 'utils/multicall'
 import { getPredictionsContract } from 'utils/contractHelpers'
 import predictionsAbi from 'config/abi/predictions.json'
 import { getPredictionsAddress } from 'utils/addressHelpers'
-import { Zero } from '@ethersproject/constants'
 import { PredictionsClaimableResponse, PredictionsLedgerResponse, PredictionsRoundsResponse } from 'utils/types'
 import {
   BetResponse,
@@ -368,20 +367,28 @@ export const getClaimStatuses = async (
   }, {})
 }
 
-export type MarketData = Pick<PredictionsState, 'status' | 'currentEpoch' | 'intervalSeconds' | 'minBetAmount'>
+export type MarketData = Pick<
+  PredictionsState,
+  'status' | 'currentEpoch' | 'intervalSeconds' | 'minBetAmount' | 'bufferSeconds'
+>
 export const getPredictionData = async (): Promise<MarketData> => {
   const address = getPredictionsAddress()
-  const staticCalls = ['currentEpoch', 'intervalSeconds', 'minBetAmount', 'paused'].map((method) => ({
+  const staticCalls = ['currentEpoch', 'intervalSeconds', 'minBetAmount', 'paused', 'bufferSeconds'].map((method) => ({
     address,
     name: method,
   }))
-  const [[currentEpoch], [intervalSeconds], [minBetAmount], [paused]] = await multicallv2(predictionsAbi, staticCalls)
+  // console.log("staticCallsstaticCallsstaticCalls  staticCallsstaticCallsstaticCalls", staticCalls)
+  const [[currentEpoch], [intervalSeconds], [minBetAmount], [paused], [bufferSeconds]] = await multicallv2(
+    predictionsAbi,
+    staticCalls,
+  )
 
   return {
     status: paused ? PredictionStatus.PAUSED : PredictionStatus.LIVE,
     currentEpoch: currentEpoch.toNumber(),
     intervalSeconds: intervalSeconds.toNumber(),
     minBetAmount: minBetAmount.toString(),
+    bufferSeconds: bufferSeconds.toNumber(),
   }
 }
 
@@ -392,7 +399,9 @@ export const getRoundsData = async (epochs: number[]): Promise<PredictionsRounds
     name: 'rounds',
     params: [epoch],
   }))
+  // console.log("callscallscallscallscalls", calls)
   const response = await multicallv2<PredictionsRoundsResponse[]>(predictionsAbi, calls)
+  // console.log("responseresponse111", response)
   return response
 }
 
@@ -404,11 +413,11 @@ export const makeFutureRoundResponse = (epoch: number, startTimestamp: number): 
     closeTimestamp: null,
     lockPrice: null,
     closePrice: null,
-    totalAmount: Zero.toJSON(),
-    bullAmount: Zero.toJSON(),
-    bearAmount: Zero.toJSON(),
-    rewardBaseCalAmount: Zero.toJSON(),
-    rewardAmount: Zero.toJSON(),
+    totalAmount: ethers.BigNumber.from(0).toJSON(),
+    bullAmount: ethers.BigNumber.from(0).toJSON(),
+    bearAmount: ethers.BigNumber.from(0).toJSON(),
+    rewardBaseCalAmount: ethers.BigNumber.from(0).toJSON(),
+    rewardAmount: ethers.BigNumber.from(0).toJSON(),
     oracleCalled: false,
     lockOracleId: null,
     closeOracleId: null,
@@ -473,28 +482,28 @@ export const serializePredictionsRoundsResponse = (response: PredictionsRoundsRe
     lockOracleId,
     closeOracleId,
   } = response
-
+  
   return {
     oracleCalled,
     epoch: epoch.toNumber(),
-    startTimestamp: startTimestamp.eq(0) ? null : startTimestamp.toNumber(),
-    lockTimestamp: lockTimestamp.eq(0) ? null : lockTimestamp.toNumber(),
-    closeTimestamp: closeTimestamp.eq(0) ? null : closeTimestamp.toNumber(),
-    lockPrice: lockPrice.eq(0) ? null : lockPrice.toJSON(),
-    closePrice: closePrice.eq(0) ? null : closePrice.toJSON(),
-    totalAmount: totalAmount.toJSON(),
-    bullAmount: bullAmount.toJSON(),
-    bearAmount: bearAmount.toJSON(),
-    rewardBaseCalAmount: rewardBaseCalAmount.toJSON(),
-    rewardAmount: rewardAmount.toJSON(),
-    lockOracleId: lockOracleId.toString(),
-    closeOracleId: closeOracleId.toString(),
+    startTimestamp: startTimestamp?.eq(0) ? null : startTimestamp?.toNumber(),
+    lockTimestamp: lockTimestamp?.eq(0) ? null : lockTimestamp?.toNumber(),
+    closeTimestamp: closeTimestamp?.eq(0) ? null : closeTimestamp?.toNumber(),
+    lockPrice: lockPrice?.eq(0) ? null : lockPrice?.toJSON(),
+    closePrice: closePrice?.eq(0) ? null : closePrice?.toJSON(),
+    totalAmount: totalAmount?.toJSON(),
+    bullAmount: bullAmount?.toJSON(),
+    bearAmount: bearAmount?.toJSON(),
+    rewardBaseCalAmount: rewardBaseCalAmount?.toJSON(),
+    rewardAmount: rewardAmount?.toJSON(),
+    lockOracleId: lockOracleId?.toString(),
+    closeOracleId: closeOracleId?.toString(),
   }
 }
 
 /**
- * Parse serialized values back into BigNumber
- * BigNumber values are stored with the "toJSON()" method, e.g  { type: "BigNumber", hex: string }
+ * Parse serialized values back into ethers.BigNumber
+ * ethers.BigNumber values are stored with the "toJSON()" method, e.g  { type: "BigNumber", hex: string }
  */
 export const parseBigNumberObj = <T = Record<string, any>, K = Record<string, any>>(data: T): K => {
   return Object.keys(data).reduce((accum, key) => {
@@ -503,7 +512,7 @@ export const parseBigNumberObj = <T = Record<string, any>, K = Record<string, an
     if (value && value?.type === 'BigNumber') {
       return {
         ...accum,
-        [key]: BigNumber.from(value),
+        [key]: ethers.BigNumber.from(value),
       }
     }
 
@@ -520,7 +529,7 @@ export const fetchUsersRoundsLength = async (account: string) => {
     const length = await contract.getUserRoundsLength(account)
     return length
   } catch {
-    return Zero
+    return ethers.BigNumber.from(0)
   }
 }
 

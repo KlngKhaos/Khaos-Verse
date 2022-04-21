@@ -1,3 +1,4 @@
+import React from 'react'
 import { Heading, TextProps } from '@pancakeswap/uikit'
 import useTheme from 'hooks/useTheme'
 

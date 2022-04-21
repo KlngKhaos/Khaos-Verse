@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import {
@@ -22,7 +22,7 @@ const Modal = styled(ModalContainer)`
 
 const BunnyDecoration = styled.div`
   position: absolute;
-  top: -116px; // line up bunny at the top of the modal
+  top: -152px;
   left: 0px;
   text-align: center;
   width: 100%;
@@ -103,10 +103,10 @@ const CollectRoundWinningsModal: React.FC<InjectedModalProps> = ({ onDismiss }) 
 
   return (
     <Modal minWidth="288px" position="relative" mt="124px">
-      <BunnyDecoration>
-        <img src="/images/decorations/prize-bunny.png" alt="bunny decoration" height="124px" width="168px" />
-      </BunnyDecoration>
       <ModalHeader>
+        <BunnyDecoration>
+          <img src="/images/decorations/modal-bg.png" alt="Gladiator" width="168px" />
+        </BunnyDecoration>
         <ModalTitle>
           <Heading>{t('Nothing to Collect')}</Heading>
         </ModalTitle>

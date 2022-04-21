@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
-import { gql } from 'graphql-request'
 import { useEffect, useState } from 'react'
-import { PoolData } from 'state/info/types'
-import { infoClient } from 'utils/graphql'
-import { useBlocksFromTimestamps } from 'views/Info/hooks/useBlocksFromTimestamps'
-import { getChangeForPeriod, getLpFeesAndApr, getPercentChange } from 'views/Info/utils/infoDataHelpers'
+import { request, gql } from 'graphql-request'
+import { INFO_CLIENT } from 'config/constants/endpoints'
 import { getDeltaTimestamps } from 'views/Info/utils/infoQueryHelpers'
+import { useBlocksFromTimestamps } from 'views/Info/hooks/useBlocksFromTimestamps'
+import { PoolData } from 'state/info/types'
+import { getChangeForPeriod, getLpFeesAndApr, getPercentChange } from 'views/Info/utils/infoDataHelpers'
 
 interface PoolFields {
   id: string
@@ -96,7 +96,7 @@ const fetchPoolData = async (
         twoWeeksAgo: ${POOL_AT_BLOCK(block14d, poolAddresses)}
       }
     `
-    const data = await infoClient.request<PoolsQueryResponse>(query)
+    const data = await request<PoolsQueryResponse>(INFO_CLIENT, query)
     return { data, error: false }
   } catch (error) {
     console.error('Failed to fetch pool data', error)
@@ -104,7 +104,7 @@ const fetchPoolData = async (
   }
 }
 
-// Transforms pools into "0xADDRESS: { ...PoolFields }" format and cast strings to numbers
+// Transforms pools into "0xADDRESS: { ...PoolFields }" format and cast strigns to numbers
 const parsePoolData = (pairs?: PoolFields[]) => {
   if (!pairs) {
     return {}

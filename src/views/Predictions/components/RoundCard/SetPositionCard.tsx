@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   ArrowBackIcon,
   Card,
@@ -15,20 +15,22 @@ import {
   Box,
   AutoRenewIcon,
 } from '@pancakeswap/uikit'
-import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
-import { parseUnits } from '@ethersproject/units'
+import { ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import { useWeb3React } from '@web3-react/core'
 import { useGetMinBetAmount } from 'state/predictions/hooks'
 import { useTranslation } from 'contexts/Localization'
+import { ToastDescriptionWithTx } from 'components/Toast'
 import { usePredictionsContract } from 'hooks/useContract'
 import { useGetBnbBalance } from 'hooks/useTokenBalance'
+import useToast from 'hooks/useToast'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
-import useCatchTxError from 'hooks/useCatchTxError'
 import { BetPosition } from 'state/types'
 import { formatBigNumber, formatFixedNumber } from 'utils/formatBalance'
 import ConnectWalletButton from 'components/ConnectWalletButton'
+import { logError } from 'utils/sentry'
 import PositionTag from '../PositionTag'
+import useSwiper from '../../hooks/useSwiper'
 import FlexRow from '../FlexRow'
 
 interface SetPositionCardProps {
@@ -42,7 +44,11 @@ interface SetPositionCardProps {
 const dust = parseUnits('0.01', 18)
 const percentShortcuts = [10, 25, 50, 75]
 
-const getButtonProps = (value: BigNumber, bnbBalance: BigNumber, minBetAmountBalance: BigNumber) => {
+const getButtonProps = (
+  value: ethers.BigNumber,
+  bnbBalance: ethers.BigNumber,
+  minBetAmountBalance: ethers.BigNumber,
+) => {
   const hasSufficientBalance = () => {
     if (value.gt(0)) {
       return value.lte(bnbBalance)
@@ -63,19 +69,21 @@ const getButtonProps = (value: BigNumber, bnbBalance: BigNumber, minBetAmountBal
 
 const getValueAsEthersBn = (value: string) => {
   const valueAsFloat = parseFloat(value)
-  return Number.isNaN(valueAsFloat) ? Zero : parseUnits(value)
+  return Number.isNaN(valueAsFloat) ? ethers.BigNumber.from(0) : parseUnits(value)
 }
 
 const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosition, epoch, onBack, onSuccess }) => {
   const [value, setValue] = useState('')
+  const [isTxPending, setIsTxPending] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [percent, setPercent] = useState(0)
 
   const { account } = useWeb3React()
+  const { swiper } = useSwiper()
   const { balance: bnbBalance } = useGetBnbBalance()
   const minBetAmount = useGetMinBetAmount()
   const { t } = useTranslation()
-  const { fetchWithCatchTxError, loading: isTxPending } = useCatchTxError()
+  const { toastSuccess, toastError } = useToast()
   const { callWithGasPrice } = useCallWithGasPrice()
   const predictionsContract = usePredictionsContract()
 
@@ -93,9 +101,9 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
     if (inputAsBn.eq(0)) {
       setPercent(0)
     } else {
-      const inputAsFn = FixedNumber.from(inputAsBn)
-      const maxValueAsFn = FixedNumber.from(maxBalance)
-      const hundredAsFn = FixedNumber.from(100)
+      const inputAsFn = ethers.FixedNumber.from(inputAsBn)
+      const maxValueAsFn = ethers.FixedNumber.from(maxBalance)
+      const hundredAsFn = ethers.FixedNumber.from(100)
       const percentage = inputAsFn.divUnsafe(maxValueAsFn).mulUnsafe(hundredAsFn)
       const percentageAsFloat = percentage.toUnsafeFloat()
 
@@ -106,9 +114,9 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
 
   const handlePercentChange = (sliderPercent: number) => {
     if (sliderPercent > 0) {
-      const maxValueAsFn = FixedNumber.from(maxBalance)
-      const hundredAsFn = FixedNumber.from(100)
-      const sliderPercentAsFn = FixedNumber.from(sliderPercent.toFixed(18)).divUnsafe(hundredAsFn)
+      const maxValueAsFn = ethers.FixedNumber.from(maxBalance)
+      const hundredAsFn = ethers.FixedNumber.from(100)
+      const sliderPercentAsFn = ethers.FixedNumber.from(sliderPercent.toFixed(18)).divUnsafe(hundredAsFn)
       const balancePercentage = maxValueAsFn.mulUnsafe(sliderPercentAsFn)
       setValue(formatFixedNumber(balancePercentage))
     } else {
@@ -124,16 +132,35 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
     onBack()
   }
 
+  // Disable the swiper events to avoid conflicts
+  const handleMouseOver = () => {
+    swiper.keyboard.disable()
+    swiper.mousewheel.disable()
+    swiper.detachEvents()
+  }
+
+  const handleMouseOut = () => {
+    swiper.keyboard.enable()
+    swiper.mousewheel.enable()
+    swiper.attachEvents()
+  }
+
   const { key, disabled } = getButtonProps(valueAsBn, maxBalance, minBetAmount)
 
   const handleEnterPosition = async () => {
     const betMethod = position === BetPosition.BULL ? 'betBull' : 'betBear'
 
-    const receipt = await fetchWithCatchTxError(() => {
-      return callWithGasPrice(predictionsContract, betMethod, [epoch], { value: valueAsBn.toString() })
-    })
-    if (receipt?.status) {
+    try {
+      const tx = await callWithGasPrice(predictionsContract, betMethod, [epoch], { value: valueAsBn.toString() })
+      toastSuccess(`${t('Transaction Submitted')}!`, <ToastDescriptionWithTx txHash={tx.hash} />)
+      setIsTxPending(true)
+      const receipt = await tx.wait()
       onSuccess(receipt.transactionHash)
+    } catch (e) {
+      logError(e)
+      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+    } finally {
+      setIsTxPending(false)
     }
   }
 
@@ -143,18 +170,19 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
     const hasSufficientBalance = inputAmount.gt(0) && inputAmount.lte(maxBalance)
 
     if (!hasSufficientBalance) {
-      setErrorMessage(t('Insufficient BNB balance'))
+      setErrorMessage({ key: 'Insufficient BNB balance' })
     } else if (inputAmount.gt(0) && inputAmount.lt(minBetAmount)) {
-      setErrorMessage(
-        t('A minimum amount of %num% %token% is required', { num: formatBigNumber(minBetAmount), token: 'BNB' }),
-      )
+      setErrorMessage({
+        key: 'A minimum amount of %num% %token% is required',
+        data: { num: formatBigNumber(minBetAmount), token: 'BNB' },
+      })
     } else {
       setErrorMessage(null)
     }
-  }, [value, maxBalance, minBetAmount, setErrorMessage, t])
+  }, [value, maxBalance, minBetAmount, setErrorMessage])
 
   return (
-    <Card>
+    <Card onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
       <CardHeader p="16px">
         <Flex alignItems="center">
           <IconButton variant="text" scale="sm" onClick={handleGoBack} mr="8px">
@@ -185,11 +213,10 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
           onUserInput={handleInputChange}
           isWarning={showFieldWarning}
           inputProps={{ disabled: !account || isTxPending }}
-          className={!account || isTxPending ? '' : 'swiper-no-swiping'}
         />
         {showFieldWarning && (
           <Text color="failure" fontSize="12px" mt="4px" textAlign="right">
-            {errorMessage}
+            {t(errorMessage.key, errorMessage.data)}
           </Text>
         )}
         <Text textAlign="right" mb="16px" color="textSubtle" fontSize="12px" style={{ height: '18px' }}>
@@ -220,7 +247,6 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
                 variant="tertiary"
                 onClick={handleClick}
                 disabled={!account || isTxPending}
-                className={!account || isTxPending ? '' : 'swiper-no-swiping'}
                 style={{ flex: 1 }}
               >
                 {`${percentShortcut}%`}
@@ -232,7 +258,6 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
             variant="tertiary"
             onClick={() => handlePercentChange(100)}
             disabled={!account || isTxPending}
-            className={!account || isTxPending ? '' : 'swiper-no-swiping'}
           >
             {t('Max')}
           </Button>
@@ -241,8 +266,7 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
           {account ? (
             <Button
               width="100%"
-              disabled={disabled}
-              className={disabled ? '' : 'swiper-no-swiping'}
+              disabled={!account || disabled}
               onClick={handleEnterPosition}
               isLoading={isTxPending}
               endIcon={isTxPending ? <AutoRenewIcon color="currentColor" spin /> : null}
@@ -250,7 +274,7 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ position, togglePosit
               {t(key)}
             </Button>
           ) : (
-            <ConnectWalletButton className="swiper-no-swiping" width="100%" />
+            <ConnectWalletButton width="100%" />
           )}
         </Box>
         <Text as="p" fontSize="12px" lineHeight={1} color="textSubtle">

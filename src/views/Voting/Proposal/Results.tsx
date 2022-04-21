@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   Box,
   Text,
@@ -12,7 +13,9 @@ import {
   CheckmarkCircleIcon,
 } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
+import times from 'lodash/times'
 import { Vote } from 'state/types'
+import { useGetVotingStateLoadingStatus } from 'state/voting/hooks'
 import { formatNumber } from 'utils/formatBalance'
 import { useTranslation } from 'contexts/Localization'
 import { FetchStatus } from 'config/constants/types'
@@ -22,12 +25,12 @@ import TextEllipsis from '../components/TextEllipsis'
 interface ResultsProps {
   choices: string[]
   votes: Vote[]
-  votesLoadingStatus: FetchStatus
 }
 
-const Results: React.FC<ResultsProps> = ({ choices, votes, votesLoadingStatus }) => {
+const Results: React.FC<ResultsProps> = ({ choices, votes }) => {
   const { t } = useTranslation()
   const results = calculateVoteResults(votes)
+  const votingStatus = useGetVotingStateLoadingStatus()
   const { account } = useWeb3React()
   const totalVotes = getTotalFromVotes(votes)
 
@@ -39,7 +42,7 @@ const Results: React.FC<ResultsProps> = ({ choices, votes, votesLoadingStatus })
         </Heading>
       </CardHeader>
       <CardBody>
-        {votesLoadingStatus === FetchStatus.Fetched &&
+        {votingStatus === FetchStatus.Fetched &&
           choices.map((choice, index) => {
             const choiceVotes = results[choice] || []
             const totalChoiceVote = getTotalFromVotes(choiceVotes)
@@ -73,18 +76,11 @@ const Results: React.FC<ResultsProps> = ({ choices, votes, votesLoadingStatus })
             )
           })}
 
-        {votesLoadingStatus === FetchStatus.Fetching &&
-          choices.map((choice, index) => {
+        {votingStatus === FetchStatus.Fetching &&
+          times(choices.length).map((count, index) => {
             return (
-              <Box key={choice} mt={index > 0 ? '24px' : '0px'}>
-                <Flex alignItems="center" mb="8px">
-                  <TextEllipsis mb="4px" title={choice}>
-                    {choice}
-                  </TextEllipsis>
-                </Flex>
-                <Box mb="4px">
-                  <Skeleton height="36px" mb="4px" />
-                </Box>
+              <Box key={count} mt={index > 0 ? '24px' : '0px'}>
+                <Skeleton height="36px" mb="4px" />
               </Box>
             )
           })}

@@ -1,5 +1,5 @@
 import { LotteryTicket } from 'config/constants/types'
-import random from 'lodash/random'
+import { random } from 'lodash'
 
 /**
  * Generate a specific number of unique, randomised 7-digit lottery numbers between 1000000 & 1999999

@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { MaxUint256 } from '@ethersproject/constants'
-import { Modal, Text, Flex, BalanceInput, Box, Button, LogoRoundIcon } from '@pancakeswap/uikit'
+import { ethers } from 'ethers'
+import { Modal, Text, Flex, BalanceInput, Box, Button, PancakeRoundIcon } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { useWeb3React } from '@web3-react/core'
 import { formatNumber, getBalanceAmount, getBalanceNumber } from 'utils/formatBalance'
+import { ethersToBigNumber } from 'utils/bigNumber'
 import useTheme from 'hooks/useTheme'
 import useTokenBalance from 'hooks/useTokenBalance'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
@@ -19,7 +20,6 @@ import { usePriceCakeBusd } from 'state/farms/hooks'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { ToastDescriptionWithTx } from 'components/Toast'
 import tokens from 'config/constants/tokens'
-import { requiresApproval } from 'utils/requiresApproval'
 
 const StyledModal = styled(Modal)`
   min-width: 280px;
@@ -69,7 +69,7 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
 
   const cakePriceBusd = usePriceCakeBusd()
   const farmAuctionContract = useFarmAuctionContract()
-  const { reader: cakeContractReader, signer: cakeContractApprover } = useCake()
+  const cakeContract = useCake()
 
   const { toastSuccess } = useToast()
 
@@ -103,10 +103,16 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        return requiresApproval(cakeContractReader, account, farmAuctionContract.address)
+        try {
+          const response = await cakeContract.allowance(account, farmAuctionContract.address)
+          const currentAllowance = ethersToBigNumber(response)
+          return currentAllowance.gt(0)
+        } catch (error) {
+          return false
+        }
       },
       onApprove: () => {
-        return callWithGasPrice(cakeContractApprover, 'approve', [farmAuctionContract.address, MaxUint256])
+        return callWithGasPrice(cakeContract, 'approve', [farmAuctionContract.address, ethers.constants.MaxUint256])
       },
       onApproveSuccess: async ({ receipt }) => {
         toastSuccess(
@@ -120,7 +126,7 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
       },
       onSuccess: async ({ receipt }) => {
         refreshBidders()
-        onDismiss?.()
+        onDismiss()
         toastSuccess(t('Bid placed!'), <ToastDescriptionWithTx txHash={receipt.transactionHash} />)
       },
     })
@@ -150,7 +156,7 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
         <Flex justifyContent="space-between" alignItems="center" pb="8px">
           <Text>{t('Bid a multiple of 10')}</Text>
           <Flex>
-            <LogoRoundIcon width="24px" height="24px" mr="4px" />
+            <PancakeRoundIcon width="24px" height="24px" mr="4px" />
             <Text bold>CAKE</Text>
           </Flex>
         </Flex>
@@ -246,7 +252,7 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
           )}
         </Flex>
         <Text color="textSubtle" small mt="24px">
-          {t('If your bid is unsuccessful, you’ll be able to reclaim your CAKE after the auction.')}
+          {t('If your bid is unFetchedful, you’ll be able to reclaim your CAKE after the auction.')}
         </Text>
       </InnerContent>
     </StyledModal>

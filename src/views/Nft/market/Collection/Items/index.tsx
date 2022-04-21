@@ -1,20 +1,26 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
 import { Box, Flex, Text } from '@pancakeswap/uikit'
+import { useAppDispatch } from 'state'
+import { fetchCollection } from 'state/nftMarket/reducer'
 import { useGetCollection } from 'state/nftMarket/hooks'
 import { useTranslation } from 'contexts/Localization'
 import Select, { OptionProps } from 'components/Select/Select'
 import Container from 'components/Layout/Container'
-import { pancakeBunniesAddress } from '../../constants'
-import PancakeBunniesCollectionNfts from './PancakeBunniesCollectionNfts'
+import { gladiatorCollectiblesAddress } from '../../constants'
+import GladiatorCollectiblesCollectionNfts from './GladiatorCollectibleCollectionNfts'
+import Header from '../Header'
 import CollectionWrapper from './CollectionWrapper'
 
 const Items = () => {
-  const collectionAddress = useRouter().query.collectionAddress as string
+  const { collectionAddress } = useParams<{ collectionAddress: string }>()
   const [sortBy, setSortBy] = useState('updatedAt')
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
   const collection = useGetCollection(collectionAddress)
-  const isPBCollection = collectionAddress.toLowerCase() === pancakeBunniesAddress.toLowerCase()
+  const isPBCollection = collectionAddress.toLowerCase() === gladiatorCollectiblesAddress.toLowerCase()
+
+  const { address } = collection || {}
 
   const sortByItems = [
     { label: t('Recently listed'), value: 'updatedAt' },
@@ -25,8 +31,15 @@ const Items = () => {
     setSortBy(newOption.value)
   }
 
+  useEffect(() => {
+    if (address) {
+      dispatch(fetchCollection(address))
+    }
+  }, [address, dispatch])
+
   return (
     <>
+      <Header collection={collection} />
       {isPBCollection ? (
         <Container mb="24px">
           <Flex alignItems="center" justifyContent={['flex-start', null, null, 'flex-end']} mb="24px">
@@ -37,7 +50,7 @@ const Items = () => {
               <Select options={sortByItems} onOptionChange={handleChange} />
             </Box>
           </Flex>
-          <PancakeBunniesCollectionNfts address={collection?.address} sortBy={sortBy} />
+          <GladiatorCollectiblesCollectionNfts collection={collection} sortBy={sortBy} />
         </Container>
       ) : (
         <CollectionWrapper collection={collection} />

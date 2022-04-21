@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
@@ -29,7 +29,6 @@ const InputsContainer = styled.div<{ focused: boolean; isDuplicate: boolean }>`
 `
 
 const DigitInput = styled.input`
-  color: ${({ theme }) => theme.colors.primaryDark};
   border: none;
   height: 32px;
   padding: 0 12px;

@@ -1,20 +1,34 @@
-import { Card, CardBody, Flex, Spinner, WaitIcon, TooltipText, useTooltip, InfoIcon } from '@pancakeswap/uikit'
+import React from 'react'
+import { Flex, Spinner, Text, TooltipText, useTooltip, InfoIcon } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
+import styled, { keyframes } from 'styled-components'
 import { NodeRound, BetPosition } from 'state/types'
 import useTheme from 'hooks/useTheme'
 import { RoundResultBox } from '../RoundResult'
 import MultiplierArrow from './MultiplierArrow'
 import CardHeader, { getBorderBackground } from './CardHeader'
 
-interface CalculatingCardProps {
-  round: NodeRound
-  hasEnteredUp: boolean
-  hasEnteredDown: boolean
-}
+const Card = styled.div`
+  position: absolute;
+  background-color: rgba(0, 0, 0, .15);  
+  backdrop-filter: blur(5px);
+  top: 0;
+  bottom: 0;
+  left: 0; 
+  right: 0; 
+  margin: auto; 
+  width: 460px;
+  height: 280px;
+  border-radius: 16px;
+  border: 2px solid #D9AB3A;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
 
-const CalculatingCard: React.FC<CalculatingCardProps> = ({ round, hasEnteredUp, hasEnteredDown }) => {
+const CalculatingCard = () => {
   const { t } = useTranslation()
-  const { theme } = useTheme()
   const { targetRef, tooltip, tooltipVisible } = useTooltip(
     t('This round’s closing transaction has been submitted to the blockchain, and is awaiting confirmation.'),
     { placement: 'bottom' },
@@ -22,26 +36,12 @@ const CalculatingCard: React.FC<CalculatingCardProps> = ({ round, hasEnteredUp, 
 
   return (
     <>
-      <Card borderBackground={getBorderBackground(theme, 'calculating')}>
-        <CardHeader
-          status="calculating"
-          icon={<WaitIcon mr="4px" width="21px" />}
-          title={t('Calculating')}
-          epoch={round.epoch}
-        />
-        <CardBody p="16px">
-          <MultiplierArrow isDisabled hasEntered={hasEnteredUp} />
-          <RoundResultBox>
-            <Flex alignItems="center" justifyContent="center" flexDirection="column">
-              <Spinner size={96} />
-              <Flex mt="8px" ref={targetRef}>
-                <TooltipText>{t('Calculating')}</TooltipText>
-                <InfoIcon ml="4px" />
-              </Flex>
-            </Flex>
-          </RoundResultBox>
-          <MultiplierArrow betPosition={BetPosition.BEAR} isDisabled hasEntered={hasEnteredDown} />
-        </CardBody>
+      <Card>
+        <Spinner />
+        <Flex mt="12px" ref={targetRef}>
+          <Text>{t('Calculating Results')}</Text>
+          <InfoIcon ml="4px" />
+        </Flex>
       </Card>
       {tooltipVisible && tooltip}
     </>

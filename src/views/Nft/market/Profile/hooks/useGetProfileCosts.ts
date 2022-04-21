@@ -1,41 +1,40 @@
 import { useEffect, useState } from 'react'
-import { BigNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
+import { ethers } from 'ethers'
 import { useTranslation } from 'contexts/Localization'
 import { multicallv2 } from 'utils/multicall'
-import profileABI from 'config/abi/pancakeProfile.json'
-import { getPancakeProfileAddress } from 'utils/addressHelpers'
+import profileABI from 'config/abi/gladiatorProfile.json'
+import { getGladiatorProfileAddress } from 'utils/addressHelpers'
 import useToast from 'hooks/useToast'
 
 const useGetProfileCosts = () => {
   const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(true)
   const [costs, setCosts] = useState({
-    numberCakeToReactivate: Zero,
-    numberCakeToRegister: Zero,
-    numberCakeToUpdate: Zero,
+    numberNrtToReactivate: ethers.BigNumber.from(0),
+    numberNrtToRegister: ethers.BigNumber.from(0),
+    numberNrtToUpdate: ethers.BigNumber.from(0),
   })
   const { toastError } = useToast()
 
   useEffect(() => {
     const fetchCosts = async () => {
       try {
-        const calls = ['numberCakeToReactivate', 'numberCakeToRegister', 'numberCakeToUpdate'].map((method) => ({
-          address: getPancakeProfileAddress(),
+        const calls = ['numberNrtToReactivate', 'numberNrtToRegister', 'numberNrtToUpdate'].map((method) => ({
+          address: getGladiatorProfileAddress(),
           name: method,
         }))
-        const [[numberCakeToReactivate], [numberCakeToRegister], [numberCakeToUpdate]] = await multicallv2<
-          [[BigNumber], [BigNumber], [BigNumber]]
+        const [[numberNrtToReactivate], [numberNrtToRegister], [numberNrtToUpdate]] = await multicallv2<
+          [[ethers.BigNumber], [ethers.BigNumber], [ethers.BigNumber]]
         >(profileABI, calls)
 
         setCosts({
-          numberCakeToReactivate,
-          numberCakeToRegister,
-          numberCakeToUpdate,
+          numberNrtToReactivate,
+          numberNrtToRegister,
+          numberNrtToUpdate,
         })
         setIsLoading(false)
       } catch (error) {
-        toastError(t('Error'), t('Could not retrieve CAKE costs for profile'))
+        toastError(t('Error'), t('Could not retrieve NRT costs for profile'))
       }
     }
 

@@ -1,28 +1,18 @@
+import React from 'react'
 import { useTranslation } from 'contexts/Localization'
-import { Text, Link } from '@pancakeswap/uikit'
+import { Text } from '@pancakeswap/uikit'
 
 const SafemoonWarning = () => {
   const { t } = useTranslation()
 
-  // Break translation sentences into pieces because the current translation approach doesn't support Link interpolation.
   return (
     <>
-      <Text>
-        {t('SAFEMOON has been migrated to')}{' '}
-        <Link
-          style={{ display: 'inline' }}
-          external
-          href="https://bscscan.com/address/0x42981d0bfbAf196529376EE702F2a9Eb9092fcB5"
-        >
-          {t('a new contract address.')}
-        </Link>{' '}
-        {t(
-          'Trading on the old address may result in the complete loss of your assets. For more information please refer to',
-        )}{' '}
-        <Link style={{ display: 'inline' }} external href="https://twitter.com/safemoon/status/1477770592031887360">
-          {t("Safemoon's announcement")}.
-        </Link>
-      </Text>
+      <Text>{t('To trade SAFEMOON, you must:')} </Text>
+      <Text>• {t('Click on the settings icon')}</Text>
+      <Text mb="24px">• {t('Set your slippage tolerance to 12%+')}</Text>
+      <Text>{t('This is because SafeMoon taxes a 10% fee on each transaction:')}</Text>
+      <Text>• {t('5% fee = redistributed to all existing holders')}</Text>
+      <Text>• {t('5% fee = used to add liquidity')}</Text>
     </>
   )
 }

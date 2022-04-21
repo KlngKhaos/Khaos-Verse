@@ -1,7 +1,9 @@
+import React from 'react'
 import { Flex, Text, Button, Link } from '@pancakeswap/uikit'
-import { NextLinkFromReactRouter as RouterLink } from 'components/NextLink'
+import { Link as RouterLink } from 'react-router-dom'
+import { useTranslation } from 'contexts/Localization'
 import CompositeImage, { CompositeImageProps } from '../CompositeImage'
-import ColoredWordHeading from '../ColoredWordHeading'
+import PurpleWordHeading from '../PurpleWordHeading'
 
 interface SalesSectionButton {
   to: string
@@ -19,7 +21,12 @@ export interface SalesSectionProps {
 }
 
 const SalesSection: React.FC<SalesSectionProps> = (props) => {
+  const { t } = useTranslation()
+
   const { headingText, bodyText, reverse, primaryButton, secondaryButton, images } = props
+
+  const headingTranslatedText = t(headingText)
+  const bodyTranslatedText = t(bodyText)
 
   return (
     <Flex flexDirection="column">
@@ -35,32 +42,32 @@ const SalesSection: React.FC<SalesSectionProps> = (props) => {
           mr={[null, null, null, !reverse && '64px']}
           alignSelf={['flex-start', null, null, 'center']}
         >
-          <ColoredWordHeading text={headingText} />
+          <PurpleWordHeading text={headingTranslatedText} />
           <Text color="textSubtle" mb="24px">
-            {bodyText}
+            {bodyTranslatedText}
           </Text>
           <Flex>
             <Button mr="16px">
               {primaryButton.external ? (
                 <Link external href={primaryButton.to}>
                   <Text color="card" bold fontSize="16px">
-                    {primaryButton.text}
+                    {t(primaryButton.text)}
                   </Text>
                 </Link>
               ) : (
                 <RouterLink to={primaryButton.to}>
                   <Text color="card" bold fontSize="16px">
-                    {primaryButton.text}
+                    {t(primaryButton.text)}
                   </Text>
                 </RouterLink>
               )}
             </Button>
             {secondaryButton.external ? (
               <Link external href={secondaryButton.to}>
-                {secondaryButton.text}
+                {t(secondaryButton.text)}
               </Link>
             ) : (
-              <RouterLink to={secondaryButton.to}>{secondaryButton.text}</RouterLink>
+              <RouterLink to={secondaryButton.to}>{t(secondaryButton.text)}</RouterLink>
             )}
           </Flex>
         </Flex>

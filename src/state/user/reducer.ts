@@ -12,6 +12,7 @@ import {
   removeSerializedToken,
   SerializedPair,
   muteAudio,
+  toggleTheme,
   unmuteAudio,
   updateGasPrice,
   updateUserDeadline,
@@ -25,15 +26,13 @@ import {
   ViewMode,
   updateUserPredictionAcceptedRisk,
   updateUserPredictionChartDisclaimerShow,
-  updateUserPredictionChainlinkChartDisclaimerShow,
   updateUserUsernameVisibility,
   updateUserExpertModeAcknowledgementShow,
-  hidePhishingWarningBanner,
-  setIsExchangeChartDisplayed,
+  updateUserGalleryFreshwaterOnly,
+  updateUserGallerySaltwaterOnly,
   setChartViewMode,
-  ChartViewMode,
-  setSubgraphHealthIndicatorDisplayed,
-  updateUserLimitOrderAcceptedWarning,
+  setIsExchangeChartDisplayed,
+  ChartViewMode
 } from './actions'
 import { GAS_PRICE_GWEI } from './hooks/helpers'
 
@@ -69,23 +68,22 @@ export interface UserState {
 
   timestamp: number
   audioPlay: boolean
-  isExchangeChartDisplayed: boolean
-  isSubgraphHealthIndicatorDisplayed: boolean
-  userChartViewMode: ChartViewMode
+  isDark: boolean
   userFarmStakedOnly: FarmStakedOnly
+  userGalleryFreshwaterOnly: FarmStakedOnly
+  userGallerySaltwaterOnly: FarmStakedOnly
   userPoolStakedOnly: boolean
   userPoolsViewMode: ViewMode
   userFarmsViewMode: ViewMode
   userPredictionAcceptedRisk: boolean
-  userLimitOrderAcceptedWarning: boolean
   userPredictionChartDisclaimerShow: boolean
-  userPredictionChainlinkChartDisclaimerShow: boolean
   userExpertModeAcknowledgementShow: boolean
   userUsernameVisibility: boolean
   gasPrice: string
   watchlistTokens: string[]
-  watchlistPools: string[]
-  hideTimestampPhishingWarningBanner: number
+  watchlistPools: string[],
+  userChartViewMode?: boolean | string,
+  isExchangeChartDisplayed: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -101,23 +99,22 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   audioPlay: true,
-  isExchangeChartDisplayed: true,
-  isSubgraphHealthIndicatorDisplayed: false,
-  userChartViewMode: ChartViewMode.BASIC,
+  isDark: false,
   userFarmStakedOnly: FarmStakedOnly.ON_FINISHED,
+  userGalleryFreshwaterOnly: FarmStakedOnly.TRUE,
+  userGallerySaltwaterOnly: FarmStakedOnly.TRUE,
   userPoolStakedOnly: false,
   userPoolsViewMode: ViewMode.TABLE,
   userFarmsViewMode: ViewMode.TABLE,
   userPredictionAcceptedRisk: false,
-  userLimitOrderAcceptedWarning: false,
   userPredictionChartDisclaimerShow: true,
-  userPredictionChainlinkChartDisclaimerShow: true,
   userExpertModeAcknowledgementShow: true,
   userUsernameVisibility: false,
   gasPrice: GAS_PRICE_GWEI.default,
   watchlistTokens: [],
   watchlistPools: [],
-  hideTimestampPhishingWarningBanner: null,
+  isExchangeChartDisplayed: true,
+  userChartViewMode: ChartViewMode.BASIC,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -193,8 +190,17 @@ export default createReducer(initialState, (builder) =>
     .addCase(unmuteAudio, (state) => {
       state.audioPlay = true
     })
+    .addCase(toggleTheme, (state) => {
+      state.isDark = !state.isDark
+    })
     .addCase(updateUserFarmStakedOnly, (state, { payload: { userFarmStakedOnly } }) => {
       state.userFarmStakedOnly = userFarmStakedOnly
+    })
+    .addCase(updateUserGalleryFreshwaterOnly, (state, { payload: { userGalleryFreshwaterOnly } }) => {
+      state.userGalleryFreshwaterOnly = userGalleryFreshwaterOnly
+    })
+    .addCase(updateUserGallerySaltwaterOnly, (state, { payload: { userGallerySaltwaterOnly } }) => {
+      state.userGallerySaltwaterOnly = userGallerySaltwaterOnly
     })
     .addCase(updateUserPoolStakedOnly, (state, { payload: { userPoolStakedOnly } }) => {
       state.userPoolStakedOnly = userPoolStakedOnly
@@ -208,14 +214,8 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateUserPredictionAcceptedRisk, (state, { payload: { userAcceptedRisk } }) => {
       state.userPredictionAcceptedRisk = userAcceptedRisk
     })
-    .addCase(updateUserLimitOrderAcceptedWarning, (state, { payload: { userAcceptedRisk } }) => {
-      state.userLimitOrderAcceptedWarning = userAcceptedRisk
-    })
     .addCase(updateUserPredictionChartDisclaimerShow, (state, { payload: { userShowDisclaimer } }) => {
       state.userPredictionChartDisclaimerShow = userShowDisclaimer
-    })
-    .addCase(updateUserPredictionChainlinkChartDisclaimerShow, (state, { payload: { userShowDisclaimer } }) => {
-      state.userPredictionChainlinkChartDisclaimerShow = userShowDisclaimer
     })
     .addCase(updateUserExpertModeAcknowledgementShow, (state, { payload: { userExpertModeAcknowledgementShow } }) => {
       state.userExpertModeAcknowledgementShow = userExpertModeAcknowledgementShow
@@ -225,6 +225,12 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateGasPrice, (state, action) => {
       state.gasPrice = action.payload.gasPrice
+    })
+    .addCase(setIsExchangeChartDisplayed, (state, { payload }) => {
+      state.isExchangeChartDisplayed = payload
+    })
+    .addCase(setChartViewMode, (state, { payload }) => {
+      state.userChartViewMode = payload
     })
     .addCase(addWatchlistToken, (state, { payload: { address } }) => {
       // state.watchlistTokens can be undefined for pre-loaded localstorage user state
@@ -247,17 +253,5 @@ export default createReducer(initialState, (builder) =>
         const newPools = state.watchlistPools.filter((x) => x !== address)
         state.watchlistPools = newPools
       }
-    })
-    .addCase(hidePhishingWarningBanner, (state) => {
-      state.hideTimestampPhishingWarningBanner = currentTimestamp()
-    })
-    .addCase(setIsExchangeChartDisplayed, (state, { payload }) => {
-      state.isExchangeChartDisplayed = payload
-    })
-    .addCase(setChartViewMode, (state, { payload }) => {
-      state.userChartViewMode = payload
-    })
-    .addCase(setSubgraphHealthIndicatorDisplayed, (state, { payload }) => {
-      state.isSubgraphHealthIndicatorDisplayed = payload
     }),
 )

@@ -1,15 +1,15 @@
-import { useMemo, useRef, useEffect } from 'react'
+import React, { useMemo, useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Text, Flex, Box, Card } from '@pancakeswap/uikit'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import { Link } from 'react-router-dom'
 import { useAllTokenData } from 'state/info/hooks'
 import { TokenData } from 'state/info/types'
 import { CurrencyLogo } from 'views/Info/components/CurrencyLogo'
-import { formatAmount } from 'utils/formatInfoNumbers'
+import { formatAmount } from 'views/Info/utils/formatInfoNumbers'
 import Percent from 'views/Info/components/Percent'
 import { useTranslation } from 'contexts/Localization'
 
-const CardWrapper = styled(NextLinkFromReactRouter)`
+const CardWrapper = styled(Link)`
   display: inline-block;
   min-width: 190px;
   margin-left: 16px;
@@ -73,27 +73,20 @@ const TopTokenMovers: React.FC = () => {
   }, [allTokens])
 
   const increaseRef = useRef<HTMLDivElement>(null)
-  const moveLeftRef = useRef<boolean>(true)
+  const [increaseSet, setIncreaseSet] = useState(false)
+  // const [pauseAnimation, setPauseAnimation] = useState(false)
+  // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
 
   useEffect(() => {
-    const scrollInterval = setInterval(() => {
-      if (increaseRef.current) {
-        if (increaseRef.current.scrollLeft === increaseRef.current.scrollWidth - increaseRef.current.clientWidth) {
-          moveLeftRef.current = false
-        } else if (increaseRef.current.scrollLeft === 0) {
-          moveLeftRef.current = true
+    if (!increaseSet && increaseRef && increaseRef.current) {
+      setInterval(() => {
+        if (increaseRef.current && increaseRef.current.scrollLeft !== increaseRef.current.scrollWidth) {
+          increaseRef.current.scrollTo(increaseRef.current.scrollLeft + 1, 0)
         }
-        increaseRef.current.scrollTo(
-          moveLeftRef.current ? increaseRef.current.scrollLeft + 1 : increaseRef.current.scrollLeft - 1,
-          0,
-        )
-      }
-    }, 30)
-
-    return () => {
-      clearInterval(scrollInterval)
+      }, 30)
+      setIncreaseSet(true)
     }
-  }, [])
+  }, [increaseRef, increaseSet])
 
   if (topPriceIncrease.length === 0 || !topPriceIncrease.some((entry) => entry.data)) {
     return null

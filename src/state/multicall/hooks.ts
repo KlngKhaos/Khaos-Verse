@@ -4,7 +4,7 @@ import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useSWRConfig } from 'swr'
+import { useBlock } from 'state/block/hooks'
 import { AppDispatch, AppState } from '../index'
 import {
   addMulticallListeners,
@@ -185,12 +185,11 @@ export function useSingleContractMultipleData(
 
   const results = useCallsData(calls, options)
 
-  const { cache } = useSWRConfig()
+  const { currentBlock } = useBlock()
 
   return useMemo(() => {
-    const currentBlockNumber = cache.get('blockNumber')
-    return results.map((result) => toCallState(result, contract?.interface, fragment, currentBlockNumber))
-  }, [fragment, contract, results, cache])
+    return results.map((result) => toCallState(result, contract?.interface, fragment, currentBlock))
+  }, [fragment, contract, results, currentBlock])
 }
 
 export function useMultipleContractSingleData(
@@ -226,12 +225,11 @@ export function useMultipleContractSingleData(
 
   const results = useCallsData(calls, options)
 
-  const { cache } = useSWRConfig()
+  const { currentBlock } = useBlock()
 
   return useMemo(() => {
-    const currentBlockNumber = cache.get('blockNumber')
-    return results.map((result) => toCallState(result, contractInterface, fragment, currentBlockNumber))
-  }, [fragment, results, contractInterface, cache])
+    return results.map((result) => toCallState(result, contractInterface, fragment, currentBlock))
+  }, [fragment, results, contractInterface, currentBlock])
 }
 
 export function useSingleCallResult(
@@ -254,10 +252,9 @@ export function useSingleCallResult(
   }, [contract, fragment, inputs])
 
   const result = useCallsData(calls, options)[0]
-  const { cache } = useSWRConfig()
+  const { currentBlock } = useBlock()
 
   return useMemo(() => {
-    const currentBlockNumber = cache.get('blockNumber')
-    return toCallState(result, contract?.interface, fragment, currentBlockNumber)
-  }, [cache, result, contract?.interface, fragment])
+    return toCallState(result, contract?.interface, fragment, currentBlock)
+  }, [result, contract, fragment, currentBlock])
 }

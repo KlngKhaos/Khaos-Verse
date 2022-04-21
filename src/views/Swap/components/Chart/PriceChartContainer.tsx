@@ -1,6 +1,6 @@
 import { Currency } from '@pancakeswap/sdk'
 import useTheme from 'hooks/useTheme'
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import BnbWbnbNotice from './BnbWbnbNotice'
 import { BNB_ADDRESS } from './constants'
 import PriceChart from './PriceChart'
@@ -18,7 +18,6 @@ type PriceChartContainerProps = {
     [key: string]: number
   }
   isMobile?: boolean
-  isFullWidthContainer?: boolean
 }
 
 const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
@@ -30,7 +29,6 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   setIsChartExpanded,
   isChartDisplayed,
   isMobile,
-  isFullWidthContainer = false,
   currentSwapPrice,
 }) => {
   const token0Address = getTokenAddress(inputCurrencyId)
@@ -61,7 +59,6 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
       isChartExpanded={isChartExpanded}
       setIsChartExpanded={setIsChartExpanded}
       isMobile={isMobile}
-      isFullWidthContainer={isFullWidthContainer}
       currentSwapPrice={currentSwapPrice}
     />
   )

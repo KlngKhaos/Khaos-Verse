@@ -1,17 +1,17 @@
 import { Address } from '../types'
 
-export enum PancakeCollectionKey {
-  PANCAKE = 'pancake',
+export enum GladiatorsCollectionKey {
+  GLADIATORS = 'gladiators',
   SQUAD = 'pancakeSquad',
 }
 
-export type PancakeCollection = {
+export type GladiatorsCollection = {
   name: string
   description?: string
   slug: string
   address: Address
 }
 
-export type PancakeCollections = {
-  [key in PancakeCollectionKey]: PancakeCollection
+export type GladiatorsCollections = {
+  [key in GladiatorsCollectionKey]: GladiatorsCollection
 }

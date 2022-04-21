@@ -1,3 +1,4 @@
+import React from 'react'
 import { Card, Table, Th } from '@pancakeswap/uikit'
 import { PredictionUser } from 'state/types'
 import Container from 'components/Layout/Container'

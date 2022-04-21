@@ -1,9 +1,10 @@
-import { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Text, Flex, Link } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useCurrentBlock } from 'state/block/hooks'
-import { ToastDescriptionWithTx } from 'components/Toast'
+import { getBscScanLink } from 'utils'
+import { useBlock } from 'state/block/hooks'
 import useToast from 'hooks/useToast'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
@@ -33,7 +34,7 @@ export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const currentBlock = useCurrentBlock()
+  const { currentBlock } = useBlock()
 
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector<AppState, AppState['transactions']>((s) => s.transactions)
@@ -70,7 +71,17 @@ export default function Updater(): null {
               )
 
               const toast = receipt.status === 1 ? toastSuccess : toastError
-              toast(t('Transaction receipt'), <ToastDescriptionWithTx txHash={receipt.transactionHash} />)
+              toast(
+                t('Transaction receipt'),
+                <Flex flexDirection="column">
+                  <Text>{transactions[hash]?.summary ?? `Hash: ${hash.slice(0, 8)}...${hash.slice(58, 65)}`}</Text>
+                  {chainId && (
+                    <Link external href={getBscScanLink(hash, 'transaction', chainId)}>
+                      {t('View on BscScan')}
+                    </Link>
+                  )}
+                </Flex>,
+              )
             } else {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: currentBlock }))
             }

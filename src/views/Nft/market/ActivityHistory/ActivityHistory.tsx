@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 import { useAppDispatch } from 'state'
 import {
@@ -117,7 +117,7 @@ const ActivityHistory: React.FC<ActivityHistoryProps> = ({ collection }) => {
           alignItems={[null, null, 'center']}
           flexDirection={['column', 'column', 'row']}
         >
-          <ActivityFilters address={collection?.address || ''} />
+          <ActivityFilters collection={collection} />
           <Button
             scale="sm"
             disabled={isLoading}

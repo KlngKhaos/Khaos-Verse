@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { AutoRenewIcon, Button, Flex } from '@pancakeswap/uikit'
 import { Achievement } from 'state/types'
@@ -5,11 +6,11 @@ import useToast from 'hooks/useToast'
 import { useTranslation } from 'contexts/Localization'
 import { usePointCenterIfoContract } from 'hooks/useContract'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
-import useCatchTxError from 'hooks/useCatchTxError'
 import { ToastDescriptionWithTx } from 'components/Toast'
 import AchievementTitle from 'views/Nft/market/Profile/components/Achievements/AchievementTitle'
 import AchievementAvatar from 'views/Nft/market/Profile/components/Achievements/AchievementAvatar'
 import AchievementDescription from 'views/Nft/market/Profile/components/Achievements/AchievementDescription'
+import { logError } from 'utils/sentry'
 import PointsLabel from './PointsLabel'
 
 interface AchievementRowProps {
@@ -52,19 +53,29 @@ const Body = styled(Flex)`
 `
 
 const AchievementRow: React.FC<AchievementRowProps> = ({ achievement, onCollectSuccess }) => {
+  const [isCollecting, setIsCollecting] = useState(false)
   const { t } = useTranslation()
   const pointCenterContract = usePointCenterIfoContract()
-  const { toastSuccess } = useToast()
-  const { fetchWithCatchTxError, loading: isCollecting } = useCatchTxError()
+  const { toastError, toastSuccess } = useToast()
   const { callWithGasPrice } = useCallWithGasPrice()
 
   const handleCollectPoints = async () => {
-    const receipt = await fetchWithCatchTxError(() => {
-      return callWithGasPrice(pointCenterContract, 'getPoints', [achievement.address])
-    })
-    if (receipt?.status) {
-      onCollectSuccess(achievement)
-      toastSuccess(t('Points Collected!'), <ToastDescriptionWithTx txHash={receipt.transactionHash} />)
+    try {
+      const tx = await callWithGasPrice(pointCenterContract, 'getPoints', [achievement.address])
+      toastSuccess(`${t('Transaction Submitted')}!`, <ToastDescriptionWithTx txHash={tx.hash} />)
+      setIsCollecting(true)
+      const receipt = await tx.wait()
+      if (receipt.status) {
+        onCollectSuccess(achievement)
+        toastSuccess(t('Points Collected!'), <ToastDescriptionWithTx txHash={receipt.transactionHash} />)
+      } else {
+        toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+      }
+    } catch (error) {
+      logError(error)
+      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+    } finally {
+      setIsCollecting(false)
     }
   }
 

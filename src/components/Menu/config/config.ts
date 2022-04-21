@@ -1,141 +1,139 @@
-import {
-  MenuItemsType,
-  DropdownMenuItemType,
-  SwapIcon,
-  SwapFillIcon,
-  EarnFillIcon,
-  EarnIcon,
-  TrophyIcon,
-  TrophyFillIcon,
-  NftIcon,
-  NftFillIcon,
-  MoreIcon,
-} from '@pancakeswap/uikit'
+import { MenuItemsType, DropdownMenuItemType } from '@pancakeswap/uikit'
 import { ContextApi } from 'contexts/Localization/types'
-import { nftsBaseUrl } from 'views/Nft/market/constants'
-import { perpLangMap } from 'utils/getPerpetualLanguageCode'
 
 export type ConfigMenuItemsType = MenuItemsType & { hideSubNav?: boolean }
 
-const config: (t: ContextApi['t'], languageCode?: string) => ConfigMenuItemsType[] = (t, languageCode) => [
+const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
   {
     label: t('Trade'),
-    icon: SwapIcon,
-    fillIcon: SwapFillIcon,
+    icon: 'Swap',
     href: '/swap',
     showItemsOnMobile: false,
     items: [
       {
-        label: t('Swap'),
+        label: t('Exchange'),
         href: '/swap',
-      },
-      {
-        label: t('Limit'),
-        href: '/limit-orders',
       },
       {
         label: t('Liquidity'),
         href: '/liquidity',
       },
-      {
-        label: t('Perpetual'),
-        href: `https://perp.pancakeswap.finance/${perpLangMap(languageCode)}/futures/BTCUSDT`,
-        type: DropdownMenuItemType.EXTERNAL_LINK,
-      },
     ],
   },
   {
     label: t('Earn'),
-    href: '/farms',
-    icon: EarnIcon,
-    fillIcon: EarnFillIcon,
+    href: '/room/pools',
+    icon: 'Earn',
     items: [
       {
         label: t('Farms'),
+        icon: 'FarmIcon',
         href: '/farms',
       },
       {
-        label: t('Pools'),
-        href: '/pools',
-      },
-    ],
-  },
-  {
-    label: t('Win'),
-    href: '/prediction',
-    icon: TrophyIcon,
-    fillIcon: TrophyFillIcon,
-    items: [
-      {
-        label: t('Trading Competition'),
-        href: '/competition',
+        label: t('Room Pools'),
+        icon: 'PoolIcon',
+        href: '/room/pools',
       },
       {
-        label: t('Prediction (BETA)'),
-        href: '/prediction',
+        label: t('Gladiator Battles'),
+        href: '/battles/join',
       },
       {
-        label: t('Lottery'),
-        href: '/lottery',
+        label: t('Bet on Battles'),
+        href: '/battles/bet',
       },
     ],
   },
   {
     label: t('NFT'),
-    href: `${nftsBaseUrl}`,
-    icon: NftIcon,
-    fillIcon: NftFillIcon,
+    href: '/gallery',
+    icon: 'NFT',
+    showOnMobile: false,
+    showItemsOnMobile: false,
     items: [
       {
-        label: t('Overview'),
-        href: `${nftsBaseUrl}`,
+        label: t('My Gladiators'),
+        href: '/mygladiators',
       },
       {
-        label: t('Collections'),
-        href: `${nftsBaseUrl}/collections`,
+        label: t('School'),
+        href: '/school',
       },
       {
-        label: t('Activity'),
-        href: `${nftsBaseUrl}/activity`,
+        label: t('Gallery'),
+        href: '/gallery',
+      },
+      {
+        label: t('Marketplace'),
+        href: '/nfts',
       },
     ],
   },
+  // {
+  //   label: t('Win'),
+  //   href: '/prediction',
+  //   icon: 'Trophy',
+  //   items: [
+  //     {
+  //       label: t('Prediction (BETA)'),
+  //       href: '/prediction',
+  //     },
+  //     {
+  //       label: t('Lottery'),
+  //       href: '/lottery',
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: t('NFT'),
+  //   href: '/collectibles',
+  //   icon: 'Nft',
+  //   showOnMobile: false,
+  //   showItemsOnMobile: false,
+  //   items: [
+  //     {
+  //       label: t('Collectibles'),
+  //       href: '/collectibles',
+  //     },
+  //   ],
+  // },
   {
     label: '',
-    href: '/info',
-    icon: MoreIcon,
+    href: '/referrals',
+    icon: 'More',
     hideSubNav: true,
     items: [
+      // {
+      //   label: t('Info'),
+      //   href: '/info',
+      // },
       {
-        label: t('Info'),
-        href: '/info',
+        label: t('Referrals'),
+        href: '/referrals',
       },
-      {
-        label: t('IFO'),
-        href: '/ifo',
-      },
-      {
-        label: t('Voting'),
-        href: '/voting',
-      },
-      {
-        type: DropdownMenuItemType.DIVIDER,
-      },
-      {
-        label: t('Leaderboard'),
-        href: '/teams',
-      },
+      // {
+      //   label: t('Voting'),
+      //   href: '/voting',
+      // },
       {
         type: DropdownMenuItemType.DIVIDER,
       },
+      // {
+      //   label: t('Leaderboard'),
+      //   href: '/teams',
+      // },
+      // {
+      //   type: DropdownMenuItemType.DIVIDER,
+      // },
       {
         label: t('Blog'),
-        href: 'https://medium.com/pancakeswap',
+        href: '	https://medium.com/@gladiators.finance',
         type: DropdownMenuItemType.EXTERNAL_LINK,
       },
       {
         label: t('Docs'),
-        href: 'https://docs.pancakeswap.finance',
+        href: 'https://docs.gladiators.finance',
         type: DropdownMenuItemType.EXTERNAL_LINK,
       },
     ],

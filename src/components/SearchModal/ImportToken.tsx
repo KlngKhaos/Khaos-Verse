@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Token, Currency } from '@pancakeswap/sdk'
 import { Button, Text, ErrorIcon, Flex, Message, Checkbox, Link, Tag, Grid } from '@pancakeswap/uikit'
 import { AutoColumn } from 'components/Layout/Column'
@@ -92,7 +92,7 @@ function ImportToken({ tokens, handleCurrencySelect }: ImportProps) {
           variant="danger"
           disabled={!confirmed}
           onClick={() => {
-            tokens.forEach((token) => addToken(token))
+            tokens.map((token) => addToken(token))
             if (handleCurrencySelect) {
               handleCurrencySelect(tokens[0])
             }

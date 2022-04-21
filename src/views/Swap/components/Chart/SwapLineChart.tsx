@@ -1,4 +1,4 @@
-import { useEffect, Dispatch, SetStateAction } from 'react'
+import React, { useEffect, Dispatch, SetStateAction } from 'react'
 import { ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from 'recharts'
 import useTheme from 'hooks/useTheme'
 import { LineChartLoader } from 'views/Info/components/ChartLoaders'
@@ -71,6 +71,10 @@ const LineChart = ({ data, setHoverValue, setHoverDate, isChangePositive, timeWi
   if (!data || data.length === 0) {
     return <LineChartLoader />
   }
+  // console.log(
+  //   'DATA===>',
+  //   data.sort((a, b) => a +b),
+  // )
   return (
     <ResponsiveContainer>
       <AreaChart
@@ -96,10 +100,15 @@ const LineChart = ({ data, setHoverValue, setHoverDate, isChangePositive, timeWi
           dataKey="time"
           axisLine={false}
           tickLine={false}
-          tickFormatter={(time) => time.toLocaleString(locale, dateFormatting)}
+          tickFormatter={(time,index) => {
+          //  if(data.length===24){
+          //   var d = new Date();
+          //    time=new Date(d.setHours(d.getHours()+10 - index)) 
+          //  }
+            return time.toLocaleString(locale, dateFormatting)}}
           minTickGap={8}
         />
-        <YAxis dataKey="value" axisLine={false} tickLine={false} domain={['auto', 'auto']} hide />
+        <YAxis dataKey="value" axisLine={false} tickLine={false} domain={['auto', 'auto']} />
         <Tooltip
           cursor={{ stroke: theme.colors.textDisabled }}
           contentStyle={{ display: 'none' }}

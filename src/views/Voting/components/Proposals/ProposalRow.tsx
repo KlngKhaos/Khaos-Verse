@@ -1,6 +1,7 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
 import { ArrowForwardIcon, Box, IconButton, Flex, Text } from '@pancakeswap/uikit'
 import styled from 'styled-components'
-import { NextLinkFromReactRouter } from 'components/NextLink'
 import { Proposal } from 'state/types'
 import { isCoreProposal } from '../../helpers'
 import TimeFrame from './TimeFrame'
@@ -10,14 +11,13 @@ interface ProposalRowProps {
   proposal: Proposal
 }
 
-const StyledProposalRow = styled(NextLinkFromReactRouter)`
+const StyledProposalRow = styled(Link)`
   align-items: center;
   border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
   display: flex;
   padding: 16px 24px;
 
   &:hover {
-    cursor: pointer;
     background-color: ${({ theme }) => theme.colors.dropdown};
   }
 `

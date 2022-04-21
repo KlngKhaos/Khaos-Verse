@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Box, Modal } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
@@ -24,7 +24,6 @@ const CastVoteModal: React.FC<CastVoteModalProps> = ({ onSuccess, proposalId, vo
   const { theme } = useTheme()
   const {
     isLoading,
-    isError,
     total,
     cakeBalance,
     cakeVaultBalance,
@@ -32,6 +31,7 @@ const CastVoteModal: React.FC<CastVoteModalProps> = ({ onSuccess, proposalId, vo
     poolsBalance,
     cakeBnbLpBalance,
     ifoPoolBalance,
+    verificationHash,
   } = useGetVotingPower(block, modalIsOpen)
 
   const isStartView = view === ConfirmVoteView.MAIN
@@ -57,6 +57,10 @@ const CastVoteModal: React.FC<CastVoteModalProps> = ({ onSuccess, proposalId, vo
         payload: {
           proposal: proposalId,
           choice: vote.value,
+          metadata: {
+            votingPower: total.toString(),
+            verificationHash,
+          },
         },
       })
 
@@ -65,15 +69,15 @@ const CastVoteModal: React.FC<CastVoteModalProps> = ({ onSuccess, proposalId, vo
 
       // Save proposal to snapshot
       await sendSnapshotData(msg)
+      setIsPending(false)
 
       await onSuccess()
 
       handleDismiss()
     } catch (error) {
-      toastError(t('Error'), (error as Error)?.message ?? t('Error occurred, please try again'))
-      console.error(error)
-    } finally {
       setIsPending(false)
+      toastError(t('Error'), (error as Error)?.message)
+      console.error(error)
     }
   }
 
@@ -89,7 +93,6 @@ const CastVoteModal: React.FC<CastVoteModalProps> = ({ onSuccess, proposalId, vo
         {view === ConfirmVoteView.MAIN && (
           <MainView
             vote={vote}
-            isError={isError}
             isLoading={isLoading}
             isPending={isPending}
             total={total}
@@ -107,7 +110,6 @@ const CastVoteModal: React.FC<CastVoteModalProps> = ({ onSuccess, proposalId, vo
             cakePoolBalance={cakePoolBalance}
             poolsBalance={poolsBalance}
             cakeBnbLpBalance={cakeBnbLpBalance}
-            block={block}
           />
         )}
       </Box>

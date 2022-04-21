@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button, Heading, Text, Flex, Checkbox, AutoRenewIcon } from '@pancakeswap/uikit'
-import { useTradingCompetitionContractMobox } from 'hooks/useContract'
+import { useTradingCompetitionContract } from 'hooks/useContract'
 import { useTranslation } from 'contexts/Localization'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import useToast from 'hooks/useToast'
-import useCatchTxError from 'hooks/useCatchTxError'
 import { ToastDescriptionWithTx } from 'components/Toast'
 import { CompetitionProps } from '../../types'
 
@@ -19,23 +18,26 @@ const StyledLabel = styled.label`
 
 const RegisterWithProfile: React.FC<CompetitionProps> = ({ profile, onDismiss, onRegisterSuccess }) => {
   const [isAcknowledged, setIsAcknowledged] = useState(false)
-  const tradingCompetitionContract = useTradingCompetitionContractMobox()
-  const { toastSuccess } = useToast()
-  const { fetchWithCatchTxError, loading: isConfirming } = useCatchTxError()
+  const [isConfirming, setIsConfirming] = useState(false)
+  const tradingCompetitionContract = useTradingCompetitionContract()
+  const { toastSuccess, toastError } = useToast()
   const { t } = useTranslation()
   const { callWithGasPrice } = useCallWithGasPrice()
 
   const handleConfirmClick = async () => {
-    const receipt = await fetchWithCatchTxError(() => {
-      return callWithGasPrice(tradingCompetitionContract, 'register')
-    })
-    if (receipt?.status) {
+    const tx = await callWithGasPrice(tradingCompetitionContract, 'register')
+    setIsConfirming(true)
+    const receipt = await tx.wait()
+    if (receipt.status) {
       toastSuccess(
         t('You have registered for the competition!'),
         <ToastDescriptionWithTx txHash={receipt.transactionHash} />,
       )
       onDismiss()
       onRegisterSuccess()
+    } else {
+      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+      setIsConfirming(false)
     }
   }
 

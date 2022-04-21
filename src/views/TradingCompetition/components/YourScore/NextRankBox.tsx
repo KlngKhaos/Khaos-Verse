@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, FlexProps, ArrowForwardIcon } from '@pancakeswap/uikit'
 

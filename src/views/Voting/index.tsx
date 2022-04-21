@@ -1,5 +1,6 @@
 import { Flex } from '@pancakeswap/uikit'
 import { PageMeta } from 'components/Layout/Page'
+import React from 'react'
 import styled from 'styled-components'
 import Footer from './components/Footer'
 import Hero from './components/Hero'

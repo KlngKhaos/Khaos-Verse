@@ -48,9 +48,6 @@ export interface Ifo {
   articleUrl: string
   campaignId: string
   tokenOfferingPrice: number
-  description?: string
-  twitterUrl?: string
-  telegramUrl?: string
   version: number
   [PoolIds.poolBasic]?: IfoPoolInfo
   [PoolIds.poolUnlimited]: IfoPoolInfo
@@ -86,10 +83,6 @@ export interface DeserializedFarmConfig extends FarmConfigBaseProps {
   quoteToken: Token
 }
 
-export interface PoolDeployedBlockNumber {
-  [key: string]: number
-}
-
 interface PoolConfigBaseProps {
   sousId: number
   contractAddress: Address
@@ -99,8 +92,10 @@ interface PoolConfigBaseProps {
   harvest?: boolean
   isFinished?: boolean
   enableEmergencyWithdraw?: boolean
-  deployedBlockNumber?: number
-  version?: number
+  arena?: {
+    id: string
+    cardTextColor: string
+  }
 }
 
 export interface SerializedPoolConfig extends PoolConfigBaseProps {

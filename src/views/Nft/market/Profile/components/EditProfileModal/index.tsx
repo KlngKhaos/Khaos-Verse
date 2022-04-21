@@ -1,3 +1,4 @@
+import React from 'react'
 import { InjectedModalProps, Modal } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { ContextApi } from 'contexts/Localization/types'
@@ -5,11 +6,9 @@ import useEditProfile, { Views } from './reducer'
 import StartView from './StartView'
 import PauseProfileView from './PauseProfileView'
 import ChangeProfilePicView from './ChangeProfilePicView'
-import ApproveCakeView from './ApproveCakeView'
+import ApproveNrtView from './ApproveNrtView'
 
-interface EditProfileModalProps extends InjectedModalProps {
-  onSuccess?: () => void
-}
+type EditProfileModalProps = InjectedModalProps
 
 const viewTitle = (t: ContextApi['t'], currentView: Views) => {
   switch (currentView) {
@@ -20,13 +19,13 @@ const viewTitle = (t: ContextApi['t'], currentView: Views) => {
     case Views.REMOVE:
       return t('Remove Profile Pic')
     case Views.APPROVE:
-      return t('Enable CAKE')
+      return t('Enable NRT')
     default:
       return ''
   }
 }
 
-const EditProfileModal: React.FC<EditProfileModalProps> = ({ onDismiss, onSuccess }) => {
+const EditProfileModal: React.FC<EditProfileModalProps> = ({ onDismiss }) => {
   const { currentView, goToChange, goToRemove, goToApprove, goPrevious } = useEditProfile()
   const { t } = useTranslation()
 
@@ -39,9 +38,9 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ onDismiss, onSucces
         {currentView === Views.START && (
           <StartView goToApprove={goToApprove} goToChange={goToChange} goToRemove={goToRemove} onDismiss={onDismiss} />
         )}
-        {currentView === Views.REMOVE && <PauseProfileView onDismiss={onDismiss} onSuccess={onSuccess} />}
-        {currentView === Views.CHANGE && <ChangeProfilePicView onDismiss={onDismiss} onSuccess={onSuccess} />}
-        {currentView === Views.APPROVE && <ApproveCakeView goToChange={goToChange} onDismiss={onDismiss} />}
+        {currentView === Views.REMOVE && <PauseProfileView onDismiss={onDismiss} />}
+        {currentView === Views.CHANGE && <ChangeProfilePicView onDismiss={onDismiss} />}
+        {currentView === Views.APPROVE && <ApproveNrtView goToChange={goToChange} onDismiss={onDismiss} />}
       </div>
     </Modal>
   )

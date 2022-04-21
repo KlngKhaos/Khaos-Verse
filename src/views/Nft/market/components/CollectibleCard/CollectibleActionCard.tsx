@@ -1,3 +1,4 @@
+import React from 'react'
 import { StyledCollectibleCard } from './styles'
 import CardBody from './CardBody'
 import { CollectibleCardProps } from './types'

@@ -1,6 +1,6 @@
+import React from 'react'
 import { Currency, Token } from '@pancakeswap/sdk'
 import { Button, Text, Modal, useModal, InjectedModalProps, Link } from '@pancakeswap/uikit'
-import { useTranslation } from 'contexts/Localization'
 import styled from 'styled-components'
 import { AutoRow } from 'components/Layout/Row'
 import { AutoColumn } from 'components/Layout/Column'
@@ -27,7 +27,6 @@ const DetailsFooter = styled.div`
 
 const UnsupportedModal: React.FC<Props> = ({ currencies, onDismiss }) => {
   const { chainId } = useActiveWeb3React()
-  const { t } = useTranslation()
   const tokens =
     chainId && currencies
       ? currencies.map((currency) => {
@@ -38,7 +37,7 @@ const UnsupportedModal: React.FC<Props> = ({ currencies, onDismiss }) => {
   const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
   return (
-    <Modal title={t('Unsupported Assets')} maxWidth="420px" onDismiss={onDismiss}>
+    <Modal title="Unsupported Assets" maxWidth="420px" onDismiss={onDismiss}>
       <AutoColumn gap="lg">
         {tokens.map((token) => {
           return (
@@ -61,9 +60,8 @@ const UnsupportedModal: React.FC<Props> = ({ currencies, onDismiss }) => {
         })}
         <AutoColumn gap="lg">
           <Text>
-            {t(
-              'Some assets are not available through this interface because they may not work well with our smart contract or we are unable to allow trading for legal reasons.',
-            )}
+            Some assets are not available through this interface because they may not work well with our smart contract
+            or we are unable to allow trading for legal reasons.
           </Text>
         </AutoColumn>
       </AutoColumn>
@@ -72,13 +70,12 @@ const UnsupportedModal: React.FC<Props> = ({ currencies, onDismiss }) => {
 }
 
 export default function UnsupportedCurrencyFooter({ currencies }: { currencies: (Currency | undefined)[] }) {
-  const { t } = useTranslation()
   const [onPresentModal] = useModal(<UnsupportedModal currencies={currencies} />)
 
   return (
     <DetailsFooter>
       <Button variant="text" onClick={onPresentModal}>
-        {t('Read more about unsupported assets')}
+        Read more about unsupported assets
       </Button>
     </DetailsFooter>
   )

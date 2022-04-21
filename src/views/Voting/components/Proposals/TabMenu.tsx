@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { TabMenu as UIKitTabMenu, Tab, Flex, VerifiedIcon, CommunityIcon } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'

@@ -1,3 +1,4 @@
+import React from 'react'
 import { HistoryIcon, Button, useModal } from '@pancakeswap/uikit'
 import TransactionsModal from './TransactionsModal'
 

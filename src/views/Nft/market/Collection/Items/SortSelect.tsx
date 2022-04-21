@@ -1,3 +1,4 @@
+import React from 'react'
 import Select, { OptionProps } from 'components/Select/Select'
 import { useTranslation } from 'contexts/Localization'
 import { useAppDispatch } from 'state'
@@ -28,7 +29,6 @@ const SortSelect: React.FC<{ collectionAddress: string }> = ({ collectionAddress
     <Select
       options={sortByItems}
       onOptionChange={handleChange}
-      key={defaultOptionIndex !== -1 ? defaultOptionIndex : undefined}
       defaultOptionIndex={defaultOptionIndex !== -1 ? defaultOptionIndex : undefined}
     />
   )

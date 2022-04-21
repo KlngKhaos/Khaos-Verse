@@ -1,42 +1,28 @@
-import { useMemo } from 'react'
+import React from 'react'
+import { ifosConfig } from 'config/constants'
 import useGetPublicIfoV2Data from 'views/Ifos/hooks/v2/useGetPublicIfoData'
-import useGetWalletIfoV3Data from 'views/Ifos/hooks/v3/useGetWalletIfoData'
-
-import { Ifo } from 'config/constants/types'
-
-import { IfoCurrentCard } from './components/IfoFoldableCard'
-import IfoContainer from './components/IfoContainer'
+import useGetWalletIfoV2Data from 'views/Ifos/hooks/v2/useGetWalletIfoData'
+import IfoFoldableCard from './components/IfoFoldableCard'
+import IfoLayout from './components/IfoLayout'
 import IfoSteps from './components/IfoSteps'
+import IfoQuestions from './components/IfoQuestions'
 
-interface TypeProps {
-  activeIfo: Ifo
-}
+/**
+ * Note: currently there should be only 1 active IFO at a time
+ */
+const activeIfo = ifosConfig.find((ifo) => ifo.isActive)
 
-const CurrentIfo: React.FC<TypeProps> = ({ activeIfo }) => {
+const Ifo = () => {
   const publicIfoData = useGetPublicIfoV2Data(activeIfo)
-  const walletIfoData = useGetWalletIfoV3Data(activeIfo)
-
-  const { poolBasic, poolUnlimited } = walletIfoData
-
-  const isCommitted = useMemo(
-    () =>
-      poolBasic.amountTokenCommittedInLP.isGreaterThan(0) || poolUnlimited.amountTokenCommittedInLP.isGreaterThan(0),
-    [poolBasic.amountTokenCommittedInLP, poolUnlimited.amountTokenCommittedInLP],
-  )
+  const walletIfoData = useGetWalletIfoV2Data(activeIfo)
 
   return (
-    <IfoContainer
-      ifoSection={<IfoCurrentCard ifo={activeIfo} publicIfoData={publicIfoData} walletIfoData={walletIfoData} />}
-      ifoSteps={
-        <IfoSteps
-          isLive={publicIfoData.status === 'live'}
-          hasClaimed={poolBasic.hasClaimed || poolUnlimited.hasClaimed}
-          isCommitted={isCommitted}
-          ifoCurrencyAddress={activeIfo.currency.address}
-        />
-      }
-    />
+    <IfoLayout id="current-ifo">
+      <IfoFoldableCard ifo={activeIfo} publicIfoData={publicIfoData} walletIfoData={walletIfoData} isInitiallyVisible />
+      <IfoSteps ifo={activeIfo} walletIfoData={walletIfoData} />
+      <IfoQuestions />
+    </IfoLayout>
   )
 }
 
-export default CurrentIfo
+export default Ifo

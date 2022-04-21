@@ -1,13 +1,22 @@
 import styled from 'styled-components'
 
-const StyledBannerImageWrapper = styled.div`
-  ${({ theme }) => `background-color: ${theme.colors.cardBorder}`};
+interface StyledBannerImageProps {
+  src: string
+  alt?: string
+}
+
+const StyledBannerImage = styled.div.attrs<StyledBannerImageProps>(({ alt }) => ({
+  alt,
+}))<StyledBannerImageProps>`
+  ${({ src, theme }) => (src ? `background-image: url('${src}')` : `background-color: ${theme.colors.cardBorder}`)};
+  background-image: url('${({ src }) => src}');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   flex: none;
-  position: relative;
   width: 100%;
   border-radius: 32px;
   height: 123px;
-  overflow: hidden;
 
   ${({ theme }) => theme.mediaQueries.sm} {
     height: 192px;
@@ -18,4 +27,4 @@ const StyledBannerImageWrapper = styled.div`
   }
 `
 
-export default StyledBannerImageWrapper
+export default StyledBannerImage

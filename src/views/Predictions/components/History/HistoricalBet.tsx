@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   ChevronDownIcon,
@@ -131,7 +131,7 @@ const HistoricalBet: React.FC<BetProps> = ({ bet }) => {
         </Text>
         <Text bold color={resultTextColor} lineHeight={1}>
           {roundResult === Result.CANCELED ? (
-            t('Cancelled')
+            t('Canceled')
           ) : roundResult === Result.HOUSE ? (
             <>
               {tooltipVisible && tooltip}

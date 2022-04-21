@@ -1,6 +1,7 @@
+import React from 'react'
 import { Flex, Grid, Text, Button, Link, LinkExternal, BinanceIcon } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import { nftsBaseUrl, pancakeBunniesAddress } from 'views/Nft/market/constants'
+import { nftsBaseUrl, gladiatorCollectiblesAddress } from 'views/Nft/market/constants'
 import { NftToken } from 'state/nftMarket/types'
 import { getBscScanLinkForNft } from 'utils'
 import { Divider, HorizontalDivider, RoundedImage } from '../shared/styles'
@@ -21,7 +22,7 @@ const EditStage: React.FC<EditStageProps> = ({
 }) => {
   const { t } = useTranslation()
   const itemPageUrlId =
-    nftToSell.collectionAddress.toLowerCase() === pancakeBunniesAddress.toLowerCase()
+    nftToSell.collectionAddress.toLowerCase() === gladiatorCollectiblesAddress.toLowerCase()
       ? nftToSell.attributes[0].value
       : nftToSell.tokenId
 
@@ -32,7 +33,7 @@ const EditStage: React.FC<EditStageProps> = ({
         <Grid flex="1" gridTemplateColumns="1fr 1fr" alignItems="center">
           <Text bold>{nftToSell.name}</Text>
           <Text fontSize="12px" color="textSubtle" textAlign="right">
-            {nftToSell?.collectionName}
+            {nftToSell.collectionName}
           </Text>
           {lowestPrice && (
             <>
@@ -51,7 +52,7 @@ const EditStage: React.FC<EditStageProps> = ({
           </Text>
           <Flex alignItems="center" justifyContent="flex-end">
             <BinanceIcon width={16} height={16} mr="4px" />
-            <Text small>{nftToSell?.marketData?.currentAskPrice}</Text>
+            <Text small>{nftToSell.marketData.currentAskPrice}</Text>
           </Flex>
         </Grid>
       </Flex>

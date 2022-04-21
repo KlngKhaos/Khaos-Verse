@@ -2,28 +2,36 @@ import { toDate, add, differenceInHours } from 'date-fns'
 import { BSC_BLOCK_TIME, DEFAULT_TOKEN_DECIMAL } from 'config'
 import { getBidderInfo } from 'config/constants/farmAuctions'
 import { simpleRpcProvider } from 'utils/providers'
-import { AuctionsResponse, FarmAuctionContractStatus, BidsPerAuction } from 'utils/types'
+import { AuctionsResponse, FarmAuctionContractStatus, BidsPerAuction, ViewBidderAuctionsResponse } from 'utils/types'
 import { Auction, AuctionStatus, Bidder, BidderAuction } from 'config/constants/types'
 import { ethersToBigNumber } from 'utils/bigNumber'
-import { FarmAuction } from 'config/abi/types'
-import orderBy from 'lodash/orderBy'
 
 export const FORM_ADDRESS =
-  'https://docs.google.com/forms/d/e/1FAIpQLSfQNsAfh98SAfcqJKR3is2hdvMRdnvfd2F3Hql96vXHgIi3Bw/viewform'
+  'https://docs.google.com/forms/d/e/1FAIpQLScUkwbsMWwg7L5jjGjEcmv6RsoCNhFDkV3xEpRu2KcJrr47Sw/viewform'
 
 // Sorts bidders received from smart contract by bid amount in descending order (biggest -> smallest)
 // Also amends bidder information with getBidderInfo
 // auction is required if data will be used for table display, hence in reclaim and congratulations card its omitted
 export const sortAuctionBidders = (bidders: BidsPerAuction[], auction?: Auction): Bidder[] => {
-  const sortedBidders = orderBy(bidders, (bidder) => Number(bidder.amount), 'desc').map((bidder, index) => {
-    const bidderInfo = getBidderInfo(bidder.account)
-    return {
-      ...bidderInfo,
-      position: index + 1,
-      account: bidder.account,
-      amount: bidder.amount,
-    }
-  })
+  const sortedBidders = [...bidders]
+    .sort((a, b) => {
+      if (a.amount.lt(b.amount)) {
+        return 1
+      }
+      if (a.amount.gt(b.amount)) {
+        return -1
+      }
+      return 0
+    })
+    .map((bidder, index) => {
+      const bidderInfo = getBidderInfo(bidder.account)
+      return {
+        ...bidderInfo,
+        position: index + 1,
+        account: bidder.account,
+        amount: bidder.amount,
+      }
+    })
 
   // Positions need to be adjusted in case 2 bidders has the same bid amount
   // adjustedPosition will always increase by 1 in the following block for the first bidder
@@ -128,7 +136,7 @@ export const processAuctionData = async (auctionId: number, auctionResponse: Auc
 }
 
 export const processBidderAuctions = (
-  bidderAuctions: Awaited<ReturnType<FarmAuction['viewBidderAuctions']>>,
+  bidderAuctions: ViewBidderAuctionsResponse,
 ): { auctions: BidderAuction[]; nextCursor: number } => {
   const [auctionIds, bids, claimed, nextCursor] = bidderAuctions
   const auctions = auctionIds.map((auctionId, index) => ({

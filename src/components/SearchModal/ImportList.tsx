@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { Button, Text, Link, Flex, Checkbox, Message } from '@pancakeswap/uikit'
 import Card from 'components/Card'
@@ -105,7 +105,7 @@ function ImportList({ listURL, list, onImport }: ImportProps) {
                 )}
               </Text>
               <Text bold color={theme.colors.failure} mb="16px">
-                {t('If you purchase a token from this list, you may not be able to sell it back.')}
+                {typeof 'If you purchase a token from this list, you may not be able to sell it back.'}
               </Text>
               <Flex alignItems="center">
                 <Checkbox

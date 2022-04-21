@@ -1,3 +1,4 @@
+import React from 'react'
 import { Flex, Heading, Skeleton } from '@pancakeswap/uikit'
 import getTimePeriods from 'utils/getTimePeriods'
 import Timer from './Timer'

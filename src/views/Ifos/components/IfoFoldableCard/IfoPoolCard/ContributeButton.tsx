@@ -1,4 +1,4 @@
-import { useCurrentBlock } from 'state/block/hooks'
+import React from 'react'
 import BigNumber from 'bignumber.js'
 import { Button, useModal } from '@pancakeswap/uikit'
 import { getBalanceNumber } from 'utils/formatBalance'
@@ -8,8 +8,8 @@ import { useTranslation } from 'contexts/Localization'
 import useTokenBalance from 'hooks/useTokenBalance'
 import useToast from 'hooks/useToast'
 import { ToastDescriptionWithTx } from 'components/Toast'
-import GetTokenModal from './GetTokenModal'
 import ContributeModal from './ContributeModal'
+import GetLpModal from './GetLpModal'
 
 interface Props {
   poolId: PoolIds
@@ -24,16 +24,15 @@ const ContributeButton: React.FC<Props> = ({ poolId, ifo, publicIfoData, walletI
   const { limitPerUserInLP } = publicPoolCharacteristics
   const { t } = useTranslation()
   const { toastSuccess } = useToast()
-  const currentBlock = useCurrentBlock()
   const { balance: userCurrencyBalance } = useTokenBalance(ifo.currency.address)
 
   // Refetch all the data, and display a message when fetching is done
   const handleContributeSuccess = async (amount: BigNumber, txHash: string) => {
-    await Promise.all([publicIfoData.fetchIfoData(currentBlock), walletIfoData.fetchIfoData()])
+    await Promise.all([publicIfoData.fetchIfoData(), walletIfoData.fetchIfoData()])
     toastSuccess(
       t('Success!'),
       <ToastDescriptionWithTx txHash={txHash}>
-        {t('You have contributed %amount% CAKE to this IFO!', {
+        {t('You have contributed %amount% CAKE-BNB LP tokens to this IFO!', {
           amount: getBalanceNumber(amount),
         })}
       </ToastDescriptionWithTx>,
@@ -43,7 +42,6 @@ const ContributeButton: React.FC<Props> = ({ poolId, ifo, publicIfoData, walletI
   const [onPresentContributeModal] = useModal(
     <ContributeModal
       poolId={poolId}
-      creditLeft={walletIfoData.ifoCredit?.creditLeft}
       ifo={ifo}
       publicIfoData={publicIfoData}
       walletIfoData={walletIfoData}
@@ -53,25 +51,19 @@ const ContributeButton: React.FC<Props> = ({ poolId, ifo, publicIfoData, walletI
     false,
   )
 
-  const [onPresentGetTokenModal] = useModal(<GetTokenModal currency={ifo.currency} />, false)
+  const [onPresentGetLpModal] = useModal(<GetLpModal currency={ifo.currency} />, false)
 
-  const noNeedCredit = ifo.version === 3.1 && poolId === PoolIds.poolBasic
-
-  const isMaxCommitted =
-    (!noNeedCredit &&
-      walletIfoData.ifoCredit?.creditLeft &&
-      walletIfoData.ifoCredit?.creditLeft.isLessThanOrEqualTo(0)) ||
+  const isDisabled =
+    isPendingTx ||
     (limitPerUserInLP.isGreaterThan(0) && amountTokenCommittedInLP.isGreaterThanOrEqualTo(limitPerUserInLP))
-
-  const isDisabled = isPendingTx || isMaxCommitted || publicIfoData.status !== 'live'
 
   return (
     <Button
-      onClick={userCurrencyBalance.isEqualTo(0) ? onPresentGetTokenModal : onPresentContributeModal}
+      onClick={userCurrencyBalance.isEqualTo(0) ? onPresentGetLpModal : onPresentContributeModal}
       width="100%"
       disabled={isDisabled}
     >
-      {isMaxCommitted && publicIfoData.status === 'live' ? t('Max. Committed') : t('Commit CAKE')}
+      {isDisabled ? t('Max. Committed') : t('Commit LP Tokens')}
     </Button>
   )
 }

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Token } from '@pancakeswap/sdk'
 import { Modal, InjectedModalProps } from '@pancakeswap/uikit'
 import ImportToken from 'components/SearchModal/ImportToken'
@@ -14,7 +15,9 @@ const ImportTokenWarningModal: React.FC<Props> = ({ tokens, onDismiss, onCancel 
     <Modal
       title={t('Import Token')}
       onDismiss={() => {
-        onDismiss?.()
+        if (onDismiss) {
+          onDismiss()
+        }
         onCancel()
       }}
       style={{ maxWidth: '420px' }}

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { Ifo, PoolIds } from 'config/constants/types'
@@ -14,35 +14,31 @@ interface UserInfo {
   claimed: boolean
 }
 
-const initialState = {
-  isInitialized: false,
-  [PoolIds.poolUnlimited]: {
-    amountTokenCommittedInLP: BIG_ZERO,
-    hasClaimed: false,
-    isPendingTx: false,
-    offeringAmountInToken: BIG_ZERO,
-    refundingAmountInLP: BIG_ZERO,
-    taxAmountInLP: BIG_ZERO, // Not used
-  },
-}
-
 /**
  * Gets all data from an IFO related to a wallet
  */
 const useGetWalletIfoData = (ifo: Ifo): WalletIfoData => {
-  const [state, setState] = useState<WalletIfoState>(initialState)
+  const [state, setState] = useState<WalletIfoState>({
+    [PoolIds.poolUnlimited]: {
+      amountTokenCommittedInLP: BIG_ZERO,
+      hasClaimed: false,
+      isPendingTx: false,
+      offeringAmountInToken: BIG_ZERO,
+      refundingAmountInLP: BIG_ZERO,
+      taxAmountInLP: BIG_ZERO, // Not used
+    },
+  })
 
   const { address, currency } = ifo
   const { poolUnlimited } = state
 
   const { account } = useWeb3React()
   const contract = useIfoV1Contract(address)
-  const currencyContract = useERC20(currency.address, false)
+  const currencyContract = useERC20(currency.address)
   const allowance = useIfoAllowance(currencyContract, address, poolUnlimited.isPendingTx)
 
   const setPendingTx = (status: boolean) =>
     setState((prevState) => ({
-      ...prevState,
       [PoolIds.poolUnlimited]: {
         ...prevState.poolUnlimited,
         isPendingTx: status,
@@ -51,7 +47,6 @@ const useGetWalletIfoData = (ifo: Ifo): WalletIfoData => {
 
   const setIsClaimed = () => {
     setState((prevState) => ({
-      ...prevState,
       [PoolIds.poolUnlimited]: {
         ...prevState.poolUnlimited,
         hasClaimed: true,
@@ -75,7 +70,6 @@ const useGetWalletIfoData = (ifo: Ifo): WalletIfoData => {
       : { amount: BIG_ZERO, claimed: false }
 
     setState((prevState) => ({
-      isInitialized: true,
       [PoolIds.poolUnlimited]: {
         ...prevState.poolUnlimited,
         amountTokenCommittedInLP: parsedUserInfo.amount,
@@ -86,11 +80,13 @@ const useGetWalletIfoData = (ifo: Ifo): WalletIfoData => {
     }))
   }, [account, address])
 
-  const resetIfoData = useCallback(() => {
-    setState(initialState)
-  }, [])
+  useEffect(() => {
+    if (account) {
+      fetchIfoData()
+    }
+  }, [account, fetchIfoData])
 
-  return { ...state, allowance, contract, setPendingTx, setIsClaimed, fetchIfoData, resetIfoData }
+  return { ...state, allowance, contract, setPendingTx, setIsClaimed, fetchIfoData }
 }
 
 export default useGetWalletIfoData

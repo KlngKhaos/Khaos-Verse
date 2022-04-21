@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { JSBI, Pair, Percent } from '@pancakeswap/sdk'
 import {
   Button,
@@ -11,8 +11,8 @@ import {
   CardProps,
   AddIcon,
 } from '@pancakeswap/uikit'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { NextLinkFromReactRouter } from 'components/NextLink'
 import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTotalSupply from '../../hooks/useTotalSupply'
@@ -146,8 +146,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
 export default function FullPositionCard({ pair, ...props }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
-  const { t } = useTranslation()
-
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
@@ -180,7 +178,7 @@ export default function FullPositionCard({ pair, ...props }: PositionCardProps) 
           <Flex alignItems="center" mb="4px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
             <Text bold ml="8px">
-              {!currency0 || !currency1 ? <Dots>{t('Loading')}</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+              {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
           </Flex>
           <Text fontSize="14px" color="textSubtle">
@@ -196,7 +194,7 @@ export default function FullPositionCard({ pair, ...props }: PositionCardProps) 
             <RowFixed>
               <CurrencyLogo size="20px" currency={currency0} />
               <Text color="textSubtle" ml="4px">
-                {t('Pooled %asset%', { asset: currency0.symbol })}:
+                Pooled {currency0.symbol}
               </Text>
             </RowFixed>
             {token0Deposited ? (
@@ -212,7 +210,7 @@ export default function FullPositionCard({ pair, ...props }: PositionCardProps) 
             <RowFixed>
               <CurrencyLogo size="20px" currency={currency1} />
               <Text color="textSubtle" ml="4px">
-                {t('Pooled %asset%', { asset: currency1.symbol })}:
+                Pooled {currency1.symbol}
               </Text>
             </RowFixed>
             {token1Deposited ? (
@@ -225,7 +223,7 @@ export default function FullPositionCard({ pair, ...props }: PositionCardProps) 
           </FixedHeightRow>
 
           <FixedHeightRow>
-            <Text color="textSubtle">{t('Share of Pool')}</Text>
+            <Text color="textSubtle">Share of pool</Text>
             <Text>
               {poolTokenPercentage
                 ? `${poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)}%`
@@ -236,22 +234,22 @@ export default function FullPositionCard({ pair, ...props }: PositionCardProps) 
           {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, BIG_INT_ZERO) && (
             <Flex flexDirection="column">
               <Button
-                as={NextLinkFromReactRouter}
+                as={Link}
                 to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
                 variant="primary"
                 width="100%"
                 mb="8px"
               >
-                {t('Remove')}
+                Remove
               </Button>
               <Button
-                as={NextLinkFromReactRouter}
+                as={Link}
                 to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
                 variant="text"
                 startIcon={<AddIcon color="primary" />}
                 width="100%"
               >
-                {t('Add liquidity instead')}
+                Add liquidity instead
               </Button>
             </Flex>
           )}

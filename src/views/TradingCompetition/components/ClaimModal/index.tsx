@@ -1,15 +1,25 @@
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Modal, Button, Flex, AutoRenewIcon, Heading, Text } from '@pancakeswap/uikit'
-import Image from 'next/image'
+import {
+  Modal,
+  Button,
+  Flex,
+  AutoRenewIcon,
+  Heading,
+  Text,
+  Image,
+  CrownIcon,
+  TrophyGoldIcon,
+  TeamPlayerIcon,
+} from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import { useTradingCompetitionContractV2 } from 'hooks/useContract'
+import { useTradingCompetitionContract } from 'hooks/useContract'
 import useToast from 'hooks/useToast'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
-import useCatchTxError from 'hooks/useCatchTxError'
 import { ToastDescriptionWithTx } from 'components/Toast'
-import { useCompetitionRewards, getRewardGroupAchievements } from '../../helpers'
+import { useCompetitionCakeRewards, getRewardGroupAchievements } from '../../helpers'
 import { CompetitionProps } from '../../types'
-import NftBunnies from '../../pngs/fan-token-champions.png'
+import NftBunnies from '../../pngs/syrup-nft.png'
 
 const ImageWrapper = styled(Flex)`
   justify-content: center;
@@ -21,37 +31,27 @@ const ImageWrapper = styled(Flex)`
 `
 
 const ClaimModal: React.FC<CompetitionProps> = ({ onDismiss, onClaimSuccess, userTradingInformation }) => {
-  const tradingCompetitionContract = useTradingCompetitionContractV2()
-  const { toastSuccess } = useToast()
-  const { fetchWithCatchTxError, loading: isConfirming } = useCatchTxError()
+  const [isConfirming, setIsConfirming] = useState(false)
+  const tradingCompetitionContract = useTradingCompetitionContract()
+  const { toastSuccess, toastError } = useToast()
   const { t } = useTranslation()
 
-  const {
-    userRewardGroup,
-    userCakeRewards,
-    userLazioRewards,
-    userPortoRewards,
-    userSantosRewards,
-    userPointReward,
-    canClaimNFT,
-  } = userTradingInformation
-  const { cakeReward, lazioReward, portoReward, santosReward } = useCompetitionRewards({
-    userCakeRewards,
-    userLazioRewards,
-    userPortoRewards,
-    userSantosRewards,
-  })
-  const achievement = getRewardGroupAchievements(userRewardGroup, userPointReward)
+  const { userRewardGroup, userCakeRewards, userPointReward, canClaimNFT } = userTradingInformation
+  const { cakeReward } = useCompetitionCakeRewards(userCakeRewards)
+  const { champion, teamPlayer } = getRewardGroupAchievements(userRewardGroup)
   const { callWithGasPrice } = useCallWithGasPrice()
 
   const handleClaimClick = async () => {
-    const receipt = await fetchWithCatchTxError(() => {
-      return callWithGasPrice(tradingCompetitionContract, 'claimReward')
-    })
-    if (receipt?.status) {
+    const tx = await callWithGasPrice(tradingCompetitionContract, 'claimReward')
+    setIsConfirming(true)
+    const receipt = await tx.wait()
+    if (receipt.status) {
       toastSuccess(t('You have claimed your rewards!'), <ToastDescriptionWithTx txHash={receipt.transactionHash} />)
       onDismiss()
       onClaimSuccess()
+    } else {
+      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+      setIsConfirming(false)
     }
   }
 
@@ -63,23 +63,16 @@ const ClaimModal: React.FC<CompetitionProps> = ({ onDismiss, onClaimSuccess, use
         </Text>
         <Flex mt="16px" alignItems="center">
           {/* achievements */}
-          <Image src={`/images/achievements/${achievement.image}`} width={25} height={25} />
+          <TrophyGoldIcon mr={[0, '4px']} />
+          {champion && <CrownIcon mr={[0, '4px']} />}
+          {teamPlayer && <TeamPlayerIcon mr={[0, '4px']} />}
           <Text ml={['4px', '8px']}>
             +{userPointReward} {t('Points')}
           </Text>
         </Flex>
-        {/* tokens */}
+        {/* cake */}
         <Heading mt="16px" scale="md" mb={canClaimNFT ? '16px' : '0px'}>
           {cakeReward.toFixed(2)} CAKE
-        </Heading>
-        <Heading mt="16px" scale="md" mb={canClaimNFT ? '16px' : '0px'}>
-          {lazioReward.toFixed(2)} LAZIO
-        </Heading>
-        <Heading mt="16px" scale="md" mb={canClaimNFT ? '16px' : '0px'}>
-          {portoReward.toFixed(2)} PORTO
-        </Heading>
-        <Heading mt="16px" scale="md" mb={canClaimNFT ? '16px' : '0px'}>
-          {santosReward.toFixed(2)} SANTOS
         </Heading>
         {/* NFT */}
         {canClaimNFT ? (

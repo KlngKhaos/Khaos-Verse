@@ -1,3 +1,4 @@
+import React from 'react'
 import { Button, ButtonProps, useModal } from '@pancakeswap/uikit'
 import CollectRoundWinningsModal from './CollectRoundWinningsModal'
 

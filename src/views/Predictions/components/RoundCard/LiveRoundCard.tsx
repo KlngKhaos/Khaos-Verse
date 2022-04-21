@@ -1,9 +1,19 @@
-import { useEffect } from 'react'
-import { Card, CardBody, Flex, PlayCircleOutlineIcon, Text, useTooltip } from '@pancakeswap/uikit'
+import React, { useEffect, useRef } from 'react'
+import { useCountUp } from 'react-countup'
+import {
+  Card,
+  CardBody,
+  Flex,
+  PlayCircleOutlineIcon,
+  Skeleton,
+  Text,
+  TooltipText,
+  useTooltip,
+} from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { NodeRound, NodeLedger, BetPosition } from 'state/types'
-import { useGetBufferSeconds } from 'state/predictions/hooks'
-import usePollOraclePrice from 'views/Predictions/hooks/usePollOraclePrice'
+import { formatBigNumberToFixed } from 'utils/formatBalance'
+import { useGetLastOraclePrice, useGetBufferSeconds } from 'state/predictions/hooks'
 import RoundProgress from 'components/RoundProgress'
 import { formatUsdv2, getHasRoundFailed, getPriceDifference } from '../../helpers'
 import PositionTag from '../PositionTag'
@@ -12,7 +22,6 @@ import MultiplierArrow from './MultiplierArrow'
 import CardHeader from './CardHeader'
 import CanceledRoundCard from './CanceledRoundCard'
 import CalculatingCard from './CalculatingCard'
-import LiveRoundPrice from './LiveRoundPrice'
 
 interface LiveRoundCardProps {
   round: NodeRound
@@ -22,8 +31,6 @@ interface LiveRoundCardProps {
   bullMultiplier: string
   bearMultiplier: string
 }
-
-const REFRESH_PRICE_BEFORE_SECONDS_TO_CLOSE = 2
 
 const LiveRoundCard: React.FC<LiveRoundCardProps> = ({
   round,
@@ -35,38 +42,41 @@ const LiveRoundCard: React.FC<LiveRoundCardProps> = ({
 }) => {
   const { t } = useTranslation()
   const { lockPrice, totalAmount, lockTimestamp, closeTimestamp } = round
-  const { price, refresh } = usePollOraclePrice()
+  const price = useGetLastOraclePrice()
   const bufferSeconds = useGetBufferSeconds()
 
   const isBull = lockPrice && price.gt(lockPrice)
+  const priceColor = isBull ? 'success' : 'failure'
 
   const priceDifference = getPriceDifference(price, lockPrice)
+  const priceAsNumber = parseFloat(formatBigNumberToFixed(price, 3, 8))
   const hasRoundFailed = getHasRoundFailed(round, bufferSeconds)
 
+  const now = Date.now()
+
+  const { countUp, update } = useCountUp({
+    start: 0,
+    end: priceAsNumber,
+    duration: 1,
+    decimals: 3,
+  })
   const { targetRef, tooltip, tooltipVisible } = useTooltip(t('Last price from Chainlink Oracle'), {
     placement: 'bottom',
   })
 
-  useEffect(() => {
-    if (closeTimestamp) {
-      const refreshPriceTimeout = setTimeout(() => {
-        refresh()
-      }, closeTimestamp * 1000 - Date.now() - REFRESH_PRICE_BEFORE_SECONDS_TO_CLOSE * 1000)
+  const updateRef = useRef(update)
 
-      return () => {
-        clearTimeout(refreshPriceTimeout)
-      }
-    }
-    return undefined
-  }, [refresh, closeTimestamp])
+  useEffect(() => {
+    updateRef.current(priceAsNumber)
+  }, [priceAsNumber, updateRef])
 
   if (hasRoundFailed) {
     return <CanceledRoundCard round={round} />
   }
 
-  if (Date.now() > closeTimestamp * 1000) {
-    return <CalculatingCard round={round} hasEnteredDown={hasEnteredDown} hasEnteredUp={hasEnteredUp} />
-  }
+  // if (now > closeTimestamp * 1000) {
+  //   return <CalculatingCard round={round} hasEnteredDown={hasEnteredDown} hasEnteredUp={hasEnteredUp} />
+  // }
 
   return (
     <Card isActive>
@@ -90,7 +100,9 @@ const LiveRoundCard: React.FC<LiveRoundCardProps> = ({
           </Text>
           <Flex alignItems="center" justifyContent="space-between" mb="16px" height="36px">
             <div ref={targetRef}>
-              <LiveRoundPrice isBull={isBull} />
+              <TooltipText bold color={priceColor} fontSize="24px" style={{ minHeight: '36px' }}>
+                {price.gt(0) ? `$${countUp}` : <Skeleton height="36px" width="94px" />}
+              </TooltipText>
             </div>
             <PositionTag betPosition={isBull ? BetPosition.BULL : BetPosition.BEAR}>
               {formatUsdv2(priceDifference)}

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Heading } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import PageHeader from 'components/PageHeader'

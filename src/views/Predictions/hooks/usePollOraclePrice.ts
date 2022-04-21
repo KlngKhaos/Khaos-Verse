@@ -1,19 +1,28 @@
-import { useChainlinkOracleContract } from 'hooks/useContract'
-import { useSWRContract } from 'hooks/useSWRContract'
-import { Zero } from '@ethersproject/constants'
+import { useEffect } from 'react'
+import { useAppDispatch } from 'state'
+import { setLastOraclePrice } from 'state/predictions'
+import useGetLatestOraclePrice from './useGetLatestOraclePrice'
 
 const usePollOraclePrice = (seconds = 10) => {
-  const chainlinkOracleContract = useChainlinkOracleContract(false)
-  // Can refactor to subscription later
-  const { data: price, mutate } = useSWRContract([chainlinkOracleContract, 'latestAnswer'], {
-    refreshInterval: seconds * 1000,
-    refreshWhenHidden: true,
-    refreshWhenOffline: true,
-    dedupingInterval: seconds * 1000,
-    fallbackData: Zero,
-  })
+  const { price, refresh } = useGetLatestOraclePrice()
+  const dispatch = useAppDispatch()
 
-  return { price, refresh: mutate }
+  // Poll for the oracle price
+  useEffect(() => {
+    refresh()
+    const timer = setInterval(() => {
+      refresh()
+    }, seconds * 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [seconds, refresh])
+
+  // If the price changed update global state
+  useEffect(() => {
+    dispatch(setLastOraclePrice(price.toJSON()))
+  }, [price, dispatch])
 }
 
 export default usePollOraclePrice

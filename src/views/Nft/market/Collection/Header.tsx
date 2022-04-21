@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router'
+import React from 'react'
+import { useLocation, useParams } from 'react-router'
 import { Text } from '@pancakeswap/uikit'
 import { Collection } from 'state/nftMarket/types'
 import { formatNumber } from 'utils/formatBalance'
@@ -19,10 +20,10 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ collection }) => {
-  const router = useRouter()
-  const collectionAddress = router.query.collectionAddress as string
+  const { collectionAddress } = useParams<{ collectionAddress: string }>()
   const { totalSupply, numberTokensListed, totalVolumeBNB, banner, avatar } = collection
   const { t } = useTranslation()
+  const { pathname, hash } = useLocation()
 
   const volume = totalVolumeBNB
     ? parseFloat(totalVolumeBNB).toLocaleString(undefined, {
@@ -34,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ collection }) => {
   const itemsConfig = [
     {
       label: t('Items'),
-      href: `${nftsBaseUrl}/collections/${collectionAddress}`,
+      href: `${nftsBaseUrl}/collections/${collectionAddress}#items`,
     },
     {
       label: t('Traits'),
@@ -67,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({ collection }) => {
         </MarketPageTitle>
       </MarketPageHeader>
       <Container>
-        <BaseSubMenu items={itemsConfig} activeItem={router.asPath} mt="24px" mb="8px" />
+        <BaseSubMenu items={itemsConfig} activeItem={`${pathname}${hash || '#items'}`} mt="24px" mb="8px" />
       </Container>
     </>
   )

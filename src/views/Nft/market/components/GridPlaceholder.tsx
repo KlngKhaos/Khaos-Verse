@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, BoxProps, Grid, GridProps, Skeleton } from '@pancakeswap/uikit'
 import times from 'lodash/times'
 

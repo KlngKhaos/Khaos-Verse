@@ -1,26 +1,25 @@
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { AutoRenewIcon, Button, Card, CardBody, Heading, Skeleton, Text } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
-import { NextLinkFromReactRouter } from 'components/NextLink'
-import { getPancakeProfileAddress } from 'utils/addressHelpers'
+import { Link as RouterLink } from 'react-router-dom'
+import { getGladiatorProfileAddress } from 'utils/addressHelpers'
 import { getErc721Contract } from 'utils/contractHelpers'
 import { useTranslation } from 'contexts/Localization'
+import { useUserNfts } from 'state/nftMarket/hooks'
+import { ToastDescriptionWithTx } from 'components/Toast'
 import useToast from 'hooks/useToast'
-import { useProfileContract } from 'hooks/useContract'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
-import useCatchTxError from 'hooks/useCatchTxError'
 import { nftsBaseUrl } from 'views/Nft/market/constants'
-import { NftLocation } from 'state/nftMarket/types'
-import { useProfile } from 'state/profile/hooks'
+import { NftLocation, UserNftInitializationState } from 'state/nftMarket/types'
 import SelectionCard from './SelectionCard'
 import NextStepButton from './NextStepButton'
 import { ProfileCreationContext } from './contexts/ProfileCreationProvider'
+import { useProfileContract } from '../../hooks/useContract'
 import multicall from '../../utils/multicall'
-import profileABI from '../../config/abi/pancakeProfile.json'
-import useNftsForAddress from '../Nft/market/hooks/useNftsForAddress'
+import profileABI from '../../config/abi/gladiatorProfile.json'
 
-const Link = styled(NextLinkFromReactRouter)`
+const Link = styled(RouterLink)`
   color: ${({ theme }) => theme.colors.primary};
 `
 
@@ -29,16 +28,17 @@ const NftWrapper = styled.div`
 `
 
 const ProfilePicture: React.FC = () => {
-  const { account, library } = useWeb3React()
+  const { library } = useWeb3React()
   const [isApproved, setIsApproved] = useState(false)
+  const [isApproving, setIsApproving] = useState(false)
   const [userProfileCreationNfts, setUserProfileCreationNfts] = useState(null)
   const { selectedNft, actions } = useContext(ProfileCreationContext)
   const profileContract = useProfileContract(false)
-  const { isLoading: isProfileLoading, profile } = useProfile()
-  const { nfts, isLoading: isUserNftLoading } = useNftsForAddress(account, profile, isProfileLoading)
+
+  const { nfts, userNftsInitializationState } = useUserNfts()
 
   useEffect(() => {
-    const fetchUserPancakeCollectibles = async () => {
+    const fetchUserGladiatorCollectibles = async () => {
       try {
         const nftsByCollection = Array.from(
           nfts.reduce((acc, value) => {
@@ -66,24 +66,28 @@ const ProfilePicture: React.FC = () => {
         console.error(e)
       }
     }
-    if (!isUserNftLoading) {
-      fetchUserPancakeCollectibles()
+    if (userNftsInitializationState === UserNftInitializationState.INITIALIZED) {
+      fetchUserGladiatorCollectibles()
     }
-  }, [nfts, profileContract, isUserNftLoading])
+  }, [nfts, profileContract, userNftsInitializationState])
 
   const { t } = useTranslation()
-  const { toastSuccess } = useToast()
-  const { fetchWithCatchTxError, loading: isApproving } = useCatchTxError()
+  const { toastError, toastSuccess } = useToast()
   const { callWithGasPrice } = useCallWithGasPrice()
 
   const handleApprove = async () => {
     const contract = getErc721Contract(selectedNft.collectionAddress, library.getSigner())
-    const receipt = await fetchWithCatchTxError(() => {
-      return callWithGasPrice(contract, 'approve', [getPancakeProfileAddress(), selectedNft.tokenId])
-    })
-    if (receipt?.status) {
+    const tx = await callWithGasPrice(contract, 'approve', [getGladiatorProfileAddress(), selectedNft.tokenId])
+    toastSuccess(`${t('Transaction Submitted')}!`, <ToastDescriptionWithTx txHash={tx.hash} />)
+    setIsApproving(true)
+    const receipt = await tx.wait()
+    if (receipt.status) {
       toastSuccess(t('Enabled'), t('Please progress to the next step.'))
+      setIsApproving(false)
       setIsApproved(true)
+    } else {
+      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+      setIsApproving(false)
     }
   }
 
@@ -94,11 +98,11 @@ const ProfilePicture: React.FC = () => {
           {t('Oops!')}
         </Heading>
         <Text bold fontSize="20px" mb="24px">
-          {t('We couldn’t find any Pancake Collectibles in your wallet.')}
+          {t('We couldn’t find any Gladiator Collectibles in your wallet.')}
         </Text>
         <Text as="p">
           {t(
-            'You need a Pancake Collectible to finish setting up your profile. If you sold or transferred your starter collectible to another wallet, you’ll need to get it back or acquire a new one somehow. You can’t make a new starter with this wallet address.',
+            'You need a Gladiator Collectible to finish setting up your profile. If you sold or transferred your starter collectible to another wallet, you’ll need to get it back or acquire a new one somehow. You can’t make a new starter with this wallet address.',
           )}
         </Text>
       </>
@@ -122,7 +126,7 @@ const ProfilePicture: React.FC = () => {
             {t('Choose a profile picture from the eligible collectibles (NFT) in your wallet, shown below.')}
           </Text>
           <Text as="p" color="textSubtle" mb="24px">
-            {t('Only approved Pancake Collectibles can be used.')}
+            {t('Only approved Gladiator Collectibles can be used.')}
             <Link to={`${nftsBaseUrl}/collections`} style={{ marginLeft: '4px' }}>
               {t('See the list >')}
             </Link>

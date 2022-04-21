@@ -1,3 +1,4 @@
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Box, Button, Flex, Text } from '@pancakeswap/uikit'
 import { AppDispatch } from 'state'
@@ -5,7 +6,7 @@ import { isTransactionRecent, useAllTransactions } from 'state/transactions/hook
 import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { clearAllTransactions } from 'state/transactions/actions'
-import orderBy from 'lodash/orderBy'
+import { orderBy } from 'lodash'
 import TransactionRow from './TransactionRow'
 
 const WalletTransactions: React.FC = () => {

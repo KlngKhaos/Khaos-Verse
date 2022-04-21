@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { ArrowDropDownIcon, Box, BoxProps, Text } from '@pancakeswap/uikit'
 
@@ -12,8 +12,9 @@ const DropDownHeader = styled.div`
   box-shadow: ${({ theme }) => theme.shadows.inset};
   border: 1px solid ${({ theme }) => theme.colors.inputSecondary};
   border-radius: 16px;
-  background: ${({ theme }) => theme.colors.input};
+  background: ${({ theme }) => theme.colors.secondary};
   transition: border-radius 0.15s;
+  color: #000000;
 `
 
 const DropDownListContainer = styled.div`
@@ -21,7 +22,7 @@ const DropDownListContainer = styled.div`
   height: 0;
   position: absolute;
   overflow: hidden;
-  background: ${({ theme }) => theme.colors.input};
+  background: ${({ theme }) => theme.colors.secondary};
   z-index: ${({ theme }) => theme.zIndices.dropdown};
   transition: transform 0.15s, opacity 0.15s;
   transform: scaleY(0);
@@ -43,7 +44,6 @@ const DropDownContainer = styled(Box)<{ isOpen: boolean }>`
   height: 40px;
   min-width: 136px;
   user-select: none;
-  z-index: 20;
 
   ${({ theme }) => theme.mediaQueries.sm} {
     min-width: 168px;
@@ -88,14 +88,13 @@ const ListItem = styled.li`
   list-style: none;
   padding: 8px 16px;
   &:hover {
-    background: ${({ theme }) => theme.colors.inputSecondary};
+    background: #c19834;
   }
 `
 
 export interface SelectProps extends BoxProps {
   options: OptionProps[]
   onOptionChange?: (option: OptionProps) => void
-  placeHolderText?: string
   defaultOptionIndex?: number
 }
 
@@ -108,12 +107,10 @@ const Select: React.FunctionComponent<SelectProps> = ({
   options,
   onOptionChange,
   defaultOptionIndex = 0,
-  placeHolderText,
   ...props
 }) => {
   const dropdownRef = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [optionSelected, setOptionSelected] = useState(false)
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(defaultOptionIndex)
 
   const toggling = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -124,7 +121,6 @@ const Select: React.FunctionComponent<SelectProps> = ({
   const onOptionClicked = (selectedIndex: number) => () => {
     setSelectedOptionIndex(selectedIndex)
     setIsOpen(false)
-    setOptionSelected(true)
 
     if (onOptionChange) {
       onOptionChange(options[selectedIndex])
@@ -145,17 +141,15 @@ const Select: React.FunctionComponent<SelectProps> = ({
   return (
     <DropDownContainer isOpen={isOpen} {...props}>
       <DropDownHeader onClick={toggling}>
-        <Text color={!optionSelected && placeHolderText ? 'text' : undefined}>
-          {!optionSelected && placeHolderText ? placeHolderText : options[selectedOptionIndex].label}
-        </Text>
+        <Text color="#000000">{options[selectedOptionIndex].label}</Text>
       </DropDownHeader>
       <ArrowDropDownIcon color="text" onClick={toggling} />
       <DropDownListContainer>
         <DropDownList ref={dropdownRef}>
           {options.map((option, index) =>
-            placeHolderText || index !== selectedOptionIndex ? (
+            index !== selectedOptionIndex ? (
               <ListItem onClick={onOptionClicked(index)} key={option.label}>
-                <Text>{option.label}</Text>
+                <Text color="#000000">{option.label}</Text>
               </ListItem>
             ) : null,
           )}

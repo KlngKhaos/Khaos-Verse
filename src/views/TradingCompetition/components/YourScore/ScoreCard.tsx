@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import {
   Card,
@@ -11,7 +12,7 @@ import {
   CheckmarkCircleIcon,
   useModal,
 } from '@pancakeswap/uikit'
-import { CLAIM, OVER } from 'config/constants/trading-competition/phases'
+import { CLAIM, OVER } from 'config/constants/trading-competition/easterPhases'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import { useTranslation } from 'contexts/Localization'
 import UserPrizeGrid from './UserPrizeGrid'
@@ -65,7 +66,6 @@ const ScoreCard: React.FC<YourScoreProps> = ({
     <ClaimModal userTradingInformation={userTradingInformation} onClaimSuccess={onClaimSuccess} />,
     false,
   )
-
   const isClaimButtonDisabled = Boolean(isLoading || finishedAndPrizesClaimed || finishedAndNothingToClaim)
   const { hasUserClaimed } = userTradingInformation
 

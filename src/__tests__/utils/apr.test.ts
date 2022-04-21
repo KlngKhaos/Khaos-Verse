@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js'
-import lpAprs from 'config/constants/lpAprs.json'
 import { getPoolApr, getFarmApr } from 'utils/apr'
 import { BIG_TEN, BIG_ZERO } from 'utils/bigNumber'
 
@@ -46,6 +45,6 @@ describe('getFarmApr', () => {
       '0x0ed7e52944161450477ee417de9cd3a859b14fd0',
     )
     expect(cakeRewardsApr).toEqual(4204800)
-    expect(lpRewardsApr).toEqual(lpAprs['0x0ed7e52944161450477ee417de9cd3a859b14fd0'])
+    expect(lpRewardsApr).toEqual(10.5)
   })
 })

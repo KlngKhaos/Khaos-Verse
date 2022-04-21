@@ -1,6 +1,6 @@
-import { createContext, useEffect, useMemo, useReducer } from 'react'
+import React, { createContext, useEffect, useMemo, useReducer } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { getBunnyFactoryContract } from 'utils/contractHelpers'
+import { getGladiatorCollectibleFactoryContract } from 'utils/contractHelpers'
 import { MINT_COST, REGISTER_COST, ALLOWANCE_MULTIPLIER } from '../config'
 import { Actions, State, ContextType } from './types'
 
@@ -16,7 +16,7 @@ const initialState: State = {
     tokenId: null,
   },
   userName: '',
-  minimumCakeRequired: totalCost,
+  minimumNrtRequired: totalCost,
   allowance,
 }
 
@@ -67,8 +67,8 @@ const ProfileCreationProvider: React.FC = ({ children }) => {
     let isSubscribed = true
 
     const fetchData = async () => {
-      const bunnyFactoryContract = getBunnyFactoryContract()
-      const canMint = await bunnyFactoryContract.canMint(account)
+      const GladiatorCollectibleFactoryContract = getGladiatorCollectibleFactoryContract()
+      const canMint = await GladiatorCollectibleFactoryContract.canMint(account)
       dispatch({ type: 'initialize', step: canMint ? 0 : 1 })
 
       // When changing wallets quickly unmounting before the hasClaim finished causes a React error

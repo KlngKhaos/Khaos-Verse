@@ -1,55 +1,52 @@
-import { useMemo } from 'react'
-import { useRouter } from 'next/router'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import React from 'react'
+import { useLocation } from 'react-router'
 import { Menu as UikitMenu } from '@pancakeswap/uikit'
 import { languageList } from 'config/localization/languages'
 import { useTranslation } from 'contexts/Localization'
-import PhishingWarningBanner from 'components/PhishingWarningBanner'
 import useTheme from 'hooks/useTheme'
-import { usePriceCakeBusd } from 'state/farms/hooks'
-import { usePhishingBannerManager } from 'state/user/hooks'
+import { useNrtBusdPrice, useDenaPrice } from 'hooks/useBUSDPrice'
+import { useProfile } from 'state/profile/hooks'
+import config from './config/config'
 import UserMenu from './UserMenu'
-import { useMenuItems } from './hooks/useMenuItems'
 import GlobalSettings from './GlobalSettings'
 import { getActiveMenuItem, getActiveSubMenuItem } from './utils'
 import { footerLinks } from './config/footerConfig'
 
 const Menu = (props) => {
-  const { isDark, setTheme } = useTheme()
-  const cakePriceUsd = usePriceCakeBusd()
+  const { isDark, toggleTheme } = useTheme()
+  const nrtBusdPrice = useNrtBusdPrice()
+  const denaPrice = useDenaPrice()
+  const { profile } = useProfile()
   const { currentLanguage, setLanguage, t } = useTranslation()
-  const { pathname } = useRouter()
-  const [showPhishingWarningBanner] = usePhishingBannerManager()
+  const { pathname } = useLocation()
 
-  const menuItems = useMenuItems()
-
-  const activeMenuItem = getActiveMenuItem({ menuConfig: menuItems, pathname })
+  const activeMenuItem = getActiveMenuItem({ menuConfig: config(t), pathname })
   const activeSubMenuItem = getActiveSubMenuItem({ menuItem: activeMenuItem, pathname })
-
-  const toggleTheme = useMemo(() => {
-    return () => setTheme(isDark ? 'light' : 'dark')
-  }, [setTheme, isDark])
 
   return (
     <UikitMenu
-      linkComponent={(linkProps) => {
-        return <NextLinkFromReactRouter to={linkProps.href} {...linkProps} prefetch={false} />
-      }}
       userMenu={<UserMenu />}
       globalMenu={<GlobalSettings />}
-      banner={showPhishingWarningBanner && typeof window !== 'undefined' && <PhishingWarningBanner />}
       isDark={isDark}
       toggleTheme={toggleTheme}
       currentLang={currentLanguage.code}
       langs={languageList}
       setLang={setLanguage}
-      cakePriceUsd={cakePriceUsd.toNumber()}
-      links={menuItems}
+      nrtPriceUsd={nrtBusdPrice}
+      denaPriceUsd={denaPrice}
+      links={config(t)}
       subLinks={activeMenuItem?.hideSubNav ? [] : activeMenuItem?.items}
       footerLinks={footerLinks(t)}
       activeItem={activeMenuItem?.href}
       activeSubItem={activeSubMenuItem?.href}
-      buyCakeLabel={t('Buy CAKE')}
+      buyCakeLabel={t('Buy')}
+      profile={{
+        username: profile?.username,
+        image: profile?.nft?.image?.thumbnail,
+        profileLink: '/profile',
+        noProfileLink: '/profile',
+        showPip: !profile?.username,
+      }}
       {...props}
     />
   )

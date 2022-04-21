@@ -1,5 +1,6 @@
+import React from 'react'
 import styled, { DefaultTheme } from 'styled-components'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { Button, Card, CommunityIcon, Flex, Heading, PrizeIcon, Text } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { Team } from 'config/constants/types'
@@ -112,9 +113,9 @@ const TeamCard: React.FC<TeamCardProps> = ({ rank, team }) => {
             <Flex>
               <Flex>
                 {/* alignSelf for Safari fix */}
-                <PrizeIcon width="24px" mr="8px" style={{ alignSelf: 'center' }} color="textDisabled" />
-                <Text fontSize="24px" bold color="textDisabled">
-                  {t('Coming Soon')}
+                <PrizeIcon width="24px" mr="8px" style={{ alignSelf: 'center' }} />
+                <Text fontSize="24px" bold>
+                  {team.points.toLocaleString()}
                 </Text>
               </Flex>
               <Flex ml="24px">
@@ -126,11 +127,9 @@ const TeamCard: React.FC<TeamCardProps> = ({ rank, team }) => {
               </Flex>
             </Flex>
           </Info>
-          <Link href={`/teams/${team?.id}`} passHref>
-            <Button as="a" variant="secondary" scale="sm">
-              {t('See More')}
-            </Button>
-          </Link>
+          <Button as={Link} to={`/teams/${team?.id}`} variant="secondary" scale="sm">
+            {t('See More')}
+          </Button>
           <DesktopAvatar>{avatar}</DesktopAvatar>
         </Body>
       </Flex>

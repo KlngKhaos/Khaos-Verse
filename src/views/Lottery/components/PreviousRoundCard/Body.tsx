@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import {
   CardBody,
@@ -86,7 +87,7 @@ const PreviousRoundCardBody: React.FC<{ lotteryNodeData: LotteryRound; lotteryId
         </Flex>
         <Flex maxWidth={['240px', null, null, '100%']} justifyContent={['center', null, null, 'flex-start']}>
           {lotteryId ? (
-            lotteryNodeData?.finalNumber ? (
+            lotteryNodeData ? (
               <WinningNumbers
                 rotateText={isLargerScreen || false}
                 number={lotteryNodeData?.finalNumber.toString()}

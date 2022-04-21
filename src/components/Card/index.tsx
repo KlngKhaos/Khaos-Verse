@@ -8,9 +8,11 @@ const Card = styled(Box)<{
   borderRadius?: string
 }>`
   width: ${({ width }) => width ?? '100%'};
-  padding: ${({ padding }) => padding ?? '1.25rem'};
+  border-radius: 16px;
+  padding: 1.25rem;
+  padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
-  border-radius: ${({ borderRadius }) => borderRadius ?? '16px'};
+  border-radius: ${({ borderRadius }) => borderRadius};
   background-color: ${({ theme }) => theme.colors.background};
 `
 export default Card

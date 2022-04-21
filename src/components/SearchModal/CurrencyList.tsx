@@ -1,4 +1,4 @@
-import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@pancakeswap/sdk'
 import { Text } from '@pancakeswap/uikit'
 import styled from 'styled-components'
@@ -10,7 +10,7 @@ import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCombinedActiveList } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { useIsUserAddedToken } from '../../hooks/Tokens'
+import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
 import Column from '../Layout/Column'
 import { RowFixed, RowBetween } from '../Layout/Row'
 import { CurrencyLogo } from '../Logo'
@@ -101,41 +101,41 @@ function CurrencyRow({
 export default function CurrencyList({
   height,
   currencies,
-  inactiveCurrencies,
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
-  showBNB,
+  showETH,
   showImportView,
   setImportToken,
   breakIndex,
 }: {
   height: number
   currencies: Currency[]
-  inactiveCurrencies: Currency[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
-  showBNB: boolean
+  showETH: boolean
   showImportView: () => void
   setImportToken: (token: Token) => void
   breakIndex: number | undefined
 }) {
   const itemData: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showBNB
-      ? [Currency.ETHER, ...currencies, ...inactiveCurrencies]
-      : [...currencies, ...inactiveCurrencies]
+    let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }
     return formatted
-  }, [breakIndex, currencies, inactiveCurrencies, showBNB])
+  }, [breakIndex, currencies, showETH])
 
   const { chainId } = useActiveWeb3React()
 
   const { t } = useTranslation()
+
+  const inactiveTokens: {
+    [address: string]: Token
+  } = useAllInactiveTokens()
 
   const Row = useCallback(
     ({ data, index, style }) => {
@@ -146,7 +146,7 @@ export default function CurrencyList({
 
       const token = wrappedCurrency(currency, chainId)
 
-      const showImport = index > currencies.length
+      const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
 
       if (index === breakIndex || !data) {
         return (
@@ -182,15 +182,15 @@ export default function CurrencyList({
       )
     },
     [
-      selectedCurrency,
-      otherCurrency,
       chainId,
-      currencies.length,
-      breakIndex,
+      inactiveTokens,
       onCurrencySelect,
-      t,
-      showImportView,
+      otherCurrency,
+      selectedCurrency,
       setImportToken,
+      showImportView,
+      breakIndex,
+      t,
     ],
   )
 

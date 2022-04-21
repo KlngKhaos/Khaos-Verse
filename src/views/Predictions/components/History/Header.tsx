@@ -1,3 +1,4 @@
+import React from 'react'
 import { useWeb3React } from '@web3-react/core'
 import {
   ArrowForwardIcon,
@@ -80,8 +81,10 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
         <Heading as="h3" size="md">
           {t('History')}
         </Heading>
-        <Button onClick={handleClick} variant="text" endIcon={<ArrowForwardIcon color="primary" />} px="0">
-          {t('Close')}
+        <Button onClick={handleClick} variant="text" endIcon={<ArrowForwardIcon color="textSubtle" />} px="0">
+          <Text color="textSubtle" fontWeight="bold" fontSize="16px">
+            {t('Close')}
+          </Text>
         </Button>
       </Flex>
       <ButtonMenuContainer>

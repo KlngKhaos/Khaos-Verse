@@ -1,8 +1,8 @@
 {
-  "short_name": "PancakeSwap",
-  "name": "PancakeSwap",
-  "description": "Farm CAKE with Pancake LP Tokens",
-  "homepage_url": "https://pancakeswap.finance",
+  "short_name": "Gladiators Finance",
+  "name": "Gladiators Finance",
+  "description": "Gladiators.finance brings 3D NFTs to Binance Smart Chain.",
+  "homepage_url": "https://gladiators.finance",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#1FC7D4",
@@ -12,7 +12,7 @@
     {
       "src": "favicon.ico",
       "type": "image/x-icon",
-      "sizes": "16x16"
+      "sizes": "256x256"
     },
     {
       "src": "logo.png",

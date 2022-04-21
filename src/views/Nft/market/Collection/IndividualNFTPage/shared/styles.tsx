@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import { Link } from 'react-router-dom'
 import { Box, Flex, Grid, Image } from '@pancakeswap/uikit'
 
 export const TwoColumnsContainer = styled(Flex)`
@@ -33,7 +33,7 @@ export const Container = styled(Flex)`
   gap: 24px;
 `
 
-export const CollectionLink = styled(NextLinkFromReactRouter)`
+export const CollectionLink = styled(Link)`
   color: ${({ theme }) => theme.colors.primary};
   display: block;
   font-weight: 600;

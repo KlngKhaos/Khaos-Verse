@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { format } from 'date-fns'
 import styled from 'styled-components'
 import {
   Text,
@@ -14,8 +15,8 @@ import {
   useMatchBreakpoints,
 } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
+import useAuctionHistory from '../hooks/useAuctionHistory'
 import AuctionLeaderboardTable from './AuctionLeaderboard/AuctionLeaderboardTable'
-import { useFarmAuction } from '../hooks/useFarmAuction'
 
 interface AuctionHistoryProps {
   mostRecentClosedAuctionId: number
@@ -43,27 +44,24 @@ const AuctionHistory: React.FC<AuctionHistoryProps> = ({ mostRecentClosedAuction
   )
   const historyAuctionIdAsInt = parseInt(historyAuctionId, 10)
 
-  const {
-    t,
-    currentLanguage: { locale },
-  } = useTranslation()
+  const { t } = useTranslation()
 
   const { isXs, isSm, isMd, isLg, isXl, isXxl } = useMatchBreakpoints()
   const isLargerScreen = isLg || isXl || isXxl
   const isSmallerScreen = isXs || isSm || isMd
 
-  const {
-    data: { auction, bidders },
-  } = useFarmAuction(historyAuctionIdAsInt)
+  const auctionHistory = useAuctionHistory(historyAuctionIdAsInt)
+  const selectedAuction = Object.values(auctionHistory).find(
+    (auctionData) => auctionData.auction.id === historyAuctionIdAsInt,
+  )
 
-  let auctionTable =
-    auction && bidders ? (
-      <AuctionLeaderboardTable bidders={bidders} noBidsText="No bids were placed in this auction" />
-    ) : (
-      <Flex justifyContent="center" alignItems="center" p="24px" height="250px">
-        <Spinner />
-      </Flex>
-    )
+  let auctionTable = selectedAuction ? (
+    <AuctionLeaderboardTable bidders={selectedAuction.bidders} noBidsText="No bids were placed in this auction" />
+  ) : (
+    <Flex justifyContent="center" alignItems="center" p="24px" height="250px">
+      <Spinner />
+    </Flex>
+  )
 
   if (Number.isNaN(historyAuctionIdAsInt)) {
     auctionTable = (
@@ -74,29 +72,23 @@ const AuctionHistory: React.FC<AuctionHistoryProps> = ({ mostRecentClosedAuction
     )
   }
 
-  const endDate = auction
-    ? auction.endDate.toLocaleString(locale, {
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    : null
+  const endDate = selectedAuction ? format(selectedAuction.auction.endDate, 'MMM. dd yyyy, hh:mm aa') : null
 
   const handleHistoryAuctionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.currentTarget.validity.valid) {
-      const {
-        target: { value },
-      } = event
-      const valueAsNumber = +value
-      const newAuctionId =
-        valueAsNumber >= mostRecentClosedAuctionId
-          ? mostRecentClosedAuctionId.toString()
-          : valueAsNumber <= 0
-          ? ''
-          : value
+    const {
+      target: { value },
+    } = event
+    if (value) {
+      let newAuctionId = value
+      if (parseInt(value, 10) <= 0) {
+        newAuctionId = ''
+      }
+      if (parseInt(value, 10) >= mostRecentClosedAuctionId) {
+        newAuctionId = mostRecentClosedAuctionId.toString()
+      }
       setHistoryAuctionId(newAuctionId)
+    } else {
+      setHistoryAuctionId('')
     }
   }
 
@@ -119,9 +111,7 @@ const AuctionHistory: React.FC<AuctionHistoryProps> = ({ mostRecentClosedAuction
           <Box width="62px" mr={['4px', '16px']}>
             <Input
               disabled={!mostRecentClosedAuctionId}
-              type="text"
-              inputMode="numeric"
-              pattern="^[0-9]+$"
+              type="input"
               value={historyAuctionId}
               onChange={handleHistoryAuctionChange}
             />

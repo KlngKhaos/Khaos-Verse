@@ -1,3 +1,4 @@
+import React from 'react'
 import { Heading, Flex, Text, useMatchBreakpoints } from '@pancakeswap/uikit'
 
 const StatCardContent: React.FC<{ headingText: string; bodyText: string; highlightColor: string }> = ({
@@ -7,7 +8,7 @@ const StatCardContent: React.FC<{ headingText: string; bodyText: string; highlig
 }) => {
   const { isMobile, isTablet } = useMatchBreakpoints()
   const isSmallerScreen = isMobile || isTablet
-  const split = headingText.split(' ')
+  const split = headingText.split('|')
   const lastWord = split.pop()
   const remainingWords = split.slice(0, split.length).join(' ')
 

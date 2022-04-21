@@ -1,3 +1,4 @@
+import React from 'react'
 import { Button, Card, CardBody, CardHeader, Heading } from '@pancakeswap/uikit'
 import uniqueId from 'lodash/uniqueId'
 import { useTranslation } from 'contexts/Localization'

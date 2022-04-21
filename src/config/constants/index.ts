@@ -1,11 +1,9 @@
 import { ChainId, JSBI, Percent, Token } from '@pancakeswap/sdk'
-import { BigNumber } from '@ethersproject/bignumber'
 import { mainnetTokens, testnetTokens } from './tokens'
 
-export const ROUTER_ADDRESS = {
-  [ChainId.MAINNET]: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
-  [ChainId.TESTNET]: '0x77195D81261690c9e4e3B1bCF0cf819680be7615',
-}
+export const ROUTER_ADDRESS = '0x77195d81261690c9e4e3b1bcf0cf819680be7615'
+// export const ROUTER_ADDRESS = '0xD99D1c33F9fC3444f8101754aBC46c52416550D1'
+
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -104,15 +102,3 @@ export const BLOCKED_ADDRESSES: string[] = [
 export { default as farmsConfig } from './farms'
 export { default as poolsConfig } from './pools'
 export { default as ifosConfig } from './ifo'
-
-export const FAST_INTERVAL = 10000
-export const SLOW_INTERVAL = 60000
-
-// Gelato uses this address to define a native currency in all chains
-export const GELATO_NATIVE = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-// Handler string is passed to Gelato to use PCS router
-export const GELATO_HANDLER = 'pancakeswap'
-export const GENERIC_GAS_LIMIT_ORDER_EXECUTION = BigNumber.from(500000)
-
-export const EXCHANGE_DOCS_URLS = 'https://docs.pancakeswap.finance/products/pancakeswap-exchange'
-export const LIMIT_ORDERS_DOCS_URL = 'https://docs.pancakeswap.finance/products/pancakeswap-exchange/limit-orders'

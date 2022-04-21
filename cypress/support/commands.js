@@ -95,14 +95,3 @@ Cypress.on('uncaught:exception', () => {
   // Needed for trading competition page since it throws unhandled rejection error
   return false
 })
-
-Cypress.Commands.add('getBySel', (selector, ...args) => {
-  return cy.get(`[data-test=${selector}]`, ...args)
-})
-
-Cypress.Commands.overwrite('log', (subject, message) => cy.task('log', message))
-
-/* eslint-disable */
-Cypress.on('window:before:load', (win) => {
-  win.sfHeader = Cypress.env('SF_HEADER')
-})

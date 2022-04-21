@@ -1,3 +1,4 @@
+import React from 'react'
 import { BoxProps, Text } from '@pancakeswap/uikit'
 import { NodeRound } from 'state/types'
 import { useTranslation } from 'contexts/Localization'
@@ -21,7 +22,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ round, hasFailed = false, chi
       </Text>
       {hasFailed ? (
         <Text bold textTransform="uppercase" color="textDisabled" mb="16px" fontSize="24px">
-          {t('Cancelled')}
+          {t('Canceled')}
         </Text>
       ) : (
         <RoundPrice lockPrice={lockPrice} closePrice={closePrice} />

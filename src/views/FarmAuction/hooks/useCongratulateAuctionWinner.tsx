@@ -14,7 +14,7 @@ const useCongratulateAuctionWinner = (currentAuction: Auction, bidders: Bidder[]
 
   const { account } = useWeb3React()
 
-  const farmAuctionContract = useFarmAuctionContract(false)
+  const farmAuctionContract = useFarmAuctionContract()
 
   useEffect(() => {
     const checkIfWonPreviousAuction = async (previousAuctionId: number) => {

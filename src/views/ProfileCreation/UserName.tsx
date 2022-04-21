@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import {
   Card,
@@ -20,7 +20,7 @@ import { useWeb3React } from '@web3-react/core'
 import { formatUnits } from '@ethersproject/units'
 import { API_PROFILE } from 'config/constants/endpoints'
 import useToast from 'hooks/useToast'
-import { useGetCakeBalance } from 'hooks/useTokenBalance'
+import { useGetNrtBalance } from 'hooks/useTokenBalance'
 import { signMessage } from 'utils/web3React'
 import fetchWithTimeout from 'utils/fetchWithTimeout'
 import useWeb3Provider from 'hooks/useActiveWeb3React'
@@ -59,7 +59,7 @@ const Indicator = styled(Flex)`
 
 const UserName: React.FC = () => {
   const [isAcknowledged, setIsAcknowledged] = useState(false)
-  const { teamId, selectedNft, userName, actions, minimumCakeRequired, allowance } = useProfileCreation()
+  const { teamId, selectedNft, userName, actions, minimumNrtRequired, allowance } = useProfileCreation()
   const { t } = useTranslation()
   const { account } = useWeb3React()
   const { toastError } = useToast()
@@ -69,15 +69,15 @@ const UserName: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState('')
   const fetchAbortSignal = useRef<AbortController>(null)
-  const { balance: cakeBalance, fetchStatus } = useGetCakeBalance()
-  const hasMinimumCakeRequired = fetchStatus === FetchStatus.Fetched && cakeBalance.gte(REGISTER_COST)
+  const { balance: nrtBalance, fetchStatus } = useGetNrtBalance()
+  const hasMinimumNrtRequired = fetchStatus === FetchStatus.Fetched && nrtBalance.gte(REGISTER_COST)
   const [onPresentConfirmProfileCreation] = useModal(
     <ConfirmProfileCreationModal
       userName={userName}
       selectedNft={selectedNft}
       account={account}
       teamId={teamId}
-      minimumCakeRequired={minimumCakeRequired}
+      minimumNrtRequired={minimumNrtRequired}
       allowance={allowance}
     />,
     false,
@@ -96,7 +96,7 @@ const UserName: React.FC = () => {
           setMessage('')
           fetchAbortSignal.current = null
         } else {
-          const res = await fetchWithTimeout(`${API_PROFILE}/api/users/valid/${debouncedUsernameToCheck}`, {
+          const res = await fetchWithTimeout(`${API_PROFILE}/users/findOne?filter=%7B%22where%22%3A%7B%22username%22%3A%22${debouncedUsernameToCheck}%22%7D%7D`, {
             method: 'get',
             signal: abortSignal,
             timeout: 30000,
@@ -105,12 +105,11 @@ const UserName: React.FC = () => {
           fetchAbortSignal.current = null
 
           if (res.ok) {
+            setIsValid(false)
+            setMessage("Username taken")
+          } else {
             setIsValid(true)
             setMessage('')
-          } else {
-            const data = await res.json()
-            setIsValid(false)
-            setMessage(data?.error?.message)
           }
         }
       } catch (e) {
@@ -144,7 +143,7 @@ const UserName: React.FC = () => {
       setIsLoading(true)
 
       const signature = await signMessage(connector, library, account, userName)
-      const response = await fetch(`${API_PROFILE}/api/users/register`, {
+      const response = await fetch(`${API_PROFILE}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +152,9 @@ const UserName: React.FC = () => {
           address: account,
           username: userName,
           signature,
-        }),
+          password: account,
+          email: `${account}@nomatter.com`
+        })
       })
 
       if (response.ok) {
@@ -175,7 +176,7 @@ const UserName: React.FC = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`${API_PROFILE}/api/users/${account}`)
+        const response = await fetch(`${API_PROFILE}/users/findOne?filter=%7B%22where%22%3A%7B%22address%22%3A%22${account}%22%7D%7D`)
         const data = await response.json()
 
         if (response.ok) {
@@ -243,7 +244,7 @@ const UserName: React.FC = () => {
           <Text color="textSubtle" fontSize="14px" py="4px" mb="16px" style={{ minHeight: '30px' }}>
             {message}
           </Text>
-          <Text as="p" color="failure" mb="8px">
+          <Text as="p" color="primary" mb="8px">
             {t(
               "Only reuse a name from other social media if you're OK with people viewing your wallet. You can't change your name once you click Confirm.",
             )}
@@ -268,9 +269,9 @@ const UserName: React.FC = () => {
       >
         {t('Complete Profile')}
       </Button>
-      {!hasMinimumCakeRequired && (
+      {!hasMinimumNrtRequired && (
         <Text color="failure" mt="16px">
-          {t('A minimum of %num% CAKE is required', { num: formatUnits(REGISTER_COST) })}
+          {t('A minimum of %num% NRT is required', { num: formatUnits(REGISTER_COST) })}
         </Text>
       )}
     </>

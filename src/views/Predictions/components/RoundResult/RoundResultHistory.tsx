@@ -1,3 +1,4 @@
+import React from 'react'
 import { BoxProps, Flex, Text } from '@pancakeswap/uikit'
 import { BetPosition, Round } from 'state/types'
 import { useTranslation } from 'contexts/Localization'
@@ -23,7 +24,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ round, children, ...props }) 
       </Text>
       {round.failed ? (
         <Text bold textTransform="uppercase" color="textDisabled" mb="16px" fontSize="24px">
-          {t('Cancelled')}
+          {t('Canceled')}
         </Text>
       ) : (
         <Flex alignItems="center" justifyContent="space-between" mb="16px">

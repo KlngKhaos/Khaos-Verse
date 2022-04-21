@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Text, Card, Flex, Box, Spinner } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
@@ -74,7 +74,7 @@ const CurrentAuctionCard: React.FC<AuctionLeaderboardProps> = ({ auction, bidder
           </Text>
           <AuctionRibbon auction={auction} noAuctionHistory={getMostRecentClosedAuctionId(id, status) === null} />
           <AuctionProgress auction={auction} />
-          <AuctionLeaderboardTable bidders={bidders} noBidsText={t('No bids yet')} />
+          <AuctionLeaderboardTable bidders={bidders} noBidsText="No bids yet" />
         </Box>
       ) : (
         <AuctionHistory mostRecentClosedAuctionId={getMostRecentClosedAuctionId(id, status)} />

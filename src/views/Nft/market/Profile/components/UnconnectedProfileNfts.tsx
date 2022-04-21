@@ -1,3 +1,4 @@
+import React from 'react'
 import { Grid, Text, Flex } from '@pancakeswap/uikit'
 import { NftToken } from 'state/nftMarket/types'
 import { useTranslation } from 'contexts/Localization'
@@ -30,10 +31,10 @@ const UserNfts: React.FC<{ nfts: NftToken[]; isLoading: boolean }> = ({ nfts, is
 
             return (
               <CollectibleLinkCard
-                key={`${nft?.tokenId}-${nft?.collectionName}`}
+                key={`${nft.tokenId}-${nft.collectionName}`}
                 nft={nft}
                 currentAskPrice={
-                  marketData?.currentAskPrice && marketData?.isTradable && parseFloat(marketData?.currentAskPrice)
+                  marketData?.currentAskPrice && marketData?.isTradable && parseFloat(marketData.currentAskPrice)
                 }
               />
             )

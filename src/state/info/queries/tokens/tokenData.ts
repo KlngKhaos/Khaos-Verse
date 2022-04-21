@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
-import { gql } from 'graphql-request'
-import { useEffect, useState } from 'react'
-import { TokenData } from 'state/info/types'
-import { infoClient } from 'utils/graphql'
-import { useBlocksFromTimestamps } from 'views/Info/hooks/useBlocksFromTimestamps'
-import { getAmountChange, getChangeForPeriod, getPercentChange } from 'views/Info/utils/infoDataHelpers'
+import { useState, useEffect } from 'react'
+import { request, gql } from 'graphql-request'
+import { INFO_CLIENT } from 'config/constants/endpoints'
 import { getDeltaTimestamps } from 'views/Info/utils/infoQueryHelpers'
+import { useBlocksFromTimestamps } from 'views/Info/hooks/useBlocksFromTimestamps'
+import { getPercentChange, getChangeForPeriod, getAmountChange } from 'views/Info/utils/infoDataHelpers'
+import { TokenData } from 'state/info/types'
+import { useBnbPrices } from 'views/Info/hooks/useBnbPrices'
 
 interface TokenFields {
   id: string
@@ -76,7 +77,7 @@ const fetchTokenData = async (
         twoWeeksAgo: ${TOKEN_AT_BLOCK(block14d, tokenAddresses)}
       }
     `
-    const data = await infoClient.request<TokenQueryResponse>(query)
+    const data = await request<TokenQueryResponse>(INFO_CLIENT, query)
     return { data, error: false }
   } catch (error) {
     console.error('Failed to fetch token data', error)
@@ -118,6 +119,7 @@ const useFetchedTokenDatas = (tokenAddresses: string[]): TokenDatas => {
   const [t24h, t48h, t7d, t14d] = getDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24h, t48h, t7d, t14d])
   const [block24h, block48h, block7d, block14d] = blocks ?? []
+  const bnbPrices = useBnbPrices()
 
   useEffect(() => {
     const fetch = async () => {
@@ -160,9 +162,9 @@ const useFetchedTokenDatas = (tokenAddresses: string[]): TokenDatas => {
           const liquidityUSDChange = getPercentChange(liquidityUSD, liquidityUSDOneDayAgo)
           const liquidityToken = current ? current.totalLiquidity : 0
           // Prices of tokens for now, 24h ago and 7d ago
-          const priceUSD = current ? current.derivedUSD : 0
-          const priceUSDOneDay = oneDay ? oneDay.derivedUSD : 0
-          const priceUSDWeek = week ? week.derivedUSD : 0
+          const priceUSD = current ? current.derivedBNB * bnbPrices.current : 0
+          const priceUSDOneDay = oneDay ? oneDay.derivedBNB * bnbPrices.oneDay : 0
+          const priceUSDWeek = week ? week.derivedBNB * bnbPrices.week : 0
           const priceUSDChange = getPercentChange(priceUSD, priceUSDOneDay)
           const priceUSDChangeWeek = getPercentChange(priceUSD, priceUSDWeek)
           const txCount = getAmountChange(current?.totalTransactions, oneDay?.totalTransactions)
@@ -190,10 +192,10 @@ const useFetchedTokenDatas = (tokenAddresses: string[]): TokenDatas => {
       }
     }
     const allBlocksAvailable = block24h?.number && block48h?.number && block7d?.number && block14d?.number
-    if (tokenAddresses.length > 0 && allBlocksAvailable && !blockError) {
+    if (tokenAddresses.length > 0 && allBlocksAvailable && !blockError && bnbPrices) {
       fetch()
     }
-  }, [tokenAddresses, block24h, block48h, block7d, block14d, blockError])
+  }, [tokenAddresses, block24h, block48h, block7d, block14d, blockError, bnbPrices])
 
   return fetchState
 }

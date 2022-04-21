@@ -1,5 +1,6 @@
+import React from 'react'
 import styled from 'styled-components'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { Flex, HelpIcon, Button, PrizeIcon } from '@pancakeswap/uikit'
 import FlexRow from './FlexRow'
 import { PricePairLabel, TimerLabel } from './Label'
@@ -28,7 +29,7 @@ const HelpButtonWrapper = styled.div`
 const TimerLabelWrapper = styled.div`
   order: 3;
   width: 100px;
-
+  
   ${({ theme }) => theme.mediaQueries.sm} {
     order: 1;
     width: auto;
@@ -46,6 +47,9 @@ const LeaderboardButtonWrapper = styled.div`
     margin: 0 0 0 8px;
   }
 `
+const BackgroundButton = styled(Button)`
+  background-color: #007587;
+`
 
 const ButtonWrapper = styled.div`
   display: none;
@@ -56,39 +60,39 @@ const ButtonWrapper = styled.div`
   }
 `
 
-const Menu = () => {
+const Menu = ({liveCard, remainingTime}) => {
+  // console.log("liveCardliveCard", liveCard)
   return (
-    <FlexRow alignItems="center" p="16px">
-      <SetCol>
+    <FlexRow alignItems="center" p="12px">
+      {/* <SetCol>
         <PricePairLabel />
-      </SetCol>
-      <FlexRow justifyContent="center">
-        <PrevNextNav />
+      </SetCol> */}
+      <FlexRow justifyContent="center" ml="270px">
+        <PrevNextNav liveCard={liveCard}/>
       </FlexRow>
       <SetCol>
         <Flex alignItems="center" justifyContent="flex-end">
           <TimerLabelWrapper>
-            <TimerLabel interval="5" unit="m" />
+            <TimerLabel interval="5" unit="m" remainingTime={remainingTime}/>
           </TimerLabelWrapper>
           <HelpButtonWrapper>
             <Button
-              variant="subtle"
+              variant="light"
               as="a"
-              href="https://docs.pancakeswap.finance/products/prediction"
+              href="https://docs.gladiators.finance/monetize-ways-to-earn/battles-prediction"
               target="_blank"
               rel="noreferrer noopener"
               width="48px"
+              style={{ backgroundColor: "#007587" }}
             >
               <HelpIcon width="24px" color="white" />
             </Button>
           </HelpButtonWrapper>
-          <LeaderboardButtonWrapper>
-            <Link href="/prediction/leaderboard" passHref>
-              <Button as="a" variant="subtle" width="48px">
-                <PrizeIcon color="white" />
-              </Button>
-            </Link>
-          </LeaderboardButtonWrapper>
+          {/* <LeaderboardButtonWrapper>
+            <Button as={Link} variant="light" to="/prediction/leaderboard" width="48px" style={{ backgroundColor: "#007587" }}>
+              <PrizeIcon color="white" />
+            </Button>
+          </LeaderboardButtonWrapper> */}
           <ButtonWrapper style={{ order: 4 }}>
             <HistoryButton />
           </ButtonWrapper>

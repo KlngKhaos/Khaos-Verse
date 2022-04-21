@@ -1,8 +1,15 @@
 import { FetchStatus } from 'config/constants/types'
-import { BigNumberish } from '@ethersproject/bignumber'
+import { BigNumberish } from 'ethers'
 
 // Collections -> Nfts -> Transactions
 // Users -> Nft tokens IDs
+
+// TODO: Handle the error state on the UI
+export enum NFTMarketInitializationState {
+  UNINITIALIZED = 'UNINITIALIZED',
+  INITIALIZED = 'INITIALIZED',
+  ERROR = 'ERROR',
+}
 
 export enum UserNftInitializationState {
   UNINITIALIZED = 'UNINITIALIZED',
@@ -12,12 +19,25 @@ export enum UserNftInitializationState {
 }
 
 export interface State {
+  initializationState: NFTMarketInitializationState
   data: {
+    collections: Record<string, Collection> // string is the address
     nfts: Record<string, NftToken[]> // string is the collection address
     filters: Record<string, NftFilter> // string is the collection address
     activityFilters: Record<string, NftActivityFilter> // string is the collection address
-    tryVideoNftMedia: boolean
+    loadingState: {
+      isUpdatingGladiatorCollectibles: boolean
+      latestGladiatorCollectiblesUpdateAt: number
+    }
+    users: Record<string, User> // string is the address
+    user: UserNftsState
   }
+}
+
+export interface UserNftsState {
+  userNftsInitializationState: UserNftInitializationState
+  nfts: NftToken[]
+  activity: UserActivity
 }
 
 export interface Transaction {
@@ -80,7 +100,7 @@ export interface TokenMarketData {
   transactionHistory?: Transaction[]
 }
 
-// Represents single NFT token, either Squad-like NFT or single PancakeBunny.
+// Represents single NFT token, either Squad-like NFT or single GladiatorCollectible.
 export interface NftToken {
   tokenId: string
   name: string
@@ -217,8 +237,8 @@ export interface ApiSingleTokenData {
 // ${API_NFT}/collections/${collectionAddress}/tokens
 export interface ApiResponseCollectionTokens {
   total: number
-  attributesDistribution: Record<string, number>
-  data: Record<string, ApiSingleTokenData>
+  attributesDistribution?: Record<string, number>
+  data: ApiSingleTokenData[]
 }
 
 // Get specific token data

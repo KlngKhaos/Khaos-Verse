@@ -1,49 +1,89 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { useAppDispatch } from 'state'
+import { gladiatorCollectiblesAddress } from 'views/Nft/market/constants'
 import { isAddress } from 'utils'
 import { FetchStatus } from 'config/constants/types'
-import erc721Abi from 'config/abi/erc721.json'
-import { useSWRMulticall } from 'hooks/useSWRContract'
-import { getPancakeProfileAddress } from 'utils/addressHelpers'
-import useSWR from 'swr'
-import useSWRImmutable from 'swr/immutable'
-import isEmpty from 'lodash/isEmpty'
-import shuffle from 'lodash/shuffle'
-
+import { fetchCollection, fetchCollections, fetchNewPBAndUpdateExisting } from './reducer'
 import { State } from '../types'
-import { ApiCollections, NftActivityFilter, NftFilter, NftToken, Collection, NftAttribute } from './types'
-import { getCollection, getCollections } from './helpers'
+import { NftActivityFilter, NftFilter, NftToken, UserNftsState } from './types'
 
-const DEFAULT_NFT_ORDERING = { field: 'currentAskPrice', direction: 'asc' as 'asc' | 'desc' }
-const DEFAULT_NFT_ACTIVITY_FILTER = { typeFilters: [], collectionFilters: [] }
-const EMPTY_OBJECT = {}
+const MAX_GEN0_ID = 4
 
-export const useGetCollections = (): { data: ApiCollections; status: FetchStatus } => {
-  const { data, status } = useSWR(['nftMarket', 'collections'], async () => getCollections())
-  const collections = data ?? ({} as ApiCollections)
-  return { data: collections, status }
+export const useFetchCollections = () => {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchCollections())
+  }, [dispatch])
 }
 
-export const useGetCollection = (collectionAddress: string): Collection | undefined => {
+export const useFetchCollection = (collectionAddress: string) => {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchCollection(collectionAddress))
+  }, [dispatch, collectionAddress])
+}
+
+// Returns a function that fetches more NFTs for specified bunny id
+// as well as updating existing PB NFTs in state
+// Note: GladiatorCollectible specific
+export const useFetchByGladiatorCollectibleIdAndUpdate = (bunnyId: string) => {
+  const dispatch = useAppDispatch()
+
+  const { latestGladiatorCollectiblesUpdateAt, isUpdatingGladiatorCollectibles } = useSelector(
+    (state: State) => state.nftMarket.data.loadingState,
+  )
+
+  // Extra guard in case market data shifts
+  // we don't wanna fetch same tokens multiple times
+  const existingGladiatorCollectibleInState = useGetAllGladiatorCollectibleByGladiatorCollectibleId(bunnyId)
+  const existingTokensWithGladiatorCollectibleId = existingGladiatorCollectibleInState ? existingGladiatorCollectibleInState.map((nft) => nft.tokenId) : []
+
+  const allGladiatorCollectibles = useNftsFromCollection(gladiatorCollectiblesAddress)
+  const allExistingPBTokenIds = allGladiatorCollectibles ? allGladiatorCollectibles.map((nft) => nft.tokenId) : []
+
+  const firstGladiatorCollectible = existingGladiatorCollectibleInState.length > 0 ? existingGladiatorCollectibleInState[0] : null
+
+  // If we already have NFT with this bunny id in state - we can reuse its metadata without making API request
+  const existingMetadata = useMemo(() => {
+    return firstGladiatorCollectible
+      ? {
+          name: firstGladiatorCollectible.name,
+          description: firstGladiatorCollectible.description,
+          collection: { name: firstGladiatorCollectible.collectionName },
+          image: firstGladiatorCollectible.image,
+        }
+      : null
+  }, [firstGladiatorCollectible])
+
+  // This fetches more bunnies when called
+  const fetchMoreGladiatorCollectibles = (orderDirection: 'asc' | 'desc') => {
+    dispatch(
+      fetchNewPBAndUpdateExisting({
+        bunnyId,
+        existingTokensWithGladiatorCollectibleId,
+        allExistingPBTokenIds,
+        existingMetadata,
+        orderDirection,
+      }),
+    )
+  }
+
+  return { isUpdatingGladiatorCollectibles, latestGladiatorCollectiblesUpdateAt, fetchMoreGladiatorCollectibles }
+}
+
+export const useLoadingState = () => {
+  return useSelector((state: State) => state.nftMarket.data.loadingState)
+}
+
+export const useGetCollections = () => {
+  return useSelector((state: State) => state.nftMarket.data.collections)
+}
+
+export const useGetCollection = (collectionAddress: string) => {
   const checksummedCollectionAddress = isAddress(collectionAddress) || ''
-  const { data } = useSWR(
-    checksummedCollectionAddress ? ['nftMarket', 'collections', checksummedCollectionAddress.toLowerCase()] : null,
-    async () => getCollection(checksummedCollectionAddress),
-  )
-  const collectionObject = data ?? {}
-  return collectionObject[checksummedCollectionAddress]
-}
-
-export const useGetShuffledCollections = (): { data: Collection[]; status: FetchStatus } => {
-  const { data } = useSWRImmutable(['nftMarket', 'collections'], async () => getCollections())
-  const collections = data ?? ({} as ApiCollections)
-  const { data: shuffledCollections, status } = useSWRImmutable(
-    !isEmpty(collections) ? ['nftMarket', 'shuffledCollections'] : null,
-    () => {
-      return shuffle(collections)
-    },
-  )
-  return { data: shuffledCollections, status }
+  const collections = useGetCollections()
+  return collections[checksummedCollectionAddress]
 }
 
 export const useNftsFromCollection = (collectionAddress: string) => {
@@ -52,38 +92,27 @@ export const useNftsFromCollection = (collectionAddress: string) => {
   return nfts
 }
 
-export const useApprovalNfts = (nftsInWallet: NftToken[]) => {
-  const nftApprovalCalls = useMemo(
-    () =>
-      nftsInWallet.map((nft: NftToken) => {
-        const { tokenId, collectionAddress } = nft
-
-        return {
-          address: collectionAddress,
-          name: 'getApproved',
-          params: [tokenId],
-        }
-      }),
-    [nftsInWallet],
-  )
-
-  const { data } = useSWRMulticall(erc721Abi, nftApprovalCalls)
-
-  const approvedTokenIds = Array.isArray(data)
-    ? data
-        .flat()
-        .reduce(
-          (acc, address, index) => ({ ...acc, [nftsInWallet[index].tokenId]: getPancakeProfileAddress() === address }),
-          {},
-        )
-    : null
-
-  return { data: approvedTokenIds }
+export const useGetAllGladiatorCollectibleByGladiatorCollectibleId = (bunnyId: string) => {
+  const nfts: NftToken[] = useSelector((state: State) => state.nftMarket.data.nfts[gladiatorCollectiblesAddress])
+  return nfts ? nfts.filter((nft) => nft.attributes[0].value === bunnyId && nft.marketData.isTradable) : []
 }
 
-export const useGetNftFilters = (collectionAddress: string): Readonly<Record<string, NftAttribute>> => {
+export const useGetNFTInitializationState = () => {
+  return useSelector((state: State) => state.nftMarket.initializationState)
+}
+
+export const useUserNfts = (): UserNftsState => {
+  return useSelector((state: State) => state.nftMarket.data.user)
+}
+
+export const useHasGen0Nfts = (): boolean => {
+  const userNfts = useSelector((state: State) => state.nftMarket.data.user)
+  return userNfts.nfts.some((nft) => nft.attributes && Number(nft.attributes[0]?.value) <= MAX_GEN0_ID)
+}
+
+export const useGetNftFilters = (collectionAddress: string) => {
   const collectionFilter: NftFilter = useSelector((state: State) => state.nftMarket.data.filters[collectionAddress])
-  return collectionFilter ? collectionFilter.activeFilters : EMPTY_OBJECT
+  return collectionFilter ? collectionFilter.activeFilters : {}
 }
 
 export const useGetNftFilterLoadingState = (collectionAddress: string) => {
@@ -93,7 +122,7 @@ export const useGetNftFilterLoadingState = (collectionAddress: string) => {
 
 export const useGetNftOrdering = (collectionAddress: string) => {
   const collectionFilter: NftFilter = useSelector((state: State) => state.nftMarket.data.filters[collectionAddress])
-  return collectionFilter ? collectionFilter.ordering : DEFAULT_NFT_ORDERING
+  return collectionFilter ? collectionFilter.ordering : { field: 'currentAskPrice', direction: 'asc' as 'asc' | 'desc' }
 }
 
 export const useGetNftShowOnlyOnSale = (collectionAddress: string) => {
@@ -101,14 +130,9 @@ export const useGetNftShowOnlyOnSale = (collectionAddress: string) => {
   return collectionFilter ? collectionFilter.showOnlyOnSale : true
 }
 
-export const useTryVideoNftMedia = () => {
-  const tryVideoNftMedia = useSelector((state: State) => state.nftMarket.data.tryVideoNftMedia)
-  return tryVideoNftMedia ?? true
-}
-
 export const useGetNftActivityFilters = (collectionAddress: string) => {
   const collectionFilter: NftActivityFilter = useSelector(
     (state: State) => state.nftMarket.data.activityFilters[collectionAddress],
   )
-  return collectionFilter || DEFAULT_NFT_ACTIVITY_FILTER
+  return collectionFilter || { typeFilters: [], collectionFilters: [] }
 }

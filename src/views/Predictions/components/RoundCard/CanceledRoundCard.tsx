@@ -1,3 +1,4 @@
+import React from 'react'
 import { Card, CardBody, Text, Flex, BlockIcon, LinkExternal } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { NodeRound, BetPosition } from 'state/types'
@@ -27,7 +28,7 @@ const CanceledRoundCard: React.FC<CanceledRoundCardProps> = ({ round }) => {
       <CardHeader
         status="canceled"
         icon={<BlockIcon mr="4px" width="21px" />}
-        title={t('Cancelled')}
+        title={t('Canceled')}
         epoch={round.epoch}
       />
       <CardBody p="16px">
@@ -35,7 +36,7 @@ const CanceledRoundCard: React.FC<CanceledRoundCardProps> = ({ round }) => {
         <RoundResultBox>
           <Flex flexDirection="column" alignItems="center">
             <Text bold color={isRefundable ? 'text' : 'textDisabled'}>
-              {t('Round Cancelled')}
+              {t('Round Canceled')}
             </Text>
             {isRefundable && <ReclaimPositionButton epoch={epoch} onSuccess={handleSuccess} width="100%" my="8px" />}
             <LinkExternal href="https://docs.pancakeswap.finance/products/prediction" external>

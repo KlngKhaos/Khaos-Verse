@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { useModal } from '@pancakeswap/uikit'
 import AvatarImage from 'views/Nft/market/components/BannerHeader/AvatarImage'
@@ -28,8 +29,8 @@ const StyledEditProfileAvatar = styled.div`
   }
 `
 
-const EditProfileAvatar: React.FC<{ src: string; alt?: string; onSuccess: () => void }> = ({ src, alt, onSuccess }) => {
-  const [onEditProfileModal] = useModal(<EditProfileModal onSuccess={onSuccess} />, false)
+const EditProfileAvatar: React.FC<{ src: string; alt?: string }> = ({ src, alt }) => {
+  const [onEditProfileModal] = useModal(<EditProfileModal />, false)
 
   return (
     <StyledEditProfileAvatar onClick={onEditProfileModal}>

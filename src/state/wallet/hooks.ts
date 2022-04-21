@@ -5,7 +5,6 @@ import ERC20_INTERFACE from 'config/abi/erc20'
 import { useAllTokens } from 'hooks/Tokens'
 import { useMulticallContract } from 'hooks/useContract'
 import { isAddress } from 'utils'
-import orderBy from 'lodash/orderBy'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 
 /**
@@ -18,7 +17,12 @@ export function useBNBBalances(uncheckedAddresses?: (string | undefined)[]): {
 
   const addresses: string[] = useMemo(
     () =>
-      uncheckedAddresses ? orderBy(uncheckedAddresses.map(isAddress).filter((a): a is string => a !== false)) : [],
+      uncheckedAddresses
+        ? uncheckedAddresses
+            .map(isAddress)
+            .filter((a): a is string => a !== false)
+            .sort()
+        : [],
     [uncheckedAddresses],
   )
 
@@ -53,12 +57,7 @@ export function useTokenBalancesWithLoadingIndicator(
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
 
-  const balances = useMultipleContractSingleData(
-    validatedTokenAddresses,
-    ERC20_INTERFACE,
-    'balanceOf',
-    useMemo(() => [address], [address]),
-  )
+  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
 
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
 
@@ -106,17 +105,17 @@ export function useCurrencyBalances(
 
   const tokenBalances = useTokenBalances(account, tokens)
   const containsBNB: boolean = useMemo(() => currencies?.some((currency) => currency === ETHER) ?? false, [currencies])
-  const bnbBalance = useBNBBalances(containsBNB ? [account] : [])
+  const ethBalance = useBNBBalances(containsBNB ? [account] : [])
 
   return useMemo(
     () =>
       currencies?.map((currency) => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === ETHER) return bnbBalance[account]
+        if (currency === ETHER) return ethBalance[account]
         return undefined
       }) ?? [],
-    [account, currencies, bnbBalance, tokenBalances],
+    [account, currencies, ethBalance, tokenBalances],
   )
 }
 

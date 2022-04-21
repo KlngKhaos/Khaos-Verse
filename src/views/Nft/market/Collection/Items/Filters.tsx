@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Box, ButtonMenu, ButtonMenuItem, Flex, Grid, Text } from '@pancakeswap/uikit'
 import capitalize from 'lodash/capitalize'
 import isEmpty from 'lodash/isEmpty'
 import { useGetNftFilters, useGetNftShowOnlyOnSale } from 'state/nftMarket/hooks'
-import { NftAttribute } from 'state/nftMarket/types'
+import { Collection, NftAttribute } from 'state/nftMarket/types'
 import { useTranslation } from 'contexts/Localization'
 import { Item, ListTraitFilter } from 'views/Nft/market/components/Filters'
 import { useAppDispatch } from 'state'
@@ -14,8 +14,7 @@ import ClearAllButton from './ClearAllButton'
 import SortSelect from './SortSelect'
 
 interface FiltersProps {
-  address: string
-  attributes: NftAttribute[]
+  collection: Collection
 }
 
 const GridContainer = styled(Grid)`
@@ -85,23 +84,21 @@ const ScrollableFlexContainer = styled(Flex)`
   }
 `
 
-const Filters: React.FC<FiltersProps> = ({ address, attributes }) => {
+const Filters: React.FC<FiltersProps> = ({ collection }) => {
+  const { address } = collection
   const dispatch = useAppDispatch()
   const { data } = useGetCollectionDistribution(address)
   const { t } = useTranslation()
   const showOnlyNftsOnSale = useGetNftShowOnlyOnSale(address)
   const [activeButtonIndex, setActiveButtonIndex] = useState(showOnlyNftsOnSale ? 1 : 0)
 
-  useEffect(() => {
-    setActiveButtonIndex(showOnlyNftsOnSale ? 1 : 0)
-  }, [showOnlyNftsOnSale])
-
   const onActiveButtonChange = (newIndex: number) => {
     dispatch(setShowOnlyOnSale({ collection: address, showOnlyOnSale: newIndex === 1 }))
+    setActiveButtonIndex(newIndex)
   }
 
   const nftFilters = useGetNftFilters(address)
-  const attrsByType: Record<string, NftAttribute[]> = attributes?.reduce(
+  const attrsByType: Record<string, NftAttribute[]> = collection?.attributes?.reduce(
     (accum, attr) => ({
       ...accum,
       [attr.traitType]: accum[attr.traitType] ? [...accum[attr.traitType], attr] : [attr],

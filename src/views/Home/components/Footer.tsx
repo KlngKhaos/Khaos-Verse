@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { Flex, Heading, Text, Link } from '@pancakeswap/uikit'
 import { useTranslation } from 'contexts/Localization'
@@ -49,6 +50,16 @@ const FloatingPancakesWrapper = styled(Container)`
     visibility: visible;
   }
 `
+const FooterImg = styled.img`
+height: 100%;
+width: 100%;
+
+@media (max-width: 1024px) {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+}
+`
 
 const TopLeftImgWrapper = styled(Flex)`
   position: absolute;
@@ -87,33 +98,31 @@ const Footer = () => {
   return (
     <>
       <BgWrapper>
-        <Flex alignItems="center" justifyContent="center" width="100%" height="100%">
-          <StyledSunburst />
-        </Flex>
+      <FooterImg src='/images/home/gladiators/3.png' alt={t('Gladiator')}/>
       </BgWrapper>
-      <FloatingPancakesWrapper>
+      {/* <FloatingPancakesWrapper>
         <TopLeftImgWrapper>
           <CompositeImage {...topLeftImage} maxHeight="256px" />
         </TopLeftImgWrapper>
         <BottomRightImgWrapper>
           <CompositeImage {...bottomRightImage} maxHeight="256px" />
         </BottomRightImgWrapper>
-      </FloatingPancakesWrapper>
+      </FloatingPancakesWrapper> */}
       <Wrapper>
-        <Heading mb="24px" scale="xl" color="white">
+        <Heading mb="24px" scale="xl" color="secondary">
           {t('Start in seconds.')}
         </Heading>
         <Text textAlign="center" color="white">
           {t('Connect your crypto wallet to start using the app in seconds.')}
         </Text>
-        <Text mb="24px" bold color="white">
+        <Text mb="24px" color="white">
           {t('No registration needed.')}
         </Text>
 
-        <Link external href="https://docs.pancakeswap.finance/">
+        <Link external href="https://docs.gladiators.finance/" color="white">
           {t('Learn how to start')}
         </Link>
-        {!account && <ConnectWalletButton mt="24px" />}
+        {!account && <ConnectWalletButton mt="24px" scale="sm" />}
       </Wrapper>
     </>
   )

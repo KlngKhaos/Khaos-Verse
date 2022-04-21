@@ -22,15 +22,11 @@ export const isUserRejected = (err) => {
   return typeof err === 'object' && 'code' in err && err.code === 4001
 }
 
-const ENABLED_LOG = false
-
 export const logError = (error: Error | unknown) => {
-  if (ENABLED_LOG) {
-    if (error instanceof Error) {
-      Sentry.captureException(error)
-    } else {
-      Sentry.captureException(assignError(error), error)
-    }
+  if (error instanceof Error) {
+    Sentry.captureException(error)
+  } else {
+    Sentry.captureException(assignError(error), error)
   }
   console.error(error)
 }

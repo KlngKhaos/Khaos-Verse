@@ -1,4 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { ethers } from 'ethers'
 import { Campaign, TranslatableText } from 'config/constants/types'
 import ifosList from 'config/constants/ifo'
 import { campaignMap } from 'config/constants/campaigns'
@@ -10,7 +10,7 @@ import pointCenterIfoABI from 'config/abi/pointCenterIfo.json'
 interface IfoMapResponse {
   thresholdToClaim: string
   campaignId: string
-  numberPoints: BigNumber
+  numberPoints: ethers.BigNumber
 }
 
 export const getAchievementTitle = (campaign: Campaign): TranslatableText => {
@@ -71,7 +71,7 @@ export const getClaimableIfoData = async (account: string): Promise<Achievement[
       const [claimStatus] = claimStatusArr
 
       if (claimStatus === true) {
-        return [...accum, { address: getPointCenterIfoAddress(), name: 'ifos', params: [ifoCampaigns[index].address] }]
+        return [...accum, { address: getPointCenterIfoAddress(), name: 'ifos', params: [index] }]
       }
 
       return accum
@@ -80,19 +80,18 @@ export const getClaimableIfoData = async (account: string): Promise<Achievement[
 
   // Transform response to an Achievement
   return claimableIfoData.reduce((accum, claimableIfoDataItem) => {
-    const claimableCampaignId = claimableIfoDataItem.campaignId.toString()
-    if (!campaignMap.has(claimableCampaignId)) {
+    if (!campaignMap.has(claimableIfoDataItem.campaignId)) {
       return accum
     }
 
-    const campaignMeta = campaignMap.get(claimableCampaignId)
-    const { address } = ifoCampaigns.find((ifoCampaign) => ifoCampaign.campaignId === claimableCampaignId)
+    const campaignMeta = campaignMap.get(claimableIfoDataItem.campaignId)
+    const { address } = ifoCampaigns.find((ifoCampaign) => ifoCampaign.campaignId === claimableIfoDataItem.campaignId)
 
     return [
       ...accum,
       {
         address,
-        id: claimableCampaignId,
+        id: claimableIfoDataItem.campaignId,
         type: 'ifo',
         title: getAchievementTitle(campaignMeta),
         description: getAchievementDescription(campaignMeta),

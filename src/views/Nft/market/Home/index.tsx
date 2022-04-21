@@ -1,7 +1,8 @@
+import React from 'react'
 import styled from 'styled-components'
-import { Box, Button, Flex, Heading, LinkExternal } from '@pancakeswap/uikit'
+import { Box, Button, Heading, Flex } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'contexts/Localization'
 import PageHeader from 'components/PageHeader'
 import SectionsWithFoldableText from 'components/FoldableSection/SectionsWithFoldableText'
@@ -9,10 +10,8 @@ import PageSection from 'components/PageSection'
 import { PageMeta } from 'components/Layout/Page'
 import { nftsBaseUrl } from 'views/Nft/market/constants'
 import { useGetCollections } from 'state/nftMarket/hooks'
-import { FetchStatus } from 'config/constants/types'
-import PageLoader from 'components/Loader/PageLoader'
 import useTheme from 'hooks/useTheme'
-import orderBy from 'lodash/orderBy'
+import { orderBy } from 'lodash'
 import SearchBar from '../components/SearchBar'
 import Collections from './Collections'
 import Newest from './Newest'
@@ -56,7 +55,7 @@ const Home = () => {
   const { t } = useTranslation()
   const { account } = useWeb3React()
   const { theme } = useTheme()
-  const { data: collections, status } = useGetCollections()
+  const collections = useGetCollections()
 
   const hotCollections = orderBy(
     collections,
@@ -80,10 +79,10 @@ const Home = () => {
               {t('NFT Market')}
             </Heading>
             <Heading scale="lg" color="text">
-              {t('Buy and Sell NFTs on BNB Smart Chain')}
+              {t('Buy and Sell NFTs on Binance Smart Chain')}
             </Heading>
             {account && (
-              <Button as={NextLinkFromReactRouter} to={`${nftsBaseUrl}/profile/${account.toLowerCase()}`} mt="32px">
+              <Button as={Link} to={`${nftsBaseUrl}/profile/${account.toLowerCase()}`} mt="32px">
                 {t('Manage/Sell')}
               </Button>
             )}
@@ -91,36 +90,29 @@ const Home = () => {
           <SearchBar />
         </StyledHeaderInner>
       </StyledPageHeader>
-      {status !== FetchStatus.Fetched ? (
-        <PageLoader />
-      ) : (
-        <PageSection
-          innerProps={{ style: { margin: '0', width: '100%' } }}
-          background={theme.colors.background}
-          index={1}
-          concaveDivider
-          dividerPosition="top"
-        >
-          <Collections
-            key="newest-collections"
-            title={t('Newest Collections')}
-            testId="nfts-newest-collections"
-            collections={newestCollections}
-          />
-          <Collections
-            key="hot-collections"
-            title={t('Hot Collections')}
-            testId="nfts-hot-collections"
-            collections={hotCollections}
-          />
-          <Newest />
-        </PageSection>
-      )}
+      <PageSection
+        innerProps={{ style: { margin: '0', width: '100%' } }}
+        background={theme.colors.background}
+        index={1}
+        concaveDivider
+        dividerPosition="top"
+      >
+        <Collections
+          key="newest-collections"
+          title={t('Newest Collections')}
+          testId="nfts-newest-collections"
+          collections={newestCollections}
+        />
+        <Collections
+          key="hot-collections"
+          title={t('Hot Collections')}
+          testId="nfts-hot-collections"
+          collections={hotCollections}
+        />
+        <Newest />
+      </PageSection>
       <Gradient p="64px 0">
         <SectionsWithFoldableText header={t('FAQs')} config={config(t)} m="auto" />
-        <LinkExternal href="https://docs.pancakeswap.finance/contact-us/nft-market-applications" mx="auto" mt="16px">
-          {t('Apply to NFT Market!')}
-        </LinkExternal>
       </Gradient>
     </>
   )

@@ -1,25 +1,22 @@
 import {
   Button,
-  ExpandIcon,
   Flex,
   IconButton,
-  ShrinkIcon,
   SyncAltIcon,
   Text,
-  // TradingViewIcon,
-  LineGraphIcon,
   useMatchBreakpoints,
 } from '@pancakeswap/uikit'
 import { CurrencyLogo, DoubleCurrencyLogo } from 'components/Logo'
-// import { TradingViewLabel } from 'components/TradingView'
+import { TradingViewLabel } from 'components/TradingView'
 import { useTranslation } from 'contexts/Localization'
+import React, { useCallback, useState } from 'react'
 import { ChartViewMode } from 'state/user/actions'
 import { useExchangeChartViewManager } from 'state/user/hooks'
 import styled from 'styled-components'
 import BasicChart from './BasicChart'
 import { StyledPriceChart } from './styles'
-// import TradingViewChart from './TradingViewChart'
-// import PairPriceDisplay from '../../../../components/PairPriceDisplay'
+import TradingViewChart from './TradingViewChart'
+import TokenDisplay from './TokenDisplay'
 
 const ChartButton = styled(Button)`
   background-color: ${({ $active, theme }) => $active && `${theme.colors.primary}0f`};
@@ -35,7 +32,6 @@ const PriceChart = ({
   isChartExpanded,
   setIsChartExpanded,
   isMobile,
-  isFullWidthContainer,
   token0Address,
   token1Address,
   currentSwapPrice,
@@ -43,12 +39,12 @@ const PriceChart = ({
   const { isDesktop } = useMatchBreakpoints()
   const toggleExpanded = () => setIsChartExpanded((currentIsExpanded) => !currentIsExpanded)
   const [chartView, setChartView] = useExchangeChartViewManager()
-  // const [twChartSymbol, setTwChartSymbol] = useState('')
+  const [twChartSymbol, setTwChartSymbol] = useState('')
   const { t } = useTranslation()
 
-  // const handleTwChartSymbol = useCallback((symbol) => {
-  //   setTwChartSymbol(symbol)
-  // }, [])
+  const handleTwChartSymbol = useCallback((symbol) => {
+    setTwChartSymbol(symbol)
+  }, [])
 
   return (
     <StyledPriceChart
@@ -56,7 +52,6 @@ const PriceChart = ({
       overflow={chartView === ChartViewMode.TRADING_VIEW ? 'hidden' : 'unset'}
       $isDark={isDark}
       $isExpanded={isChartExpanded}
-      $isFullWidthContainer={isFullWidthContainer}
     >
       <Flex justifyContent="space-between" px="24px">
         <Flex alignItems="center">
@@ -84,7 +79,7 @@ const PriceChart = ({
               onClick={() => setChartView(ChartViewMode.BASIC)}
               mr="8px"
             >
-              {isDesktop ? t('Basic') : <LineGraphIcon color="primary" />}
+              {isDesktop && t('Basic')}
             </ChartButton>
             {/* <ChartButton
               aria-label="TradingView"
@@ -94,15 +89,15 @@ const PriceChart = ({
               variant="text"
               onClick={() => setChartView(ChartViewMode.TRADING_VIEW)}
             >
-              {isDesktop ? 'TradingView' : <TradingViewIcon color="primary" />}
+              {isDesktop && 'TradingView' }
             </ChartButton> */}
           </Flex>
         </Flex>
         {!isMobile && (
           <Flex>
-            <IconButton variant="text" onClick={toggleExpanded}>
-              {isChartExpanded ? <ShrinkIcon color="text" /> : <ExpandIcon color="text" />}
-            </IconButton>
+            <IconButton variant="text" onClick={toggleExpanded} />
+            {/* {isChartExpanded ? <ShrinkIcon color="text" /> : <ExpandIcon color="text" />} */}
+            {/* </IconButton> */}
           </Flex>
         )}
       </Flex>
@@ -117,7 +112,7 @@ const PriceChart = ({
           currentSwapPrice={currentSwapPrice}
         />
       )}
-      {/* {chartView === ChartViewMode.TRADING_VIEW && (
+      {chartView === ChartViewMode.TRADING_VIEW && (
         <Flex
           flexDirection="column"
           justifyContent="space-between"
@@ -125,7 +120,7 @@ const PriceChart = ({
           pt="12px"
         >
           <Flex justifyContent="space-between" alignItems="baseline" flexWrap="wrap">
-            <PairPriceDisplay
+            <TokenDisplay
               value={currentSwapPrice?.[token0Address]}
               inputSymbol={inputCurrency?.symbol}
               outputSymbol={outputCurrency?.symbol}
@@ -142,7 +137,7 @@ const PriceChart = ({
             onTwChartSymbol={handleTwChartSymbol}
           />
         </Flex>
-      ) */}
+      )}
     </StyledPriceChart>
   )
 }

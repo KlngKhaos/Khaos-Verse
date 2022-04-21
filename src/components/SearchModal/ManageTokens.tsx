@@ -1,4 +1,4 @@
-import { useRef, RefObject, useCallback, useState, useMemo } from 'react'
+import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
 import { Token } from '@pancakeswap/sdk'
 import { Text, Button, CloseIcon, IconButton, LinkExternal, Input, Link } from '@pancakeswap/uikit'
 import styled from 'styled-components'
@@ -60,7 +60,7 @@ export default function ManageTokens({
 
   const handleRemoveAll = useCallback(() => {
     if (chainId && userAddedTokens) {
-      userAddedTokens.forEach((token) => {
+      userAddedTokens.map((token) => {
         return removeToken(chainId, token.address)
       })
     }

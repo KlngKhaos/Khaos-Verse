@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { ChainId, Currency, Token } from '@pancakeswap/sdk'
 import styled from 'styled-components'
 import {
@@ -18,7 +18,6 @@ import { registerToken } from 'utils/wallet'
 import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { WrappedTokenInfo } from 'state/lists/hooks'
 import { RowFixed } from '../Layout/Row'
 import { AutoColumn, ColumnCenter } from '../Layout/Column'
 import { getBscScanLink } from '../../utils'
@@ -56,7 +55,7 @@ function ConfirmationPendingContent({ pendingText }: { pendingText: string }) {
   )
 }
 
-export function TransactionSubmittedContent({
+function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
@@ -91,14 +90,7 @@ export function TransactionSubmittedContent({
               variant="tertiary"
               mt="12px"
               width="fit-content"
-              onClick={() =>
-                registerToken(
-                  token.address,
-                  token.symbol,
-                  token.decimals,
-                  token instanceof WrappedTokenInfo ? token.logoURI : undefined,
-                )
-              }
+              onClick={() => registerToken(token.address, token.symbol, token.decimals)}
             >
               <RowFixed>
                 {t('Add %asset% to Metamask', { asset: currencyToAdd.symbol })}
@@ -136,7 +128,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
     <Wrapper>
       <AutoColumn justify="center">
         <ErrorIcon color="failure" width="64px" />
-        <Text color="failure" style={{ textAlign: 'center', width: '85%', wordBreak: 'break-word' }}>
+        <Text color="failure" style={{ textAlign: 'center', width: '85%' }}>
           {message}
         </Text>
       </AutoColumn>
@@ -174,7 +166,7 @@ const TransactionConfirmationModal: React.FC<InjectedModalProps & ConfirmationMo
     if (customOnDismiss) {
       customOnDismiss()
     }
-    onDismiss?.()
+    onDismiss()
   }, [customOnDismiss, onDismiss])
 
   if (!chainId) return null
@@ -187,7 +179,7 @@ const TransactionConfirmationModal: React.FC<InjectedModalProps & ConfirmationMo
         <TransactionSubmittedContent
           chainId={chainId}
           hash={hash}
-          onDismiss={handleDismiss}
+          onDismiss={onDismiss}
           currencyToAdd={currencyToAdd}
         />
       ) : (

@@ -1,12 +1,13 @@
+import React from 'react'
 import { Modal, Flex, Text } from '@pancakeswap/uikit'
-import { BigNumber } from '@ethersproject/bignumber'
+import { ethers } from 'ethers'
 import { formatUnits } from '@ethersproject/units'
+import { useAppDispatch } from 'state'
 import { useTranslation } from 'contexts/Localization'
-import { useCake, useProfileContract } from 'hooks/useContract'
+import { useNrt, useProfileContract } from 'hooks/useContract'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
-import { useProfile } from 'state/profile/hooks'
+import { fetchProfile } from 'state/profile'
 import useToast from 'hooks/useToast'
-import { requiresApproval } from 'utils/requiresApproval'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import { ToastDescriptionWithTx } from 'components/Toast'
 import ApproveConfirmButtons from 'components/ApproveConfirmButtons'
@@ -18,8 +19,8 @@ interface Props {
   selectedNft: State['selectedNft']
   account: string
   teamId: number
-  minimumCakeRequired: BigNumber
-  allowance: BigNumber
+  minimumNrtRequired: ethers.BigNumber
+  allowance: ethers.BigNumber
   onDismiss?: () => void
 }
 
@@ -27,24 +28,29 @@ const ConfirmProfileCreationModal: React.FC<Props> = ({
   account,
   teamId,
   selectedNft,
-  minimumCakeRequired,
+  minimumNrtRequired,
   allowance,
   onDismiss,
 }) => {
   const { t } = useTranslation()
   const profileContract = useProfileContract()
-  const { refresh: refreshProfile } = useProfile()
+  const dispatch = useAppDispatch()
   const { toastSuccess } = useToast()
-  const { reader: cakeContractReader, signer: cakeContractApprover } = useCake()
+  const nrtContract = useNrt()
   const { callWithGasPrice } = useCallWithGasPrice()
 
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        return requiresApproval(cakeContractReader, account, profileContract.address, minimumCakeRequired)
+        try {
+          const response = await nrtContract.allowance(account, profileContract.address)
+          return response.gte(minimumNrtRequired)
+        } catch (error) {
+          return false
+        }
       },
       onApprove: () => {
-        return callWithGasPrice(cakeContractApprover, 'approve', [profileContract.address, allowance.toJSON()])
+        return callWithGasPrice(nrtContract, 'approve', [profileContract.address, allowance.toJSON()])
       },
       onConfirm: () => {
         return callWithGasPrice(profileContract, 'createProfile', [
@@ -54,7 +60,7 @@ const ConfirmProfileCreationModal: React.FC<Props> = ({
         ])
       },
       onSuccess: async ({ receipt }) => {
-        refreshProfile()
+        await dispatch(fetchProfile(account))
         onDismiss()
         toastSuccess(t('Profile created!'), <ToastDescriptionWithTx txHash={receipt.transactionHash} />)
       },
@@ -67,7 +73,7 @@ const ConfirmProfileCreationModal: React.FC<Props> = ({
       </Text>
       <Flex justifyContent="space-between" mb="16px">
         <Text>{t('Cost')}</Text>
-        <Text>{t('%num% CAKE', { num: formatUnits(REGISTER_COST) })}</Text>
+        <Text>{t('%num% NRT', { num: formatUnits(REGISTER_COST) })}</Text>
       </Flex>
       <ApproveConfirmButtons
         isApproveDisabled={isConfirmed || isConfirming || isApproved}

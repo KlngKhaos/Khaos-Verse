@@ -1,23 +1,20 @@
-import { Currency, Pair, Token } from '@pancakeswap/sdk'
-import { Button, ChevronDownIcon, Text, useModal, Flex, Box, MetamaskIcon } from '@pancakeswap/uikit'
+import React from 'react'
+import { Currency, Pair } from '@pancakeswap/sdk'
+import { Button, ChevronDownIcon, Text, useModal, Flex } from '@pancakeswap/uikit'
 import styled from 'styled-components'
-import { registerToken } from 'utils/wallet'
-import { isAddress } from 'utils'
 import { useTranslation } from 'contexts/Localization'
-import { WrappedTokenInfo } from 'state/lists/hooks'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { CurrencyLogo, DoubleCurrencyLogo } from '../Logo'
 
+import { RowBetween } from '../Layout/Row'
 import { Input as NumericalInput } from './NumericalInput'
-import { CopyButton } from '../CopyButton'
 
 const InputRow = styled.div<{ selected: boolean }>`
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  justify-content: flex-end;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 const CurrencySelectButton = styled(Button).attrs({ variant: 'text', scale: 'sm' })`
@@ -32,15 +29,15 @@ const LabelRow = styled.div`
   line-height: 1rem;
   padding: 0.75rem 1rem 0 1rem;
 `
-const InputPanel = styled.div`
+const InputPanel = styled.div<{ hideInput?: boolean }>`
   display: flex;
   flex-flow: column nowrap;
   position: relative;
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.colors.backgroundAlt};
+  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+  background-color: ${({ theme }) => theme.colors.background};
   z-index: 1;
 `
-const Container = styled.div`
+const Container = styled.div<{ hideInput: boolean }>`
   border-radius: 16px;
   background-color: ${({ theme }) => theme.colors.input};
   box-shadow: ${({ theme }) => theme.shadows.inset};
@@ -56,6 +53,7 @@ interface CurrencyInputPanelProps {
   disableCurrencySelect?: boolean
   hideBalance?: boolean
   pair?: Pair | null
+  hideInput?: boolean
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
@@ -71,19 +69,15 @@ export default function CurrencyInputPanel({
   disableCurrencySelect = false,
   hideBalance = false,
   pair = null, // used for double token logo
+  hideInput = false,
   otherCurrency,
   id,
   showCommonBases,
 }: CurrencyInputPanelProps) {
-  const { account, library } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
-  const {
-    t,
-    currentLanguage: { locale },
-  } = useTranslation()
-
-  const token = pair ? pair.liquidityToken : currency instanceof Token ? currency : null
-  const tokenAddress = token ? isAddress(token.address) : null
+  const { t } = useTranslation()
+  const translatedLabel = label || t('Input')
 
   const [onPresentCurrencyModal] = useModal(
     <CurrencySearchModal
@@ -94,12 +88,42 @@ export default function CurrencyInputPanel({
     />,
   )
   return (
-    <Box position="relative" id={id}>
-      <Flex mb="6px" alignItems="center" justifyContent="space-between">
-        <Flex>
+    <InputPanel id={id}>
+      <Container hideInput={hideInput}>
+        {!hideInput && (
+          <LabelRow>
+            <RowBetween>
+              <Text fontSize="14px">{translatedLabel}</Text>
+              {account && (
+                <Text onClick={onMax} fontSize="14px" style={{ display: 'inline', cursor: 'pointer' }}>
+                  {!hideBalance && !!currency
+                    ? t('Balance: %balance%', { balance: selectedCurrencyBalance?.toSignificant(6) ?? t('Loading') })
+                    : ' -'}
+                </Text>
+              )}
+            </RowBetween>
+          </LabelRow>
+        )}
+        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
+          {!hideInput && (
+            <>
+              <NumericalInput
+                className="token-amount-input"
+                value={value}
+                onUserInput={(val) => {
+                  onUserInput(val)
+                }}
+              />
+              {account && currency && showMaxButton && label !== 'To' && (
+                <Button onClick={onMax} scale="sm" variant="text">
+                  MAX
+                </Button>
+              )}
+            </>
+          )}
           <CurrencySelectButton
-            className="open-currency-select-button"
             selected={!!currency}
+            className="open-currency-select-button"
             onClick={() => {
               if (!disableCurrencySelect) {
                 onPresentCurrencyModal()
@@ -113,11 +137,11 @@ export default function CurrencyInputPanel({
                 <CurrencyLogo currency={currency} size="24px" style={{ marginRight: '8px' }} />
               ) : null}
               {pair ? (
-                <Text id="pair" bold>
+                <Text id="pair">
                   {pair?.token0.symbol}:{pair?.token1.symbol}
                 </Text>
               ) : (
-                <Text id="pair" bold>
+                <Text id="pair">
                   {(currency && currency.symbol && currency.symbol.length > 20
                     ? `${currency.symbol.slice(0, 4)}...${currency.symbol.slice(
                         currency.symbol.length - 5,
@@ -129,62 +153,8 @@ export default function CurrencyInputPanel({
               {!disableCurrencySelect && <ChevronDownIcon />}
             </Flex>
           </CurrencySelectButton>
-          {token && tokenAddress ? (
-            <Flex style={{ gap: '4px' }} alignItems="center">
-              <CopyButton
-                width="16px"
-                buttonColor="textSubtle"
-                text={tokenAddress}
-                tooltipMessage={t('Token address copied')}
-                tooltipTop={-20}
-                tooltipRight={40}
-                tooltipFontSize={12}
-              />
-              {library?.provider?.isMetaMask && (
-                <MetamaskIcon
-                  style={{ cursor: 'pointer' }}
-                  width="16px"
-                  onClick={() =>
-                    registerToken(
-                      tokenAddress,
-                      token.symbol,
-                      token.decimals,
-                      token instanceof WrappedTokenInfo ? token.logoURI : undefined,
-                    )
-                  }
-                />
-              )}
-            </Flex>
-          ) : null}
-        </Flex>
-        {account && (
-          <Text onClick={onMax} color="textSubtle" fontSize="14px" style={{ display: 'inline', cursor: 'pointer' }}>
-            {!hideBalance && !!currency
-              ? t('Balance: %balance%', { balance: selectedCurrencyBalance?.toSignificant(6) ?? t('Loading') })
-              : ' -'}
-          </Text>
-        )}
-      </Flex>
-      <InputPanel>
-        <Container as="label">
-          <LabelRow>
-            <NumericalInput
-              className="token-amount-input"
-              value={value}
-              onUserInput={(val) => {
-                onUserInput(val)
-              }}
-            />
-          </LabelRow>
-          <InputRow selected={disableCurrencySelect}>
-            {account && currency && showMaxButton && label !== 'To' && (
-              <Button onClick={onMax} scale="xs" variant="secondary">
-                {t('Max').toLocaleUpperCase(locale)}
-              </Button>
-            )}
-          </InputRow>
-        </Container>
-      </InputPanel>
-    </Box>
+        </InputRow>
+      </Container>
+    </InputPanel>
   )
 }

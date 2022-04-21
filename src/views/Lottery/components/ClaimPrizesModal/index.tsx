@@ -1,9 +1,9 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Heading, ModalContainer, ModalHeader, ModalTitle, ModalBody, ModalCloseButton } from '@pancakeswap/uikit'
 import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
-import delay from 'lodash/delay'
+import { delay } from 'lodash'
 import confetti from 'canvas-confetti'
 import { LotteryTicketClaimData } from 'config/constants/types'
 import { useAppDispatch } from 'state'
@@ -77,7 +77,7 @@ const ClaimPrizesModal: React.FC<ClaimPrizesModalModalProps> = ({ onDismiss, rou
         <ClaimPrizesInner
           onSuccess={() => {
             dispatch(fetchUserLotteries({ account, currentLotteryId }))
-            onDismiss?.()
+            onDismiss()
           }}
           roundsToClaim={roundsToClaim}
         />

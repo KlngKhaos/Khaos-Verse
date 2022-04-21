@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import { Button, Flex, Text, InjectedModalProps } from '@pancakeswap/uikit'
 import { formatBigNumber } from 'utils/formatBalance'
-import { getPancakeProfileAddress } from 'utils/addressHelpers'
-import { useCake } from 'hooks/useContract'
-import { useGetCakeBalance } from 'hooks/useTokenBalance'
+import { getGladiatorProfileAddress } from 'utils/addressHelpers'
+import { useNrt } from 'hooks/useContract'
+import { useGetNrtBalance } from 'hooks/useTokenBalance'
 import { useTranslation } from 'contexts/Localization'
 import useGetProfileCosts from 'views/Nft/market/Profile/hooks/useGetProfileCosts'
 import { FetchStatus } from 'config/constants/types'
-import { requiresApproval } from 'utils/requiresApproval'
 import { useProfile } from 'state/profile/hooks'
 import ProfileAvatarWithTeam from 'components/ProfileAvatarWithTeam'
 import { UseEditProfileResponse } from './reducer'
@@ -44,36 +43,31 @@ const AvatarWrapper = styled.div`
 const StartPage: React.FC<StartPageProps> = ({ goToApprove, goToChange, goToRemove, onDismiss }) => {
   const { t } = useTranslation()
   const { account } = useWeb3React()
-  const { reader: cakeContract } = useCake()
+  const nrtContract = useNrt()
   const { profile } = useProfile()
-  const { balance: cakeBalance, fetchStatus } = useGetCakeBalance()
+  const { balance: nrtBalance, fetchStatus } = useGetNrtBalance()
   const {
-    costs: { numberCakeToUpdate, numberCakeToReactivate },
+    costs: { numberNrtToUpdate, numberNrtToReactivate },
     isLoading: isProfileCostsLoading,
   } = useGetProfileCosts()
   const [needsApproval, setNeedsApproval] = useState(null)
-  const minimumCakeRequired = profile?.isActive ? numberCakeToUpdate : numberCakeToReactivate
-  const hasMinimumCakeRequired = fetchStatus === FetchStatus.Fetched && cakeBalance.gte(minimumCakeRequired)
+  const minimumNrtRequired = profile.isActive ? numberNrtToUpdate : numberNrtToReactivate
+  const hasMinimumCakeRequired = fetchStatus === FetchStatus.Fetched && nrtBalance.gte(minimumNrtRequired)
 
   /**
-   * Check if the wallet has the required CAKE allowance to change their profile pic or reactivate
+   * Check if the wallet has the required NRT allowance to change their profile pic or reactivate
    * If they don't, we send them to the approval screen first
    */
   useEffect(() => {
     const checkApprovalStatus = async () => {
-      const approvalNeeded = await requiresApproval(
-        cakeContract,
-        account,
-        getPancakeProfileAddress(),
-        minimumCakeRequired,
-      )
-      setNeedsApproval(approvalNeeded)
+      const response = await nrtContract.allowance(account, getGladiatorProfileAddress())
+      setNeedsApproval(response.lt(minimumNrtRequired))
     }
 
     if (account && !isProfileCostsLoading) {
       checkApprovalStatus()
     }
-  }, [account, minimumCakeRequired, setNeedsApproval, cakeContract, isProfileCostsLoading])
+  }, [account, minimumNrtRequired, setNeedsApproval, nrtContract, isProfileCostsLoading])
 
   if (!profile) {
     return null
@@ -88,7 +82,7 @@ const StartPage: React.FC<StartPageProps> = ({ goToApprove, goToChange, goToRemo
         <Text as="p" color="failure">
           {!isProfileCostsLoading &&
             !hasMinimumCakeRequired &&
-            t('%minimum% CAKE required to change profile pic', { minimum: formatBigNumber(minimumCakeRequired) })}
+            t('%minimum% NRT required to change profile pic', { minimum: formatBigNumber(minimumNrtRequired) })}
         </Text>
       </Flex>
       {profile.isActive ? (

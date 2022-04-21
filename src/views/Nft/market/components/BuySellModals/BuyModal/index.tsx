@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { InjectedModalProps } from '@pancakeswap/uikit'
-import { MaxUint256, Zero } from '@ethersproject/constants'
+import { ethers } from 'ethers'
 import useTheme from 'hooks/useTheme'
-import { useTranslation, TranslateFunction } from 'contexts/Localization'
+import { useTranslation } from 'contexts/Localization'
 import useTokenBalance, { useGetBnbBalance } from 'hooks/useTokenBalance'
 import { getBalanceNumber } from 'utils/formatBalance'
 import { ethersToBigNumber } from 'utils/bigNumber'
 import tokens from 'config/constants/tokens'
-import { CHAIN_ID } from 'config/constants/networks'
-import { ChainId } from '@pancakeswap/sdk'
-import { parseUnits, formatEther } from '@ethersproject/units'
+import { parseUnits, formatEther } from 'ethers/lib/utils'
 import { useERC20, useNftMarketContract } from 'hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
 import { useCallWithGasPrice } from 'hooks/useCallWithGasPrice'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
-import { requiresApproval } from 'utils/requiresApproval'
 import useToast from 'hooks/useToast'
 import { ToastDescriptionWithTx } from 'components/Toast'
-import { NftToken } from 'state/nftMarket/types'
+import { useAppDispatch } from 'state'
+import { addUserNft } from 'state/nftMarket/reducer'
+import { NftLocation, NftToken } from 'state/nftMarket/types'
 import { StyledModal } from './styles'
 import ReviewStage from './ReviewStage'
 import ConfirmStage from '../shared/ConfirmStage'
@@ -25,20 +24,16 @@ import ApproveAndConfirmStage from '../shared/ApproveAndConfirmStage'
 import { PaymentCurrency, BuyingStage } from './types'
 import TransactionConfirmed from '../shared/TransactionConfirmed'
 
-const modalTitles = (t: TranslateFunction) => ({
-  [BuyingStage.REVIEW]: t('Review'),
-  [BuyingStage.APPROVE_AND_CONFIRM]: t('Back'),
-  [BuyingStage.CONFIRM]: t('Back'),
-  [BuyingStage.TX_CONFIRMED]: t('Transaction Confirmed'),
-})
+const modalTitles = {
+  [BuyingStage.REVIEW]: 'Review',
+  [BuyingStage.APPROVE_AND_CONFIRM]: 'Back',
+  [BuyingStage.CONFIRM]: 'Back',
+  [BuyingStage.TX_CONFIRMED]: 'Transaction Confirmed',
+}
 
 interface BuyModalProps extends InjectedModalProps {
   nftToBuy: NftToken
 }
-
-// NFT WBNB in testnet contract is different
-const wbnbAddress =
-  CHAIN_ID === String(ChainId.MAINNET) ? tokens.wbnb.address : '0x094616f0bdfb0b526bd735bf66eca0ad254ca81f'
 
 const BuyModal: React.FC<BuyModalProps> = ({ nftToBuy, onDismiss }) => {
   const [stage, setStage] = useState(BuyingStage.REVIEW)
@@ -50,20 +45,20 @@ const BuyModal: React.FC<BuyModalProps> = ({ nftToBuy, onDismiss }) => {
   const { callWithGasPrice } = useCallWithGasPrice()
 
   const { account } = useWeb3React()
-  const wbnbContractReader = useERC20(wbnbAddress, false)
-  const wbnbContractApprover = useERC20(wbnbAddress)
+  const wbnbContract = useERC20(tokens.wbnb.address)
   const nftMarketContract = useNftMarketContract()
 
   const { toastSuccess } = useToast()
+  const dispatch = useAppDispatch()
 
-  const nftPriceWei = parseUnits(nftToBuy?.marketData?.currentAskPrice, 'ether')
-  const nftPrice = parseFloat(nftToBuy?.marketData?.currentAskPrice)
+  const nftPriceWei = parseUnits(nftToBuy.marketData.currentAskPrice, 'ether')
+  const nftPrice = parseFloat(nftToBuy.marketData.currentAskPrice)
 
   // BNB - returns ethers.BigNumber
   const { balance: bnbBalance, fetchStatus: bnbFetchStatus } = useGetBnbBalance()
   const formattedBnbBalance = parseFloat(formatEther(bnbBalance))
   // WBNB - returns BigNumber
-  const { balance: wbnbBalance, fetchStatus: wbnbFetchStatus } = useTokenBalance(wbnbAddress)
+  const { balance: wbnbBalance, fetchStatus: wbnbFetchStatus } = useTokenBalance(tokens.wbnb.address)
   const formattedWbnbBalance = getBalanceNumber(wbnbBalance)
 
   const walletBalance = paymentCurrency === PaymentCurrency.BNB ? formattedBnbBalance : formattedWbnbBalance
@@ -83,10 +78,15 @@ const BuyModal: React.FC<BuyModalProps> = ({ nftToBuy, onDismiss }) => {
 
   const { isApproving, isApproved, isConfirming, handleApprove, handleConfirm } = useApproveConfirmTransaction({
     onRequiresApproval: async () => {
-      return requiresApproval(wbnbContractReader, account, nftMarketContract.address)
+      try {
+        const currentAllowance = await wbnbContract.allowance(account, nftMarketContract.address)
+        return currentAllowance.gt(0)
+      } catch (error) {
+        return false
+      }
     },
     onApprove: () => {
-      return callWithGasPrice(wbnbContractApprover, 'approve', [nftMarketContract.address, MaxUint256])
+      return callWithGasPrice(wbnbContract, 'approve', [nftMarketContract.address, ethers.constants.MaxUint256])
     },
     onApproveSuccess: async ({ receipt }) => {
       toastSuccess(
@@ -95,7 +95,9 @@ const BuyModal: React.FC<BuyModalProps> = ({ nftToBuy, onDismiss }) => {
       )
     },
     onConfirm: () => {
-      const payAmount = Number.isNaN(nftPrice) ? Zero : parseUnits(nftToBuy?.marketData?.currentAskPrice)
+      const payAmount = Number.isNaN(nftPrice)
+        ? ethers.BigNumber.from(0)
+        : parseUnits(nftToBuy.marketData.currentAskPrice)
       if (paymentCurrency === PaymentCurrency.BNB) {
         return callWithGasPrice(nftMarketContract, 'buyTokenUsingBNB', [nftToBuy.collectionAddress, nftToBuy.tokenId], {
           value: payAmount,
@@ -110,6 +112,13 @@ const BuyModal: React.FC<BuyModalProps> = ({ nftToBuy, onDismiss }) => {
     onSuccess: async ({ receipt }) => {
       setConfirmedTxHash(receipt.transactionHash)
       setStage(BuyingStage.TX_CONFIRMED)
+      dispatch(
+        addUserNft({
+          tokenId: nftToBuy.tokenId,
+          collectionAddress: nftToBuy.collectionAddress,
+          nftLocation: NftLocation.WALLET,
+        }),
+      )
       toastSuccess(
         t('Your NFT has been sent to your wallet'),
         <ToastDescriptionWithTx txHash={receipt.transactionHash} />,
@@ -133,7 +142,7 @@ const BuyModal: React.FC<BuyModalProps> = ({ nftToBuy, onDismiss }) => {
 
   return (
     <StyledModal
-      title={modalTitles(t)[stage]}
+      title={t(modalTitles[stage])}
       stage={stage}
       onDismiss={onDismiss}
       onBack={showBackButton ? goBack : null}

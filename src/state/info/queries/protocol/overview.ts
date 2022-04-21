@@ -1,10 +1,10 @@
-import { gql } from 'graphql-request'
-import { useEffect, useState } from 'react'
-import { ProtocolData } from 'state/info/types'
-import { infoClient } from 'utils/graphql'
-import { useBlocksFromTimestamps } from 'views/Info/hooks/useBlocksFromTimestamps'
+import { useState, useEffect } from 'react'
+import { request, gql } from 'graphql-request'
+import { INFO_CLIENT } from 'config/constants/endpoints'
 import { getChangeForPeriod, getPercentChange } from 'views/Info/utils/infoDataHelpers'
+import { ProtocolData } from 'state/info/types'
 import { getDeltaTimestamps } from 'views/Info/utils/infoQueryHelpers'
+import { useBlocksFromTimestamps } from 'views/Info/hooks/useBlocksFromTimestamps'
 
 interface PancakeFactory {
   totalTransactions: string
@@ -23,14 +23,14 @@ const getOverviewData = async (block?: number): Promise<{ data?: OverviewRespons
   try {
     const query = gql`query overview {
       pancakeFactories(
-        ${block ? `block: { number: ${block}}` : ``}
+        ${block ? `block: { number: ${block}}` : ``} 
         first: 1) {
         totalTransactions
         totalVolumeUSD
         totalLiquidityUSD
       }
     }`
-    const data = await infoClient.request<OverviewResponse>(query)
+    const data = await request<OverviewResponse>(INFO_CLIENT, query)
     return { data, error: false }
   } catch (error) {
     console.error('Failed to fetch info overview', error)

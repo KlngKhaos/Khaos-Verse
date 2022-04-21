@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import {
   Modal,
@@ -79,7 +79,7 @@ const RoiCalculatorModal: React.FC<RoiCalculatorModalProps> = ({
   stakingTokenPrice,
   multiplier,
   initialValue,
-  earningTokenSymbol = 'CAKE',
+  earningTokenSymbol = 'DENA',
   autoCompoundFrequency = 0,
   performanceFee = 0,
   isFarm = false,
@@ -179,7 +179,7 @@ const RoiCalculatorModal: React.FC<RoiCalculatorModalProps> = ({
               $1000
             </Button>
             <Button
-              disabled={!stakingTokenBalance.isFinite() || stakingTokenBalance.lte(0) || !account}
+              disabled={stakingTokenBalance.lte(0) || !account}
               scale="xs"
               p="4px 16px"
               width="128px"

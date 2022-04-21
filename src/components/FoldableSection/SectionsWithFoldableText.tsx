@@ -1,13 +1,16 @@
-import { ReactNode } from 'react'
+import React from 'react'
 import { Text, Heading, Card, CardHeader, CardBody, Box, BoxProps } from '@pancakeswap/uikit'
+import { useTranslation } from 'contexts/Localization'
 import FoldableText from './FoldableText'
 
 interface Props extends BoxProps {
   header: string
-  config: { title: string; description: ReactNode[] }[]
+  config: { title: string; description: string[] }[]
 }
 
 const SectionsWithFoldableText: React.FC<Props> = ({ header, config, ...props }) => {
+  const { t } = useTranslation()
+
   return (
     <Box maxWidth="888px" {...props}>
       <Card>
@@ -18,12 +21,11 @@ const SectionsWithFoldableText: React.FC<Props> = ({ header, config, ...props })
         </CardHeader>
         <CardBody>
           {config.map(({ title, description }, i, { length }) => (
-            <FoldableText key={title} id={title} mb={i + 1 === length ? '' : '24px'} title={title}>
-              {description.map((desc, index) => {
+            <FoldableText key={title} id={title} mb={i + 1 === length ? '' : '24px'} title={t(title)}>
+              {description.map((desc) => {
                 return (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <Text key={index} color="textSubtle" as="p">
-                    {desc}
+                  <Text key={desc} color="textSubtle" as="p">
+                    {t(desc)}
                   </Text>
                 )
               })}

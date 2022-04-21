@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { BoxProps, Box, Flex, FlexProps } from '@pancakeswap/uikit'
 import Container from 'components/Layout/Container'
@@ -22,7 +23,7 @@ interface BackgroundColorProps extends FlexProps {
   getPadding?: () => string
 }
 
-const BackgroundColor = styled(Flex)<BackgroundColorProps>`
+const BackgroundColor = styled(Flex) <BackgroundColorProps>`
   position: relative;
   flex-direction: column;
   align-items: center;

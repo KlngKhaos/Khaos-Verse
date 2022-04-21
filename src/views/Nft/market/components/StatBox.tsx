@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { Box, BoxProps, Flex, Skeleton, Text } from '@pancakeswap/uikit'
 
@@ -8,7 +9,7 @@ export interface StatBoxItemProps extends BoxProps {
 
 export const StatBoxItem: React.FC<StatBoxItemProps> = ({ title, stat, ...props }) => (
   <Box {...props}>
-    <Text fontSize="12px" color="textSubtle" textAlign="center">
+    <Text fontSize="12px" color="#D9AB3A" textAlign="center">
       {title}
     </Text>
     {stat === null ? (
@@ -23,8 +24,8 @@ export const StatBoxItem: React.FC<StatBoxItemProps> = ({ title, stat, ...props 
 
 const StatBox = styled(Flex)`
   align-items: center;
-  background: ${({ theme }) => theme.colors.invertedContrast};
-  border: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  background: #000;
+  border: 1px solid #D9AB3A;
   border-radius: ${({ theme }) => theme.radii.card};
   justify-content: space-around;
   padding: 8px;

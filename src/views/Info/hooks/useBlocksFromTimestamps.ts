@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { multiQuery } from 'views/Info/utils/infoQueryHelpers'
 import { BLOCKS_CLIENT } from 'config/constants/endpoints'
 import { Block } from 'state/info/types'
-import orderBy from 'lodash/orderBy'
 
 const getBlockSubqueries = (timestamps: number[]) =>
   timestamps.map((timestamp) => {
@@ -40,6 +39,9 @@ export const getBlocksFromTimestamps = async (
     skipCount,
   )
 
+  const sortingFunction =
+    sortDirection === 'desc' ? (a: Block, b: Block) => b.number - a.number : (a: Block, b: Block) => a.number - b.number
+
   const blocks: Block[] = []
   if (fetchedData) {
     // eslint-disable-next-line no-restricted-syntax
@@ -52,7 +54,7 @@ export const getBlocksFromTimestamps = async (
       }
     }
     // graphql-request does not guarantee same ordering of batched requests subqueries, hence manual sorting
-    return orderBy(blocks, (block) => block.number, sortDirection)
+    blocks.sort(sortingFunction)
   }
   return blocks
 }
@@ -60,8 +62,6 @@ export const getBlocksFromTimestamps = async (
 /**
  * for a given array of timestamps, returns block entities
  * @param timestamps
- * @param sortDirection
- * @param skipCount
  */
 export const useBlocksFromTimestamps = (
   timestamps: number[],
@@ -74,24 +74,19 @@ export const useBlocksFromTimestamps = (
   const [blocks, setBlocks] = useState<Block[]>()
   const [error, setError] = useState(false)
 
-  const timestampsString = JSON.stringify(timestamps)
-  const blocksString = blocks ? JSON.stringify(blocks) : undefined
-
   useEffect(() => {
     const fetchData = async () => {
-      const timestampsArray = JSON.parse(timestampsString)
-      const result = await getBlocksFromTimestamps(timestampsArray, sortDirection, skipCount)
+      const result = await getBlocksFromTimestamps(timestamps, sortDirection, skipCount)
       if (result.length === 0) {
         setError(true)
       } else {
         setBlocks(result)
       }
     }
-    const blocksArray = blocksString ? JSON.parse(blocksString) : undefined
-    if (!blocksArray && !error) {
+    if (!blocks && !error) {
       fetchData()
     }
-  }, [blocksString, error, skipCount, sortDirection, timestampsString])
+  }) // TODO: dep array?
 
   return {
     blocks,

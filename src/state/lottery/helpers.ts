@@ -1,10 +1,12 @@
-import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber'
+import BigNumber from 'bignumber.js'
+import { ethers } from 'ethers'
 import { LotteryStatus, LotteryTicket } from 'config/constants/types'
 import lotteryV2Abi from 'config/abi/lotteryV2.json'
 import { getLotteryV2Address } from 'utils/addressHelpers'
 import { multicallv2 } from 'utils/multicall'
-import { LotteryResponse } from 'state/types'
+import { LotteryRound, LotteryRoundUserTickets, LotteryResponse } from 'state/types'
 import { getLotteryV2Contract } from 'utils/contractHelpers'
+import { useMemo } from 'react'
 import { ethersToSerializedBigNumber } from 'utils/bigNumber'
 import { NUM_ROUNDS_TO_FETCH_FROM_NODES } from 'config/constants/lottery'
 
@@ -100,10 +102,6 @@ export const fetchMultipleLotteries = async (lotteryIds: string[]): Promise<Lott
   }
 }
 
-export const fetchCurrentLotteryId = async (): Promise<EthersBigNumber> => {
-  return lotteryContract.currentLotteryId()
-}
-
 export const fetchCurrentLotteryIdAndMaxBuy = async () => {
   try {
     const calls = ['currentLotteryId', 'maxNumberTicketsPerBuyOrClaim'].map((method) => ({
@@ -113,7 +111,7 @@ export const fetchCurrentLotteryIdAndMaxBuy = async () => {
     const [[currentLotteryId], [maxNumberTicketsPerBuyOrClaim]] = (await multicallv2(
       lotteryV2Abi,
       calls,
-    )) as EthersBigNumber[][]
+    )) as ethers.BigNumber[][]
 
     return {
       currentLotteryId: currentLotteryId ? currentLotteryId.toString() : null,
@@ -134,6 +132,47 @@ export const getRoundIdsArray = (currentLotteryId: string): string[] => {
     roundIds.push(currentIdAsInt - i)
   }
   return roundIds.map((roundId) => roundId.toString())
+}
+
+export const useProcessLotteryResponse = (
+  lotteryData: LotteryResponse & { userTickets?: LotteryRoundUserTickets },
+): LotteryRound => {
+  const {
+    priceTicketInCake: priceTicketInCakeAsString,
+    discountDivisor: discountDivisorAsString,
+    amountCollectedInCake: amountCollectedInCakeAsString,
+  } = lotteryData
+
+  const discountDivisor = useMemo(() => {
+    return new BigNumber(discountDivisorAsString)
+  }, [discountDivisorAsString])
+
+  const priceTicketInCake = useMemo(() => {
+    return new BigNumber(priceTicketInCakeAsString)
+  }, [priceTicketInCakeAsString])
+
+  const amountCollectedInCake = useMemo(() => {
+    return new BigNumber(amountCollectedInCakeAsString)
+  }, [amountCollectedInCakeAsString])
+
+  return {
+    isLoading: lotteryData.isLoading,
+    lotteryId: lotteryData.lotteryId,
+    userTickets: lotteryData.userTickets,
+    status: lotteryData.status,
+    startTime: lotteryData.startTime,
+    endTime: lotteryData.endTime,
+    priceTicketInCake,
+    discountDivisor,
+    treasuryFee: lotteryData.treasuryFee,
+    firstTicketId: lotteryData.firstTicketId,
+    lastTicketId: lotteryData.lastTicketId,
+    amountCollectedInCake,
+    finalNumber: lotteryData.finalNumber,
+    cakePerBracket: lotteryData.cakePerBracket,
+    countWinnersPerBracket: lotteryData.countWinnersPerBracket,
+    rewardsBreakdown: lotteryData.rewardsBreakdown,
+  }
 }
 
 export const hasRoundBeenClaimed = (tickets: LotteryTicket[]): boolean => {

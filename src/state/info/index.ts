@@ -18,7 +18,11 @@ import {
 } from './actions'
 
 const initialState: InfoState = {
-  protocol: {},
+  protocol: {
+    overview: undefined,
+    chartData: undefined,
+    transactions: undefined,
+  },
   pools: { byAddress: {} },
   tokens: { byAddress: {} },
 }
@@ -98,7 +102,7 @@ export default createReducer(initialState, (builder) =>
         state.tokens.byAddress[tokenAddress] = {
           ...state.tokens.byAddress[tokenAddress],
           priceData: {
-            ...state.tokens.byAddress[tokenAddress]?.priceData,
+            ...state.tokens.byAddress[tokenAddress].priceData,
             [secondsInterval]: priceData,
             oldestFetchedTimestamp,
           },

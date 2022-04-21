@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useCurrentBlock } from 'state/block/hooks'
+import { useBlock } from 'state/block/hooks'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMulticallContract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
@@ -30,46 +30,21 @@ async function fetchChunk(
   chunk: Call[],
   minBlockNumber: number,
 ): Promise<{ results: string[]; blockNumber: number }> {
-  console.debug('Fetching chunk', multicallContract, chunk, minBlockNumber)
+  // console.debug('Fetching chunk', multicallContract, chunk, minBlockNumber)
   let resultsBlockNumber
   let returnData
   try {
     // prettier-ignore
     [resultsBlockNumber, returnData] = await multicallContract.aggregate(
-      chunk.map((obj) => [obj.address, obj.callData]),
-      {
-        blockTag: minBlockNumber,
-      }
+      chunk.map((obj) => [obj.address, obj.callData])
     )
-  } catch (err) {
-    const error = err as any
-    if (
-      error.code === -32000 ||
-      (error?.data?.message && error?.data?.message?.indexOf('header not found') !== -1) ||
-      error.message?.indexOf('header not found') !== -1
-    ) {
-      throw new RetryableError(`header not found for block number ${minBlockNumber}`)
-    } else if (error.code === -32603 || error.message?.indexOf('execution ran out of gas') !== -1) {
-      if (chunk.length > 1) {
-        if (process.env.NODE_ENV === 'development') {
-          console.debug('Splitting a chunk in 2', chunk)
-        }
-        const half = Math.floor(chunk.length / 2)
-        const [c0, c1] = await Promise.all([
-          fetchChunk(multicallContract, chunk.slice(0, half), minBlockNumber),
-          fetchChunk(multicallContract, chunk.slice(half, chunk.length), minBlockNumber),
-        ])
-        return {
-          results: c0.results.concat(c1.results),
-          blockNumber: c1.blockNumber,
-        }
-      }
-    }
+  } catch (error) {
     console.debug('Failed to fetch chunk inside retry', error)
     throw error
   }
   if (resultsBlockNumber.toNumber() < minBlockNumber) {
-    console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
+    // console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
+    throw new RetryableError('Fetched for old block number')
   }
   return { results: returnData, blockNumber: resultsBlockNumber.toNumber() }
 }
@@ -144,7 +119,7 @@ export default function Updater(): null {
   const state = useSelector<AppState, AppState['multicall']>((s) => s.multicall)
   // wait for listeners to settle before triggering updates
   const debouncedListeners = useDebounce(state.callListeners, 100)
-  const currentBlock = useCurrentBlock()
+  const { currentBlock } = useBlock()
   const { chainId } = useActiveWeb3React()
   const multicallContract = useMulticallContract()
   const cancellations = useRef<{ blockNumber: number; cancellations: (() => void)[] }>()

@@ -1,8 +1,8 @@
-import { Box, ButtonMenu, ButtonMenuItem, Flex } from '@pancakeswap/uikit'
-import { NextLinkFromReactRouter } from 'components/NextLink'
-import { useTranslation } from 'contexts/Localization'
-import { useRouter } from 'next/router'
+import React from 'react'
 import styled from 'styled-components'
+import { Link, useRouteMatch } from 'react-router-dom'
+import { Box, Flex, ButtonMenu, ButtonMenuItem } from '@pancakeswap/uikit'
+import { useTranslation } from 'contexts/Localization'
 import Search from 'views/Info/components/InfoSearch'
 
 const NavWrapper = styled(Flex)`
@@ -19,9 +19,8 @@ const NavWrapper = styled(Flex)`
 
 const InfoNav = () => {
   const { t } = useTranslation()
-  const router = useRouter()
-  const isPools = router.asPath === '/info/pools'
-  const isTokens = router.asPath === '/info/tokens'
+  const isPools = useRouteMatch(['/info/pools', '/info/pool', '/info/pair'])
+  const isTokens = useRouteMatch(['/info/tokens', '/info/token'])
   let activeIndex = 0
   if (isPools) {
     activeIndex = 1
@@ -33,13 +32,13 @@ const InfoNav = () => {
     <NavWrapper>
       <Box>
         <ButtonMenu activeIndex={activeIndex} scale="sm" variant="subtle">
-          <ButtonMenuItem as={NextLinkFromReactRouter} to="/info">
+          <ButtonMenuItem as={Link} to="/info">
             {t('Overview')}
           </ButtonMenuItem>
-          <ButtonMenuItem as={NextLinkFromReactRouter} to="/info/pools">
+          <ButtonMenuItem as={Link} to="/info/pools">
             {t('Pools')}
           </ButtonMenuItem>
-          <ButtonMenuItem as={NextLinkFromReactRouter} to="/info/tokens">
+          <ButtonMenuItem as={Link} to="/info/tokens">
             {t('Tokens')}
           </ButtonMenuItem>
         </ButtonMenu>

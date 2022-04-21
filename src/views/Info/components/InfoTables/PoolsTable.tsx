@@ -1,8 +1,8 @@
-import { useCallback, useState, useMemo, useEffect, Fragment } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import { Link } from 'react-router-dom'
 import { Text, Flex, Box, Skeleton, ArrowBackIcon, ArrowForwardIcon } from '@pancakeswap/uikit'
-import { formatAmount } from 'utils/formatInfoNumbers'
+import { formatAmount } from 'views/Info/utils/formatInfoNumbers'
 import { PoolData } from 'state/info/types'
 import { ITEMS_PER_INFO_TABLE_PAGE } from 'config/constants/info'
 import { DoubleCurrencyLogo } from 'views/Info/components/CurrencyLogo'
@@ -47,7 +47,7 @@ const ResponsiveGrid = styled.div`
   }
 `
 
-const LinkWrapper = styled(NextLinkFromReactRouter)`
+const LinkWrapper = styled(Link)`
   text-decoration: none;
   :hover {
     cursor: pointer;
@@ -57,7 +57,7 @@ const LinkWrapper = styled(NextLinkFromReactRouter)`
 
 const SORT_FIELD = {
   volumeUSD: 'volumeUSD',
-  liquidityUSD: 'liquidityUSD',
+  tvlUSD: 'tvlUSD',
   volumeUSDWeek: 'volumeUSDWeek',
   lpFees24h: 'lpFees24h',
   lpApr7d: 'lpApr7d',
@@ -206,10 +206,10 @@ const PoolTable: React.FC<PoolTableProps> = ({ poolDatas, loading }) => {
           color="secondary"
           fontSize="12px"
           bold
-          onClick={() => handleSort(SORT_FIELD.liquidityUSD)}
+          onClick={() => handleSort(SORT_FIELD.tvlUSD)}
           textTransform="uppercase"
         >
-          {t('Liquidity')} {arrow(SORT_FIELD.liquidityUSD)}
+          {t('Liquidity')} {arrow(SORT_FIELD.tvlUSD)}
         </ClickableColumnHeader>
       </ResponsiveGrid>
       <Break />
@@ -218,10 +218,10 @@ const PoolTable: React.FC<PoolTableProps> = ({ poolDatas, loading }) => {
           {sortedPools.map((poolData, i) => {
             if (poolData) {
               return (
-                <Fragment key={poolData.address}>
+                <React.Fragment key={poolData.address}>
                   <DataRow index={(page - 1) * ITEMS_PER_INFO_TABLE_PAGE + i} poolData={poolData} />
                   <Break />
-                </Fragment>
+                </React.Fragment>
               )
             }
             return null

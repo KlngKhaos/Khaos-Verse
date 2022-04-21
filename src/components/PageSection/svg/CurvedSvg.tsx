@@ -1,3 +1,4 @@
+import React from 'react'
 import styled, { css, DefaultTheme } from 'styled-components'
 import { Box } from '@pancakeswap/uikit'
 import { ClipFill } from '../types'

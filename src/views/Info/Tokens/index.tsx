@@ -1,14 +1,17 @@
-import { Card, Heading, Text } from '@pancakeswap/uikit'
+import React, { useMemo, useEffect } from 'react'
+import { Text, Heading, Card } from '@pancakeswap/uikit'
 import Page from 'components/Layout/Page'
-import { useTranslation } from 'contexts/Localization'
-import { useMemo } from 'react'
+import TokenTable from 'views/Info/components/InfoTables/TokensTable'
 import { useAllTokenData, useTokenDatas } from 'state/info/hooks'
 import { useWatchlistTokens } from 'state/user/hooks'
-import TokenTable from 'views/Info/components/InfoTables/TokensTable'
+import { useTranslation } from 'contexts/Localization'
 import TopTokenMovers from 'views/Info/components/TopTokenMovers'
 
 const TokensOverview: React.FC = () => {
   const { t } = useTranslation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const allTokens = useAllTokenData()
 
