@@ -38,7 +38,7 @@ const Footer = () => {
   const { t } = useTranslation()
   return (
     <Wrapper>
-      <Flex flexDirection={['column', 'column', 'row']} alignItems="center">
+      {/* <Flex flexDirection={['column', 'column', 'row']} alignItems="center">
         <LinkExternal
           id="ercBridge"
           href="https://www.binance.org/en/bridge?utm_source=GladiatorsFinance"
@@ -49,7 +49,7 @@ const Footer = () => {
         >
           {t('Convert ERC-20 to BEP-20')}
         </LinkExternal>
-      </Flex>
+      </Flex> */}
       {/* <Flex
         flexGrow={1}
         alignItems="center"

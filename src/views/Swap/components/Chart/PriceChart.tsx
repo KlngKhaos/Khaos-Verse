@@ -1,11 +1,4 @@
-import {
-  Button,
-  Flex,
-  IconButton,
-  SyncAltIcon,
-  Text,
-  useMatchBreakpoints,
-} from '@pancakeswap/uikit'
+import { Button, Flex, IconButton, SyncAltIcon, Text, useMatchBreakpoints } from '@pancakeswap/uikit'
 import { CurrencyLogo, DoubleCurrencyLogo } from 'components/Logo'
 import { TradingViewLabel } from 'components/TradingView'
 import { useTranslation } from 'contexts/Localization'
@@ -22,6 +15,8 @@ const ChartButton = styled(Button)`
   background-color: ${({ $active, theme }) => $active && `${theme.colors.primary}0f`};
   padding: 4px 8px;
   border-radius: 6px;
+  color: #dbbe62 !important;
+  font-weight: 400;
 `
 
 const PriceChart = ({

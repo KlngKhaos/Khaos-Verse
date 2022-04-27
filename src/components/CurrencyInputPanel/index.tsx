@@ -12,6 +12,20 @@ import { RowBetween } from '../Layout/Row'
 import { Input as NumericalInput } from './NumericalInput'
 
 const InputRow = styled.div<{ selected: boolean }>`
+  background: #eeeaf4 !important;
+  color: #000;
+  input {
+    color: #000;
+    &::placeholder {
+      color: #000;
+    }
+  }
+  div {
+    color: #000;
+  }
+  svg {
+    fill: #000;
+  }
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -28,6 +42,8 @@ const LabelRow = styled.div`
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem 0 1rem;
+  background: #eeeaf4 !important;
+  color: #000;
 `
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   display: flex;
@@ -39,6 +55,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 `
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: 16px;
+  overflow: hidden;
   background-color: ${({ theme }) => theme.colors.input};
   box-shadow: ${({ theme }) => theme.shadows.inset};
 `
@@ -93,7 +110,9 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <Text fontSize="14px">{translatedLabel}</Text>
+              <Text fontSize="14px" color="#000">
+                {translatedLabel}
+              </Text>
               {account && (
                 <Text onClick={onMax} fontSize="14px" style={{ display: 'inline', cursor: 'pointer' }}>
                   {!hideBalance && !!currency

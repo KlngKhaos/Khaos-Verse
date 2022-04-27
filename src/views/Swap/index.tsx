@@ -886,7 +886,12 @@ export default function Swap({ history }: RouteComponentProps) {
                   setIsChartDisplayed={setIsChartDisplayed}
                   isChartDisplayed={isChartDisplayed}
                 />
-                <Wrapper id="swap-page">
+                <Wrapper
+                  id="swap-page"
+                  style={{
+                    background: '#fff',
+                  }}
+                >
                   <AutoColumn gap="md">
                     <CurrencyInputPanel
                       label={
@@ -911,9 +916,15 @@ export default function Swap({ history }: RouteComponentProps) {
                             setApprovalSubmitted(false) // reset 2 step UI for approvals
                             onSwitchTokens()
                           }}
+                          style={{
+                            background: '#EEEAF4',
+                          }}
                         >
                           <ArrowDownIcon
                             className="icon-down"
+                            style={{
+                              background: '#EEEAF4',
+                            }}
                             color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? 'primary' : 'text'}
                           />
                         </SwitchIconButton>

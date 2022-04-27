@@ -27,7 +27,7 @@ const BgWrapper = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  bottom: 0px;
+  top: 0px;
   left: 0px;
   background-color: #000;
 `
@@ -35,7 +35,7 @@ const BgWrapper = styled.div`
 const BgImage = styled.img`
   height: 100%;
   width: 100%;
-  margin-top: 95px;
+  /* margin-top: 95px; */
   object-fit: contain;
   @media (min-width: 320px) and (max-width: 480px) {
     margin-top: -100px;
@@ -84,7 +84,7 @@ const HeroWrapper = styled(Flex)`
 `
 
 const HeroHeading = styled(Flex)`
-  color: #ae3675;
+  /* color: #ae3675; */
   font-family: 'Good Times';
   @media (min-width: 320px) {
     font-size: 32px;
@@ -94,15 +94,19 @@ const HeroHeading = styled(Flex)`
   }
 `
 
-const Hero = () => {
+const MidPage = () => {
   const { t } = useTranslation()
   const { account } = useWeb3React()
   const { theme } = useTheme()
 
   return (
     <>
-      <BgWrapper>
-        <BgImage src="/images/home/gladiators/2.png" alt={t('Gladiator')} />
+      <BgWrapper
+        style={{
+          backgroundSize: 'cover',
+        }}
+      >
+        <BgImage src="/midpage.png" alt={t('Khaos')} />
       </BgWrapper>
       <HeroWrapper
         position="relative"
@@ -113,37 +117,21 @@ const Hero = () => {
         id="homepage-hero"
       >
         <Flex flex="1" flexDirection="column" height={['192px', null, null, '100%']}>
-          <Heading scale="xxl" color="secondary" mb="24px">
-            <HeroHeading>{t('Enter into the Khaos Verse')}</HeroHeading>
+          <Heading scale="xxl" color="#7645D9" mb="0px">
+            <HeroHeading>{t('Khaos Token')}</HeroHeading>
           </Heading>
-          <Text fontSize="1rem" mb="24px" fontWeight={400}>
-            {t('Trade today on the first bridge between ERC-20 and PulseChain Network.')}
+          <Text fontSize="3rem" mb="24px" fontWeight={400}>
+            {t('Easy to use token.........')}
+          </Text>
+          <Text fontSize="1rem" mb="24px" fontWeight={200} color="#7A6EAA">
+            {t(
+              'Khaos Verse is a decentralized crypto ecosystem providing the first bridge between ERC-20 and PulseChain Network',
+            )}
           </Text>
           <Flex>
-            {!account && <ConnectWalletButton mr="8px" />}
-            {account && (
-              <Link to="/mygladiators">
-                <Button variant="primary" mr="8px" color="#7645D9">
-                  {t('My Gladiators')}
-                </Button>
-              </Link>
-            )}
-            {account && (
-              <Link to="/school">
-                <Button variant="primary" mr="8px" color="#7645D9">
-                  {t('School')}
-                </Button>
-              </Link>
-            )}
             <Link to="/swap">
-              <Button
-                style={{
-                  border: '1px solid #D7B53C',
-                  color: '#D7B53C',
-                }}
-                variant="secondary"
-              >
-                {t('Trade')}
+              <Button variant="primary" color="#7645D9">
+                {t('Buy Khaos')}
               </Button>
             </Link>
           </Flex>
@@ -153,4 +141,4 @@ const Hero = () => {
   )
 }
 
-export default Hero
+export default MidPage

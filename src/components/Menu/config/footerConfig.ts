@@ -9,26 +9,26 @@ export const footerLinks: (t: ContextApi['t']) => FooterLinkType[] = (t) => [
         label: t('Contact'),
         href: 'https://docs.gladiators.finance/contact-us',
       },
+      // {
+      //   label: t('Blog'),
+      //   href: 'https://medium.com/@gladiators.finance/',
+      // },
       {
-        label: t('Blog'),
-        href: 'https://medium.com/@gladiators.finance/',
-      },
-      {
-        label: t('NRT token'),
+        label: t('Khaos Token'),
         href: 'https://www.nftroyaltoken.com/',
       },
-      {
-        label: t('DENA token'),
-        href: 'https://docs.gladiators.finance/tokenomics/denarius-dena',
-      },
+      // {
+      //   label: t('DENA token'),
+      //   href: 'https://docs.gladiators.finance/tokenomics/denarius-dena',
+      // },
       // {
       //   label: '—',
       // },
-      {
-        label: t('Online Store'),
-        href: '/nfts',
-        isHighlighted: true,
-      },
+      // {
+      //   label: t('Online Store'),
+      //   href: '/nfts',
+      //   isHighlighted: true,
+      // },
     ],
   },
   {
@@ -67,7 +67,6 @@ export const footerLinks: (t: ContextApi['t']) => FooterLinkType[] = (t) => [
         label: t('Audits'),
         href: 'https://docs.gladiators.finance/',
       },
-      
     ],
   },
 ]

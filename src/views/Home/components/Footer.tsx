@@ -51,14 +51,14 @@ const FloatingPancakesWrapper = styled(Container)`
   }
 `
 const FooterImg = styled.img`
-height: 100%;
-width: 100%;
-
-@media (max-width: 1024px) {
   height: 100%;
-  width: auto;
-  object-fit: cover;
-}
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+  }
 `
 
 const TopLeftImgWrapper = styled(Flex)`
@@ -98,7 +98,7 @@ const Footer = () => {
   return (
     <>
       <BgWrapper>
-      <FooterImg src='/images/home/gladiators/3.png' alt={t('Gladiator')}/>
+        <FooterImg src="/bg.png" alt={t('Gladiator')} />
       </BgWrapper>
       {/* <FloatingPancakesWrapper>
         <TopLeftImgWrapper>
@@ -109,20 +109,15 @@ const Footer = () => {
         </BottomRightImgWrapper>
       </FloatingPancakesWrapper> */}
       <Wrapper>
-        <Heading mb="24px" scale="xl" color="secondary">
-          {t('Start in seconds.')}
-        </Heading>
-        <Text textAlign="center" color="white">
-          {t('Connect your crypto wallet to start using the app in seconds.')}
+        <img src="/kv portal.png" alt="" />
+        <Text mb="24px" fontSize="3rem" textAlign="center" color="white" fontWeight={400}>
+          {t('First Bridge on Pulsechain Network.')}
         </Text>
-        <Text mb="24px" color="white">
-          {t('No registration needed.')}
+        <Text textAlign="center" color="#7A6EAA" fontWeight={200}>
+          {t(
+            'Khaos Verse is a decentralized crypto ecosystem providing the first bridge between ERC-20 and PulseChain Network.',
+          )}
         </Text>
-
-        <Link external href="https://docs.gladiators.finance/" color="white">
-          {t('Learn how to start')}
-        </Link>
-        {!account && <ConnectWalletButton mt="24px" scale="sm" />}
       </Wrapper>
     </>
   )

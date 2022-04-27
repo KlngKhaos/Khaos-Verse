@@ -1,15 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {
-  ChartIcon,
-  Flex,
-  Heading,
-  HistoryIcon,
-  IconButton,
-  NotificationDot,
-  Text,
-  useModal
-} from '@pancakeswap/uikit'
+import { ChartIcon, Flex, Heading, HistoryIcon, IconButton, NotificationDot, Text, useModal } from '@pancakeswap/uikit'
 import TransactionsModal from 'components/App/Transactions/TransactionsModal'
 import GlobalSettings from 'components/Menu/GlobalSettings'
 import { useExpertModeManager } from 'state/user/hooks'
@@ -27,6 +18,10 @@ const CurrencyInputContainer = styled(Flex)`
   padding: 24px;
   width: 100%;
   border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  background: #fff;
+  svg {
+    fill: #000;
+  }
 `
 
 const ColoredIconButton = styled(IconButton)`
@@ -43,25 +38,23 @@ const CurrencyInputHeader: React.FC<Props> = ({ title, subtitle, setIsChartDispl
   return (
     <CurrencyInputContainer>
       <Flex width="100%" alignItems="flex-start" justifyContent="space-between">
-        {setIsChartDisplayed && (
-          <ColoredIconButton onClick={toggleChartDisplayed} variant="text" scale="sm"/>
-        )}
+        {setIsChartDisplayed && <ColoredIconButton onClick={toggleChartDisplayed} variant="text" scale="sm" />}
         <Flex flexDirection="column" alignItems="center">
-          <Heading as="h2" mb="8px">
+          <Heading as="h2" color="primary" mb="8px" fontFamily="Good Times">
             {title}
           </Heading>
           <Flex alignItems="center">
-            <Text color="textSubtle" fontSize="14px">
+            <Text color="primary" fontSize="14px">
               {subtitle}
             </Text>
           </Flex>
         </Flex>
         <Flex>
           <NotificationDot show={expertMode}>
-            <GlobalSettings  />
+            <GlobalSettings />
           </NotificationDot>
           <IconButton onClick={onPresentTransactionsModal} variant="text" scale="sm">
-            <HistoryIcon color="textSubtle" width="24px" />
+            <HistoryIcon color="#000" width="24px" />
           </IconButton>
         </Flex>
       </Flex>

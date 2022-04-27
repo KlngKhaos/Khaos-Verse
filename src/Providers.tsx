@@ -1,5 +1,5 @@
 import React from 'react'
-import { ModalProvider, light, dark } from '@pancakeswap/uikit'
+import { ModalProvider, light, dark, darkColors } from '@pancakeswap/uikit'
 import { Web3ReactProvider } from '@web3-react/core'
 import { HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
@@ -19,7 +19,7 @@ const ThemeProviderWrapper = (props) => {
   // return <ThemeProvider theme={isDark ? dark : light} {...props} />
   // const updatedTheme =
   dark.colors.primary = '#7645D9'
-
+  dark.colors.secondary = '#7645D9'
   return <ThemeProvider theme={dark} {...props} />
 }
 

@@ -33,14 +33,15 @@ import NrtDenaData from './components/NrtDenaData'
 import UserBanner from './components/UserBanner'
 import Configurator3DNftModal from '../Gallery/components/Configurator3DNftModal'
 import Hero from './components/Hero'
+import MidPage from './components/MidPage'
 
 const StyledHeroSection = styled(PageSection)`
   padding-top: 16px;
   padding-bottom: 0;
 
-  ${({ theme }) => theme.mediaQueries.md} {
+  /* ${({ theme }) => theme.mediaQueries.md} {
     padding-top: 48px;
-  }
+  } */
 `
 const HeroHome = styled.div`
   background-color: #000000;
@@ -467,6 +468,13 @@ const Home: React.FC = () => {
         >
           <Footer />
         </PageSection>
+        <StyledHeroSection
+          innerProps={{ style: { margin: '0', width: '100%', paddingBottom: '0' } }}
+          index={2}
+          hasCurvedDivider={false}
+        >
+          <MidPage />
+        </StyledHeroSection>
       </HeroHome>
     </>
   )
