@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router'
 import { Menu as UikitMenu } from '@pancakeswap/uikit'
 import { languageList } from 'config/localization/languages'
@@ -24,8 +24,16 @@ const Menu = (props) => {
   const activeMenuItem = getActiveMenuItem({ menuConfig: config(t), pathname })
   const activeSubMenuItem = getActiveSubMenuItem({ menuItem: activeMenuItem, pathname })
 
+  const navRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const logoHtml: any = navRef.current.querySelector(`a > svg`).parentNode
+    logoHtml.setAttribute('aria-label', 'Khaos Home Page')
+    logoHtml.innerHTML = '<img src="/khaos.png" alt="Khaos" />'
+  }, [])
+
   return (
-    <StyledMenu>
+    <StyledMenu ref={navRef}>
       <UikitMenu
         userMenu={<UserMenu />}
         globalMenu={<GlobalSettings />}
