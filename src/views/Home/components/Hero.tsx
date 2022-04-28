@@ -114,7 +114,7 @@ const Hero = () => {
       >
         <Flex flex="1" flexDirection="column" height={['192px', null, null, '100%']}>
           <Heading scale="xxl" color="secondary" mb="24px">
-            <HeroHeading>{t('Enter into the Khaos Verse')}</HeroHeading>
+            <HeroHeading>{t('Enter into Khaos')}</HeroHeading>
           </Heading>
           <Text fontSize="1rem" mb="24px" fontWeight={400}>
             {t('Trade today on the first bridge between ERC-20 and PulseChain Network.')}
