@@ -1,0 +1,4 @@
+// BNB
+export const DEFAULT_INPUT_CURRENCY = 'BNB'
+// NRT
+export const DEFAULT_OUTPUT_CURRENCY = '0x1b2f67679798c764f2c0c69dfb6bda8b30a094cf'
