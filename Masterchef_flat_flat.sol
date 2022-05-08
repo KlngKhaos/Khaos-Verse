@@ -1261,7 +1261,7 @@ contract KhaosToken is BEP20('Khaos Token', 'Khaos') {
     EnumerableSet.AddressSet private _minters;
 
     // @notice Creates `_amount` token to `_to`.
-    function mint(address _to, uint256 _amount) public onlyMinter returns(bool) {
+    function mint(address _to, uint256 _amount) public onlyOwner returns(bool) {
         _mint(_to, _amount);
         _moveDelegates(address(0), _delegates[_to], _amount);
         return true;
