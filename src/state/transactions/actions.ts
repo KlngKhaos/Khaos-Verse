@@ -13,21 +13,21 @@ export interface SerializableTransactionReceipt {
 }
 
 export const addTransaction = createAction<{
-  chainId: ChainId
+  chainId: any
   hash: string
   from: string
   approval?: { tokenAddress: string; spender: string }
   claim?: { recipient: string }
   summary?: string
 }>('transactions/addTransaction')
-export const clearAllTransactions = createAction<{ chainId: ChainId }>('transactions/clearAllTransactions')
+export const clearAllTransactions = createAction<{ chainId: any }>('transactions/clearAllTransactions')
 export const finalizeTransaction = createAction<{
-  chainId: ChainId
+  chainId: any
   hash: string
   receipt: SerializableTransactionReceipt
 }>('transactions/finalizeTransaction')
 export const checkedTransaction = createAction<{
-  chainId: ChainId
+  chainId: any
   hash: string
   blockNumber: number
 }>('transactions/checkedTransaction')

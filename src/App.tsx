@@ -201,7 +201,7 @@ const App: React.FC = () => {
             <Route path="/pool">
               <Redirect to="/liquidity" />
             </Route>
-            {/* <Route path="/staking">
+            <Route path="/staking">
               <Redirect to="/pools" />
             </Route>
             <Route path="/syrup">
@@ -212,7 +212,7 @@ const App: React.FC = () => {
             </Route>
             <Route path="/profile">
               <Redirect to={`${nftsBaseUrl}/profile/${account?.toLowerCase() || ''}`} />
-            </Route> */}
+            </Route>
 
             {/* 404 */}
             <Route component={NotFound} />

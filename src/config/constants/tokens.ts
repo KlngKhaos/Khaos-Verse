@@ -2,8 +2,8 @@ import { ChainId, Token } from '@pancakeswap/sdk'
 import { serializeToken } from 'state/user/hooks/helpers'
 import { SerializedToken } from './types'
 
-const { MAINNET } = ChainId
-const TESTNET = 941
+const { MAINNET, TESTNET } = ChainId
+
 interface TokenList {
   [symbol: string]: Token
 }

@@ -22,7 +22,7 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
   },
   {
     label: t('Earn'),
-    href: '/farms',
+    href: '/room/pools',
     icon: 'Earn',
     items: [
       {
@@ -30,46 +30,46 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
         icon: 'FarmIcon',
         href: '/farms',
       },
-      // {
-      //   label: t('Room Pools'),
-      //   icon: 'PoolIcon',
-      //   href: '/room/pools',
-      // },
-      // {
-      //   label: t('Gladiator Battles'),
-      //   href: '/battles/join',
-      // },
-      // {
-      //   label: t('Bet on Battles'),
-      //   href: '/battles/bet',
-      // },
+      {
+        label: t('Room Pools'),
+        icon: 'PoolIcon',
+        href: '/room/pools',
+      },
+      {
+        label: t('Gladiator Battles'),
+        href: '/battles/join',
+      },
+      {
+        label: t('Bet on Battles'),
+        href: '/battles/bet',
+      },
     ],
   },
-  // {
-  //   label: t('NFT'),
-  //   href: '/gallery',
-  //   icon: 'NFT',
-  //   showOnMobile: false,
-  //   showItemsOnMobile: false,
-  //   items: [
-  //     {
-  //       label: t('My Gladiators'),
-  //       href: '/mygladiators',
-  //     },
-  //     {
-  //       label: t('School'),
-  //       href: '/school',
-  //     },
-  //     {
-  //       label: t('Gallery'),
-  //       href: '/gallery',
-  //     },
-  //     {
-  //       label: t('Marketplace'),
-  //       href: '/nfts',
-  //     },
-  //   ],
-  // },
+  {
+    label: t('NFT'),
+    href: '/gallery',
+    icon: 'NFT',
+    showOnMobile: false,
+    showItemsOnMobile: false,
+    items: [
+      {
+        label: t('My Gladiators'),
+        href: '/mygladiators',
+      },
+      {
+        label: t('School'),
+        href: '/school',
+      },
+      {
+        label: t('Gallery'),
+        href: '/gallery',
+      },
+      {
+        label: t('Marketplace'),
+        href: '/nfts',
+      },
+    ],
+  },
   // {
   //   label: t('Win'),
   //   href: '/prediction',
@@ -98,51 +98,46 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
   //     },
   //   ],
   // },
-  // {
-  //   label: '',
-  //   href: '/referrals',
-  //   icon: 'More',
-  //   hideSubNav: true,
-  //   items: [
-  //     // {
-  //     //   label: t('Info'),
-  //     //   href: '/info',
-  //     // },
-  //     {
-  //       label: t('Docs'),
-  //       href: 'https://docs.gladiators.finance',
-  //       type: DropdownMenuItemType.EXTERNAL_LINK,
-  //     },
-  //     // {
-  //     //   label: t('Referrals'),
-  //     //   href: '/referrals',
-  //     // },
-  //     // {
-  //     //   label: t('Voting'),
-  //     //   href: '/voting',
-  //     // },
-  //     // {
-  //     //   type: DropdownMenuItemType.DIVIDER,
-  //     // },
-  //     // {
-  //     //   label: t('Leaderboard'),
-  //     //   href: '/teams',
-  //     // },
-  //     // {
-  //     //   type: DropdownMenuItemType.DIVIDER,
-  //     // },
-  //     // {
-  //     //   label: t('Blog'),
-  //     //   href: '	https://medium.com/@gladiators.finance',
-  //     //   type: DropdownMenuItemType.EXTERNAL_LINK,
-  //     // },
-  //     // {
-  //     //   label: t('Docs'),
-  //     //   href: 'https://docs.gladiators.finance',
-  //     //   type: DropdownMenuItemType.EXTERNAL_LINK,
-  //     // },
-  //   ],
-  // },
+  {
+    label: '',
+    href: '/referrals',
+    icon: 'More',
+    hideSubNav: true,
+    items: [
+      // {
+      //   label: t('Info'),
+      //   href: '/info',
+      // },
+      {
+        label: t('Referrals'),
+        href: '/referrals',
+      },
+      // {
+      //   label: t('Voting'),
+      //   href: '/voting',
+      // },
+      {
+        type: DropdownMenuItemType.DIVIDER,
+      },
+      // {
+      //   label: t('Leaderboard'),
+      //   href: '/teams',
+      // },
+      // {
+      //   type: DropdownMenuItemType.DIVIDER,
+      // },
+      {
+        label: t('Blog'),
+        href: '	https://medium.com/@gladiators.finance',
+        type: DropdownMenuItemType.EXTERNAL_LINK,
+      },
+      {
+        label: t('Docs'),
+        href: 'https://docs.gladiators.finance',
+        type: DropdownMenuItemType.EXTERNAL_LINK,
+      },
+    ],
+  },
 ]
 
 export default config

@@ -5,12 +5,12 @@ import { useMemo } from 'react'
 import { arrayify } from 'ethers/lib/utils'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
-  TokenAddressMap,
   useDefaultTokenList,
   useUnsupportedTokenList,
   useCombinedActiveList,
   useCombinedInactiveList,
 } from '../state/lists/hooks'
+
 
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import useUserAddedTokens from '../state/user/hooks/useUserAddedTokens'
@@ -20,15 +20,14 @@ import { useBytes32TokenContract, useTokenContract } from './useContract'
 import { filterTokens } from '../components/SearchModal/filtering'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
+function useTokensFromMap(tokenMap: any, includeUserAdded: boolean): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
     if (!chainId) return {}
-
-    console.log("chainId ", chainId)
-    console.log("tokenMap ", tokenMap)
+console.log("chainIdchainId", chainId)
+console.log("tokenMap", tokenMap)
     // reduce to just tokens
     const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{ [address: string]: Token }>((newMap, address) => {
       newMap[address] = tokenMap[chainId][address].token
@@ -57,20 +56,18 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
 
 export function useDefaultTokens(): { [address: string]: Token } {
   const defaultList = useDefaultTokenList()
-  console.log("defaultList ", defaultList)
   return useTokensFromMap(defaultList, false)
 }
 
 export function useAllTokens(): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
-  console.log("allTokens ", allTokens)
   return useTokensFromMap(allTokens, true)
 }
 
 export function useAllInactiveTokens(): { [address: string]: Token } {
   // get inactive tokens
   const inactiveTokensMap = useCombinedInactiveList()
-  console.log("inactiveTokensMap ", inactiveTokensMap)
+  console.log("inactiveTokensMap", inactiveTokensMap)
   const inactiveTokens = useTokensFromMap(inactiveTokensMap, false)
 
   // filter out any token that are on active list
@@ -89,7 +86,6 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
 
 export function useUnsupportedTokens(): { [address: string]: Token } {
   const unsupportedTokensMap = useUnsupportedTokenList()
-  console.log("unsupportedTokensMap ", unsupportedTokensMap)
   return useTokensFromMap(unsupportedTokensMap, false)
 }
 

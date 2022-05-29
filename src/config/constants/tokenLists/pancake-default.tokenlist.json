@@ -21,31 +21,23 @@
     {
       "name": "Denarius Token",
       "symbol": "DENA",
-      "address": "0x60fbAd46F86939498316D04A508E958cD0AEF45d",
-      "chainId": 941,
+      "address": "0xB56fF089c8b44B42763F9867Dc5964C62096cd8E",
+      "chainId": 56,
       "decimals": 18,
       "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"
     },
     {
-      "name": "NFT Royal Token",
+      "name": "NFT ROYAL TOKEN",
       "symbol": "NRT",
       "address": "0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D",
       "chainId": 941,
       "decimals": 18,
-      "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"
-    },   
-    {
-      "name": "Governance Token",
-      "symbol": "KG",
-      "address": "0xA2F3Cd8217823751feb2cCC1df1FBF39aD2874Fe",
-      "chainId": 941,
-      "decimals": 18,
-      "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"
+      "logoURI": "https://pancakeswap.finance/images/tokens/0x1b2f67679798c764f2c0c69dfb6bda8b30a094cf.png"
     },
     {
-      "name": "KHAOS",
-      "symbol": "KHAOS",
-      "address": "0xe3fdade8023cE0c66eA0c9D8423e5A47a9559801",
+      "name": "Denarius Token",
+      "symbol": "DENA",
+      "address": "0xdc0bdCdeEA4B0eC6BeB15cC42EE4581a9d08E37B",
       "chainId": 941,
       "decimals": 18,
       "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"

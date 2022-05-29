@@ -286,7 +286,7 @@ const Home: React.FC = () => {
           index={2}
           hasCurvedDivider={false}
         >
-          {/* <UserBannerWrapper>{account && <UserBanner />}</UserBannerWrapper> */}
+          <UserBannerWrapper>{account && <UserBanner />}</UserBannerWrapper>
           <Hero />
         </StyledHeroSection>
         {/* <StyledMetricsSection

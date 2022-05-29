@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react'
-import styled from 'styled-components'
 import { useLocation } from 'react-router'
 import { Menu as UikitMenu } from '@pancakeswap/uikit'
 import { languageList } from 'config/localization/languages'
@@ -12,6 +11,7 @@ import UserMenu from './UserMenu'
 import GlobalSettings from './GlobalSettings'
 import { getActiveMenuItem, getActiveSubMenuItem } from './utils'
 import { footerLinks } from './config/footerConfig'
+import styled from 'styled-components'
 
 const Menu = (props) => {
   const { isDark, toggleTheme } = useTheme()
@@ -28,11 +28,8 @@ const Menu = (props) => {
 
   useEffect(() => {
     const logoHtml: any = navRef.current.querySelector(`a > svg`).parentNode
-    const footerLogo: any = navRef.current.querySelector(`div > svg`).parentNode
     logoHtml.setAttribute('aria-label', 'Khaos Home Page')
     logoHtml.innerHTML = '<img src="/khaos.png" alt="Khaos" />'
-    footerLogo.setAttribute('aria-label', 'Khaos Home Page')
-    footerLogo.innerHTML = '<img src="/khaos.png" alt="Khaos" />'
   }, [])
 
   return (

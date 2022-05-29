@@ -2,9 +2,9 @@ import { ContextApi } from 'contexts/Localization/types'
 import { PageMeta } from './types'
 
 export const DEFAULT_META: PageMeta = {
-  title: 'Khaos',
+  title: 'Gladiators',
   description:
-    'Khaos brings 3D NFTs to Binance Smart Chain. Trade, earn, win crypto and have with our massive 3D ecosystem on the most popular decentralized platform.',
+    'Gladiators brings 3D NFTs to Binance Smart Chain. Trade, earn, win crypto and have with our massive 3D ecosystem on the most popular decentralized platform.',
   image: 'https://gladiators.finance/images/hero.png',
 }
 
@@ -27,101 +27,101 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta => {
   switch (basePath) {
     case '/':
       return {
-        title: `${t('Home')} | ${t('Khaos')}`,
+        title: `${t('Home')} | ${t('Gladiators')}`,
       }
     case '/swap':
       return {
-        title: `${t('Exchange')} | ${t('Khaos')}`,
+        title: `${t('Exchange')} | ${t('Gladiators')}`,
       }
     case '/add':
       return {
-        title: `${t('Add Liquidity')} | ${t('Khaos')}`,
+        title: `${t('Add Liquidity')} | ${t('Gladiators')}`,
       }
     case '/remove':
       return {
-        title: `${t('Remove Liquidity')} | ${t('Khaos')}`,
+        title: `${t('Remove Liquidity')} | ${t('Gladiators')}`,
       }
     case '/liquidity':
       return {
-        title: `${t('Liquidity')} | ${t('Khaos')}`,
+        title: `${t('Liquidity')} | ${t('Gladiators')}`,
       }
     case '/find':
       return {
-        title: `${t('Import Pool')} | ${t('Khaos')}`,
+        title: `${t('Import Pool')} | ${t('Gladiators')}`,
       }
     case '/competition':
       return {
-        title: `${t('Trading Battle')} | ${t('Khaos')}`,
+        title: `${t('Trading Battle')} | ${t('Gladiators')}`,
       }
     case '/prediction':
       return {
-        title: `${t('Prediction')} | ${t('Khaos')}`,
+        title: `${t('Prediction')} | ${t('Gladiators')}`,
       }
     case '/prediction/leaderboard':
       return {
-        title: `${t('Leaderboard')} | ${t('Khaos')}`,
+        title: `${t('Leaderboard')} | ${t('Gladiators')}`,
       }
     case '/farms':
       return {
-        title: `${t('Farms')} | ${t('Khaos')}`,
+        title: `${t('Farms')} | ${t('Gladiators')}`,
       }
     case '/farms/auction':
       return {
-        title: `${t('Farm Auctions')} | ${t('Khaos')}`,
+        title: `${t('Farm Auctions')} | ${t('Gladiators')}`,
       }
     case '/pools':
       return {
-        title: `${t('Pools')} | ${t('Khaos')}`,
+        title: `${t('Pools')} | ${t('Gladiators')}`,
       }
     case '/lottery':
       return {
-        title: `${t('Lottery')} | ${t('Khaos')}`,
+        title: `${t('Lottery')} | ${t('Gladiators')}`,
       }
     case '/collectibles':
       return {
-        title: `${t('Collectibles')} | ${t('Khaos')}`,
+        title: `${t('Collectibles')} | ${t('Gladiators')}`,
       }
     case '/ifo':
       return {
-        title: `${t('Initial Farm Offering')} | ${t('Khaos')}`,
+        title: `${t('Initial Farm Offering')} | ${t('Gladiators')}`,
       }
     case '/teams':
       return {
-        title: `${t('Leaderboard')} | ${t('Khaos')}`,
+        title: `${t('Leaderboard')} | ${t('Gladiators')}`,
       }
     case '/profile':
       return {
-        title: `${t('Your Profile')} | ${t('Khaos')}`,
+        title: `${t('Your Profile')} | ${t('Gladiators')}`,
       }
     case '/profile/tasks':
       return {
-        title: `${t('Task Center')} | ${t('Khaos')}`,
+        title: `${t('Task Center')} | ${t('Gladiators')}`,
       }
     case '/voting':
       return {
-        title: `${t('Voting')} | ${t('Khaos')}`,
+        title: `${t('Voting')} | ${t('Gladiators')}`,
       }
     case '/voting/proposal':
       return {
-        title: `${t('Proposals')} | ${t('Khaos')}`,
+        title: `${t('Proposals')} | ${t('Gladiators')}`,
       }
     case '/voting/proposal/create':
       return {
-        title: `${t('Make a Proposal')} | ${t('Khaos')}`,
+        title: `${t('Make a Proposal')} | ${t('Gladiators')}`,
       }
     case '/info':
       return {
-        title: `${t('Overview')} | ${t('Khaos Info & Analytics')}`,
+        title: `${t('Overview')} | ${t('Gladiators Info & Analytics')}`,
         description: 'View statistics for Pancakeswap exchanges.',
       }
     case '/info/pools':
       return {
-        title: `${t('Pools')} | ${t('Khaos Info & Analytics')}`,
+        title: `${t('Pools')} | ${t('Gladiators Info & Analytics')}`,
         description: 'View statistics for Pancakeswap exchanges.',
       }
     case '/info/tokens':
       return {
-        title: `${t('Pools')} | ${t('Khaos Info & Analytics')}`,
+        title: `${t('Pools')} | ${t('Gladiators Info & Analytics')}`,
         description: 'View statistics for Pancakeswap exchanges.',
       }
     default:

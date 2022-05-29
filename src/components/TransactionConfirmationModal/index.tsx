@@ -63,7 +63,7 @@ function TransactionSubmittedContent({
 }: {
   onDismiss: () => void
   hash: string | undefined
-  chainId: ChainId
+  chainId: any
   currencyToAdd?: Currency | undefined
 }) {
   const { library } = useActiveWeb3React()

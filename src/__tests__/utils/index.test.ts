@@ -15,7 +15,7 @@ describe('utils', () => {
       expect(getBscScanLink('abc', 'address', ChainId.MAINNET)).toEqual('https://bscscan.com/address/abc')
     })
     it('enum', () => {
-      expect(getBscScanLink('abc', 'address', ChainId.TESTNET)).toEqual('https://testnet.bscscan.com/address/abc')
+      expect(getBscScanLink('abc', 'address', ChainId.TESTNET)).toEqual('https://scan.v2b.testnet.pulsechain.com//address/abc')
     })
   })
 

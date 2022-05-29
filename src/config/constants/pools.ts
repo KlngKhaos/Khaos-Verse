@@ -9,7 +9,7 @@ const pools: SerializedPoolConfig[] = [
     stakingToken: serializedTokens.nrt,
     earningToken: serializedTokens.dena,
     contractAddress: {
-      97: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
+      941: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
       56: '0x73feaa1eE314F8c655E354234017bE2193C9E24E',
     },
     poolCategory: PoolCategory.CORE,
@@ -27,7 +27,7 @@ const pools: SerializedPoolConfig[] = [
     stakingToken: serializedTokens.dena,
     earningToken: serializedTokens.dena,
     contractAddress: {
-      97: '',
+      941: '',
       56: '0x73feaa1eE314F8c655E354234017bE2193C9E24E',
     },
     poolCategory: PoolCategory.CORE,
@@ -44,7 +44,7 @@ const pools: SerializedPoolConfig[] = [
     stakingToken: serializedTokens.cake,
     earningToken: serializedTokens.dena,
     contractAddress: {
-      97: '',
+      941: '',
       56: '0x73feaa1eE314F8c655E354234017bE2193C9E24E',
     },
     poolCategory: PoolCategory.CORE,
@@ -61,7 +61,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.dena,
   //   earningToken: serializedTokens.tlos,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x73feaa1eE314F8c655E354234017bE2193C9E24E',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -78,7 +78,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.dena,
   //   earningToken: serializedTokens.stephero,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x73feaa1eE314F8c655E354234017bE2193C9E24E',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -95,7 +95,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bp,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x8ed7acf12b08274d5cdaf03d43d0e54bcbdd487e',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -108,7 +108,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.cvp,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xC4b15117BC0be030c20754FF36197641477af5d1',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -121,7 +121,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.qbt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xB72dEf58D0832f747d6B7197471Fe20AeA7EB463',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -134,7 +134,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.naos,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb38b78529bCc895dA16CE2978D6cD6C56e8CfFC3',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -147,7 +147,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pha,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2E101b5F7f910F2609e5AcE5f43bD274b1DE09AA',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -160,7 +160,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bel,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x52733Ad7b4D09BF613b0389045e33E2F287afa04',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -173,7 +173,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ramp,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x401b9b97bdbc3197c1adfab9652dc78040bd1e13',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -186,7 +186,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pots,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xBeDb490970204cb3CC7B0fea94463BeD67d5364D',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -199,7 +199,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.tusd,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb6e510ae2da1ab4e350f837c70823ab75091780e',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -212,7 +212,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.revv,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x8aa5b2c67852ed5334c8a7f0b5eb0ef975106793',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -225,7 +225,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.btt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3b804460c3c62f0f565af593984159f13b1ac976',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -238,7 +238,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.skill,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x455f4d4cc4d6ca15441a93c631e82aaf338ad843',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -251,7 +251,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.win,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xde4aef42bb27a2cb45c746acde4e4d8ab711d27c',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -264,7 +264,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.if,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x57d3524888ded4085d9124a422f13b27c8a43de7',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -277,7 +277,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.sps,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb56299d8fbf46c509014b103a164ad1fc65ea222',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -290,7 +290,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.c98,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x5e49531BA07bE577323e55666D46C6217164119E',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -303,7 +303,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.axs,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xBB472601B3CB32723d0755094BA80B73F67f2AF3',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -316,7 +316,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.axs,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x583A36816F3b8401C4fdf682203E0caDA6997740',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -329,7 +329,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pmon,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x28050e8f024e05f9ddbef5f60dd49f536dba0cf0',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -342,7 +342,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.trx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb2b62f88ab82ed0bb4ab4da60d9dc9acf9e816e5',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -355,7 +355,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.chess,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xd1812e7e28c39e78727592de030fc0e7c366d61a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -368,7 +368,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.titan,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x97058cf9b36c9ef1622485cef22e72d6fea32a36',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -381,7 +381,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.harmony,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xe595456846155e23b24cc9cbee910ee97027db6d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -394,7 +394,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.mask,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xae611c6d4d3ca2cee44cd34eb7aac29d5a387fcf',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -407,7 +407,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dvi,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x135827eaf9746573c0b013f18ee12f138b9b0384',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -420,7 +420,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.gum,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x09b8a5f51c9e245402057851ada274174fa00e2a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -433,7 +433,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.adx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x53a2d1db049b5271c6b6db020dba0e8a7c4eb90d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -446,7 +446,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.suter,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x4da8da81647ee0aa7350e9959f3e4771eb753da0',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -459,7 +459,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bscpad,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0446b8f8474c590d2249a4acdd6eedbc2e004bca',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -472,7 +472,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.rabbit,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x391240A007Bfd8A59bA74978D691219a76c64c5C',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -485,7 +485,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.waultx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x017DEa5C58c2Bcf57FA73945073dF7AD4052a71C',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -498,7 +498,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.wex,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x6Bd94783caCef3fb7eAa9284f1631c464479829f',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -511,7 +511,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.form,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x7c71723fB1F9Cfb250B702cfc4eBd5D9Ab2E83d9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -524,7 +524,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.orbs,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9C8813d7D0A61d30610a7A5FdEF9109e196a3D77',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -537,7 +537,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.$dg,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xa07a91da6d10173f33c294803684bceede325957',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -550,7 +550,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.woo,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x88c321d444c88acf3e747dc90f20421b97648903',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -563,7 +563,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.woo,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3c7234c496d76133b48bd6a342e7aea4f8d87fc8',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -576,7 +576,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.htb,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x64473c33c360f315cab38674f1633505d1d8dcb2',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -589,7 +589,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.jgn,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x5cc7a19a50be2a6b2540ebcd55bd728e732e59c3',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -602,7 +602,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dft,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2666e2494e742301ffc8026e476acc1710a775ed',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -615,7 +615,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hai,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x6ac2213F09A404c86AFf506Aa51B6a5BF1F6e24E',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -628,7 +628,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.o3,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x35BD47263f7E57368Df76339903C53bAa99076e1',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -641,7 +641,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ampl,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x62dEc3A560D2e8A84D30752bA454f97b26757877',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -654,7 +654,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.oddz,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x44d1f81e80e43e935d66d65874354ef91e5e49f6',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -667,7 +667,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bondly,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x4ea43fce546975aae120c9eeceb172500be4a02b',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -680,7 +680,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.marsh,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x567fd708e788e51b68666b9310ee9df163d60fae',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -693,7 +693,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.mbox,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x36f9452083fc9bc469a31e7966b873f402292433',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -706,7 +706,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ata,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xc612680457751d0d01b5d901ad08132a3b001900',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -719,7 +719,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.mx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x336bcd59f2b6eb7221a99f7a50fd03c6bf9a306b',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -732,7 +732,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bcfx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2b3974dda76b2d408b7d680a27fbb0393e3cf0e1',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -745,7 +745,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.qkc,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xfa67f97eeee6de55d179ecabbfe701f27d9a1ed9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -758,7 +758,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ktn,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x48852322a185dc5fc733ff8c8d7c6dcbd2b3b2a2',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -771,7 +771,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.mtrg,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xf4d0f71698f58f221911515781b05e808a8635cb',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -784,7 +784,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.tusd,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9dceb1d92f7e0361d0766f3d98482424df857654',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -797,7 +797,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.vrt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb77f1425ec3a7c78b1a1e892f72332c8b5e8ffcb',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -810,7 +810,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.kalm,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb9ff4da0954b300542e722097671ead8cf337c17',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -823,7 +823,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ez,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb19395702460261e51edf7a7b130109c64f13af9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -836,7 +836,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.kalm,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x6e113ecb9ff2d271140f124c2cc5b5e4b5700c9f',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -850,7 +850,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.popen,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x7baf1763ce5d0da8c9d85927f08a8be9c481ce50',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -863,7 +863,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lien,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2b8d6c9c62bfc1bed84724165d3000e61d332cab',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -876,7 +876,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.well,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x8a06ff2748edcba3fb4e44a6bfda4e46769e557b',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -889,7 +889,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.deri,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3eba95f5493349bbe0cad33eaae05dc6a7e26b90',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -902,7 +902,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.chr,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x593edbd14a5b7eec828336accca9c16cc12f04be',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -915,7 +915,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.cyc,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xD714738837944C3c592477249E8edB724A76e068',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -928,7 +928,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.xend,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x8ea9f2482b2f7b12744a831f81f8d08714adc093',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -942,7 +942,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hget,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x8e8125f871eb5ba9d55361365f5391ab437f9acc',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -956,7 +956,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hotcross,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0e09205e993f78cd5b3a5df355ae98ee7d0b5834',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -970,7 +970,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.rfox,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xf9f00d41b1f4b3c531ff750a9b986c1a530f33d9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -984,7 +984,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.wmass,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x4Af531EcD50167a9402Ce921ee6436dd4cFC04FD',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -998,7 +998,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ubxt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9b4bac2d8f69853aa29cb45478c77fc54532ac22',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1012,7 +1012,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.btr,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x20ee70a07ae1b475cb150dec27930d97915726ea',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1026,7 +1026,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.τdoge,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x017556dffb8c6a52fd7f4788adf6fb339309c81b',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1040,7 +1040,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pmon,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xdaa711ecf2ac0bff5c82fceeae96d0008791cc49',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1054,7 +1054,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.one,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x74af842ecd0b6588add455a47aa21ed9ba794108',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1068,7 +1068,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.fine,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x42d41749d6e9a1c5b47e27f690d4531f181b2159',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1082,7 +1082,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.doge,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xbebd44824631b55991fa5f2bf5c7a4ec96ff805b',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1096,7 +1096,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bmxx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x55131f330c886e3f0cae389cedb23766ac9aa3ed',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1110,7 +1110,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.oin,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x01453a74a94687fa3f99b80762435855a13664f4',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1124,7 +1124,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hyfi,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0032ceb978fe5fc8a5d5d6f5adfc005e76397e29',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1138,7 +1138,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.kun,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x439b46d467402cebc1a2fa05038b5b696b1f4417',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1152,7 +1152,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.math,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x377ae5f933aa4cfa41fa03e2cae8a2befccf53b2',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1166,7 +1166,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ust,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xce3ebac3f549ebf1a174a6ac3b390c179422b5f6',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1180,7 +1180,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.win,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xd26dec254c699935c286cd90e9841dcabf1af72d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1194,7 +1194,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.trx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x93e2867d9b74341c2d19101b7fbb81d6063cca4d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1208,7 +1208,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.btt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3b644e44033cff70bd6b771904225f3dd69dfb6d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1222,7 +1222,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lmt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0a687d7b951348d681f7ed5eea84c0ba7b9566dc',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1236,7 +1236,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pnt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x417df1c0e6a498eb1f2247f99032a01d4fafe922',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1250,7 +1250,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.xmark,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xdc8943d806f9dd64312d155284abf780455fd345',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1264,7 +1264,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ramp,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xa90a894e5bc20ab2be46c7e033a38f8b8eaa771a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1278,7 +1278,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hakka,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x34ac807e34e534fe426da1e11f816422774aae1c',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1292,7 +1292,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pbtc,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x31fa2f516b77c4273168b284ac6d9def5aa6dafb',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1306,7 +1306,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lien,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x7112f8988f075c7784666ab071927ae4109a8076',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1320,7 +1320,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bbadger,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x126dfbcef85c5bf335f8be99ca4006037f417892',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1334,7 +1334,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bdigg,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x4f0ad2332b1f9983e8f63cbee617523bb7de5031',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1348,7 +1348,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bondly,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9483ca44324de06802576866b9d296f7614f45ac',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1362,7 +1362,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.xed,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x72ceec6e2a142678e703ab0710de78bc819f4ce0',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1376,7 +1376,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.cgg,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x1c6ed21d3313822ae73ed0d94811ffbbe543f341',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1390,7 +1390,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.perl,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x1ac0d0333640f57327c83053c581340ebc829e30',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1404,7 +1404,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.arpa,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xc707e5589aeb1dc117b0bb5a3622362f1812d4fc',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1418,7 +1418,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.oddz,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x22106cdcf9787969e1672d8e6a9c03a889cda9c5',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1432,7 +1432,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dexe,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x999b86e8bba3d4f05afb8155963999db70afa97f',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1446,7 +1446,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dfd,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xAF3EfE5fCEeBc603Eada6A2b0172be11f7405102',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1460,7 +1460,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.alpaca,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xf73fdeb26a8c7a4abf3809d3db11a06ba5c13d0e',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1474,7 +1474,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.τbtc,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xaac7171afc93f4b75e1268d208040b152ac65e32',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1488,7 +1488,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.τbtc,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2c6017269b4324d016ca5d8e3267368652c18905',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1502,7 +1502,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.swingby,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x675434c68f2672c983e36cf10ed13a4014720b79',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1515,7 +1515,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.xed,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x05d6c2d1d687eacfb5e6440d5a3511e91f2201a8',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1530,7 +1530,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hakka,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xd623a32da4a632ce01766c317d07cb2cad56949b',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1545,7 +1545,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.cgg,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xdf75f38dbc98f9f26377414e567abcb8d57cca33',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1560,7 +1560,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.mix,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xce64a930884b2c68cd93fc1c7c7cdc221d427692',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1573,7 +1573,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.suter,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xc1E70edd0141c454b834Deac7ddDeA413424aEf9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1586,7 +1586,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.broobee,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x189d8228CdfDc404Bd9e5bD65ff958cb5fd8855c',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1599,7 +1599,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hzn,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0196c582216e2463f052E2B07Ef8667Bec9Fb17a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1612,7 +1612,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.alpa,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x8f84106286c9c8A42bc3555C835E6e2090684ab7',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1625,7 +1625,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.perl,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xa8d32b31ECB5142f067548Bf0424389eE98FaF26',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1640,7 +1640,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.tlm,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xC59aa49aE508050c2dF653E77bE13822fFf02E9A',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1653,7 +1653,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.jgn,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x14AeA62384789EDA98f444cCb970F6730877d3F9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1666,7 +1666,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.eps,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xebb87dF24D65977cbe62538E4B3cFBD5d0308642',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1679,7 +1679,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.arpa,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x40918EF8efFF4aA061656013a81E0e5A8A702eA7',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1694,7 +1694,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.itam,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x44eC1B26035865D9A7C130fD872670CD7Ebac2bC',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1703,11 +1703,11 @@ const pools: SerializedPoolConfig[] = [
   //   tokenPerBlock: '3.096',
   // },
   // {
-  //   sousId: 97,
+  //   sousId: 941,
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bondly,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x1329ad151dE6C441184E32E108401126AE850937',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1722,7 +1722,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.tko,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9bbDc92474a7e7321B78dcDA5EF35f4981438760',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1735,7 +1735,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.apys,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x46530d79b238f809e80313e73715b160c66677aF',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1748,7 +1748,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hoo,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x47fD853D5baD391899172892F91FAa6d0cd8A2Aa',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1761,7 +1761,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.oddz,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xe25aB6F05BBF6C1be953BF2d7df15B3e01b8e5a5',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1776,7 +1776,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.easy,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xEB8Fd597921E3Dd37B0F103a2625F855e2C9b9B5',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1789,7 +1789,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.nrv,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xABFd8d1942628124aB971937154f826Bce86DcbC',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1802,7 +1802,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dego,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x526d3c204255f807C95a99b69596f2f9f72345e5',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1815,7 +1815,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.gum,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xAa2082BeE04fc518300ec673F9497ffa6F669dB8',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1828,7 +1828,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pbtc,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9096625Bc0d36F5EDa6d44e511641667d89C28f4',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1843,7 +1843,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dft,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x78BD4dB48F8983c3C36C8EAFbEF38f6aC7B55285',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1856,7 +1856,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.swth,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x35418e14F5aA615C4f020eFBa6e01C5DbF15AdD2',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1869,7 +1869,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lien,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3c7cC49a35942fbD3C2ad428a6c22490cd709d03',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1884,7 +1884,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.zil,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xF795739737ABcFE0273f4Dced076460fdD024Dd9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1897,7 +1897,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.pcws,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x06FF8960F7F4aE572A3f57FAe77B2882BE94Bf90',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1910,7 +1910,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bbadger,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xe4dD0C50fb314A8B2e84D211546F5B57eDd7c2b9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1925,7 +1925,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bdigg,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb627A7e33Db571bE792B0b69c5C2f5a8160d5500',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1940,7 +1940,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lto,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xadBfFA25594AF8Bc421ecaDF54D057236a99781e',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1953,7 +1953,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.mir,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3e31488f08EBcE6F2D8a2AA512aeFa49a3C7dFa7',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1967,7 +1967,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.mir,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x453a75908fb5a36d482d5f8fe88eca836f32ead5',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1982,7 +1982,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.trade,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x509C99D73FB54b2c20689708b3F824147292D38e',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -1996,7 +1996,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dusk,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xF1bd5673Ea4a1C415ec84fa3E402F2F7788E7717',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2010,7 +2010,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bifi,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xB4C68A1C565298834360BbFF1652284275120D47',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2024,7 +2024,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.txl,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x153e62257F1AAe05d5d253a670Ca7585c8D3F94F',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2038,7 +2038,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.cos,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xF682D186168b4114ffDbF1291F19429310727151',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2052,7 +2052,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bunny,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xaDdAE5f4dB84847ac9d947AED1304A8e7D19f7cA',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2066,7 +2066,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.alice,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x4C32048628D0d32d4D6c52662FB4A92747782B56',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2080,7 +2080,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.for,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x47642101e8D8578C42765d7AbcFd0bA31868c523',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2094,7 +2094,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bux,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x07F8217c68ed9b838b0b8B58C19c79bACE746e9A',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2108,7 +2108,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.nuls,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x580DC9bB9260A922E3A4355b9119dB990F09410d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2122,7 +2122,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.belt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x6f0037d158eD1AeE395e1c12d21aE8583842F472',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2136,7 +2136,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ramp,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x423382f989C6C289c8D441000e1045e231bd7d90',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2151,7 +2151,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bfi,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0A595623b58dFDe6eB468b613C11A7A8E84F09b9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2165,7 +2165,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dexe,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9E6dA246d369a41DC44673ce658966cAf487f7b2',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2180,7 +2180,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bel,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2C0f449387b15793B9da27c2d945dBed83ab1B07',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2194,7 +2194,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.tpt,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0c3D6892aa3b23811Af3bd1bbeA8b0740E8e4528',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2208,7 +2208,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.tpt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x75C91844c5383A68b7d3A427A44C32E3ba66Fe45',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2222,7 +2222,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.watch,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xC58954199E268505fa3D3Cb0A00b7207af8C2D1d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2236,7 +2236,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.xmark,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xA5137e08C48167E363Be8Ec42A68f4F54330964E',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2250,7 +2250,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bmxx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x6F31B87f51654424Ce57E9F8243E27ed13846CDB',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2264,7 +2264,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.iotx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xCE54BA909d23B9d4BE0Ff0d84e5aE83F0ADD8D9a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2278,7 +2278,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bor,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3e677dC00668d69c2A7724b9AFA7363e8A56994e',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2292,7 +2292,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bopen,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x5Ac8406498dC1921735d559CeC271bEd23B294A7',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2306,7 +2306,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.sushi,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xb69b6e390cba1F68442A886bC89E955048DAe7E3',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2320,7 +2320,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.dodo,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xae3001ddb18A6A57BEC2C19D71680437CA87bA1D',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2334,7 +2334,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.swingby,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x02aa767e855b8e80506fb47176202aA58A95315a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2348,7 +2348,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bry,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x1c736F4FB20C7742Ee83a4099fE92abA61dFca41',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2362,7 +2362,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.zee,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x02861B607a5E87daf3FD6ec19DFB715F1b371379',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2376,7 +2376,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.swgb,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x73e4E8d010289267dEe3d1Fc48974B60363963CE',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2390,7 +2390,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.comp,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xE0565fBb109A3f3f8097D8A9D931277bfd795072',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2404,7 +2404,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.comp,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xc3693e3cbc3514d5d07EA5b27A721F184F617900',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2418,7 +2418,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.sfp,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2B02d43967765b18E31a9621da640588f3550EFD',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2432,7 +2432,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lina,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x212bb602418C399c29D52C55100fD6bBa12bea05',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2446,7 +2446,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lina,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x04aE8ca68A116278026fB721c06dCe709eD7013C',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2460,7 +2460,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.lit,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x1714bAAE9DD4738CDEA07756427FA8d4F08D9479',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2474,7 +2474,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hget,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xcCD0b93cC6ce3dC6dFaA9DB68f70e5C8455aC5bd',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2488,7 +2488,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bdo,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9cB24e9460351bC51d4066BC6AEd1F3809b02B78',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2502,7 +2502,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.egld,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x2dcf4cDFf4Dd954683Fe0a6123077f8a025b66cF',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2516,7 +2516,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ust,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x6EFa207ACdE6e1caB77c1322CbdE9628929ba88F',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2530,7 +2530,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.wsote,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xD0b738eC507571176D40f28bd56a0120E375f73a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2544,7 +2544,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.front,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xf7a31366732F08E8e6B88519dC3E827e04616Fc9',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2558,7 +2558,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.helmet,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9F23658D5f4CEd69282395089B0f8E4dB85C6e79',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2572,7 +2572,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.btcst,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xB6fd2724cc9c90DD31DA35DbDf0300009dceF97d',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2586,7 +2586,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bscx,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x108BFE84Ca8BCe0741998cb0F60d313823cEC143',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2600,7 +2600,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ten,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x4A26b082B432B060B1b00A84eE4E823F04a6f69a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2614,7 +2614,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.balbt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x3cc08B7C6A31739CfEd9d8d38b484FDb245C79c8',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2628,7 +2628,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.asr,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xd18E1AEb349ef0a6727eCe54597D98D263e05CAB',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2642,7 +2642,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.atm,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x68C7d180bD8F7086D91E65A422c59514e4aFD638',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2656,7 +2656,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.og,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xbE65d7e42E05aD2c4ad28769dc9c5b4b6EAff2C7',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2670,7 +2670,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.reef,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x1500fa1afbfe4f4277ed0345cdf12b2c9ca7e139',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2684,7 +2684,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ditto,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x624ef5C2C6080Af188AF96ee5B3160Bb28bb3E02',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2698,7 +2698,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.twt,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x0554a5D083Abf2f056ae3F6029e1714B9A655174',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2712,7 +2712,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.juv,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x543467B17cA5De50c8BF7285107A36785Ab57E56',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2726,7 +2726,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.psg,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x65aFEAFaec49F23159e897EFBDCe19D94A86A1B6',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2740,7 +2740,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.vai,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x1AD34D8d4D79ddE88c9B6b8490F8fC67831f2CAe',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2754,7 +2754,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.bnb,
   //   earningToken: serializedTokens.cake,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x555Ea72d7347E82C614C16f005fA91cAf06DCB5a',
   //   },
   //   poolCategory: PoolCategory.BINANCE,
@@ -2768,7 +2768,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bnb,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x326D754c64329aD7cb35744770D56D0E1f3B3124',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2782,7 +2782,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.blink,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x42Afc29b2dEa792974d1e9420696870f1Ca6d18b',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2796,7 +2796,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.blink,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xBb2B66a2c7C2fFFB06EA60BeaD69741b3f5BF831',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2811,7 +2811,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.unfi,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xFb1088Dae0f03C5123587d2babb3F307831E6367',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2825,7 +2825,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.twt,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x9c4EBADa591FFeC4124A7785CAbCfb7068fED2fb',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2839,7 +2839,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.hard,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0x90F995b9d46b32c4a1908A8c6D0122e392B3Be97',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2853,7 +2853,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.broobee,
   //   contractAddress: {
-  //     97: '',
+  //     941: '',
   //     56: '0xdc8c45b7F3747Ca9CaAEB3fa5e0b5FCE9430646b',
   //   },
   //   poolCategory: PoolCategory.COMMUNITY,
@@ -2867,7 +2867,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.stax,
   //   contractAddress: {
-  //     97: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
+  //     941: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
   //     56: '0xFF02241a2A1d2a7088A344309400E9fE74772815',
   //   },
   //   poolCategory: PoolCategory.COMMUNITY,
@@ -2881,7 +2881,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.nar,
   //   contractAddress: {
-  //     97: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
+  //     941: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
   //     56: '0xDc938BA1967b06d666dA79A7B1E31a8697D1565E',
   //   },
   //   poolCategory: PoolCategory.COMMUNITY,
@@ -2895,7 +2895,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.nya,
   //   contractAddress: {
-  //     97: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
+  //     941: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
   //     56: '0x07a0A5B67136d40F4d7d95Bc8e0583bafD7A81b9',
   //   },
   //   poolCategory: PoolCategory.COMMUNITY,
@@ -2909,7 +2909,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.ctk,
   //   contractAddress: {
-  //     97: '0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A',
+  //     941: '0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A',
   //     56: '0x21A9A53936E812Da06B7623802DEc9A1f94ED23a',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2923,7 +2923,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.twt,
   //   contractAddress: {
-  //     97: '0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A',
+  //     941: '0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A',
   //     56: '0xe7f9A439Aa7292719aC817798DDd1c4D35934aAF',
   //   },
   //   poolCategory: PoolCategory.CORE,
@@ -2937,7 +2937,7 @@ const pools: SerializedPoolConfig[] = [
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.inj,
   //   contractAddress: {
-  //     97: '0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A',
+  //     941: '0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A',
   //     56: '0xcec2671C81a0Ecf7F8Ee796EFa6DBDc5Cb062693',
   //   },
   //   poolCategory: PoolCategory.CORE,
