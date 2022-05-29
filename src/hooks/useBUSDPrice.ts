@@ -7,7 +7,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 const BUSD_MAINNET = {
   56: mainnetTokens.busd,
-  97: testnetTokens.busd
+  941: testnetTokens.busd
 }
 
 const { wbnb: WBNB } = tokens

@@ -115,7 +115,7 @@ const Footer = () => {
         </Text>
         <Text textAlign="center" color="#7A6EAA" fontWeight={200}>
           {t(
-            'Khaos Verse is a decentralized crypto ecosystem providing the first bridge between ERC-20 and PulseChain Network.',
+            'Khaos is a decentralized crypto ecosystem providing the first bridge between ERC-20 and PulseChain Network.',
           )}
         </Text>
       </Wrapper>

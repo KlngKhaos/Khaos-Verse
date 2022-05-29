@@ -2,8 +2,8 @@ import { ChainId, Token } from '@pancakeswap/sdk'
 import { serializeToken } from 'state/user/hooks/helpers'
 import { SerializedToken } from './types'
 
-const { MAINNET, TESTNET } = ChainId
-
+const { MAINNET } = ChainId
+const TESTNET = 941
 interface TokenList {
   [symbol: string]: Token
 }
@@ -1673,14 +1673,14 @@ export const testnetTokens = {
     'DENA Token',
     'https://gladiators.finance/',
   ),
-  dena: new Token(
-    TESTNET,
-    '0x60fbAd46F86939498316D04A508E958cD0AEF45d',
-    18,
-    'DENA',
-    'Gladiator Finance',
-    'https://gladiators.finance/',
-  ),
+  // dena: new Token(
+  //   TESTNET,
+  //   '0x60fbAd46F86939498316D04A508E958cD0AEF45d',
+  //   18,
+  //   'DENA',
+  //   'Gladiator Finance',
+  //   'https://gladiators.finance/',
+  // ),
   // nrt: new Token(
   //   TESTNET,
   //   '0x769Fb42ceddb77d75d9dfBcaf98EBB3D22F1f90F',

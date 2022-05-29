@@ -22,7 +22,7 @@
       "name": "Denarius Token",
       "symbol": "DENA",
       "address": "0x60fbAd46F86939498316D04A508E958cD0AEF45d",
-      "chainId": 97,
+      "chainId": 941,
       "decimals": 18,
       "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"
     },
@@ -30,7 +30,7 @@
       "name": "NFT Royal Token",
       "symbol": "NRT",
       "address": "0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D",
-      "chainId": 97,
+      "chainId": 941,
       "decimals": 18,
       "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"
     },   
@@ -38,7 +38,7 @@
       "name": "Governance Token",
       "symbol": "KG",
       "address": "0xA2F3Cd8217823751feb2cCC1df1FBF39aD2874Fe",
-      "chainId": 97,
+      "chainId": 941,
       "decimals": 18,
       "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"
     },
@@ -46,7 +46,7 @@
       "name": "KHAOS",
       "symbol": "KHAOS",
       "address": "0xe3fdade8023cE0c66eA0c9D8423e5A47a9559801",
-      "chainId": 97,
+      "chainId": 941,
       "decimals": 18,
       "logoURI": "https://pancakeswap.finance/images/tokens/0xB56fF089c8b44B42763F9867Dc5964C62096cd8E.png"
     }

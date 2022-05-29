@@ -27,6 +27,8 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
   return useMemo(() => {
     if (!chainId) return {}
 
+    console.log("chainId ", chainId)
+    console.log("tokenMap ", tokenMap)
     // reduce to just tokens
     const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{ [address: string]: Token }>((newMap, address) => {
       newMap[address] = tokenMap[chainId][address].token
@@ -55,17 +57,20 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
 
 export function useDefaultTokens(): { [address: string]: Token } {
   const defaultList = useDefaultTokenList()
+  console.log("defaultList ", defaultList)
   return useTokensFromMap(defaultList, false)
 }
 
 export function useAllTokens(): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
+  console.log("allTokens ", allTokens)
   return useTokensFromMap(allTokens, true)
 }
 
 export function useAllInactiveTokens(): { [address: string]: Token } {
   // get inactive tokens
   const inactiveTokensMap = useCombinedInactiveList()
+  console.log("inactiveTokensMap ", inactiveTokensMap)
   const inactiveTokens = useTokensFromMap(inactiveTokensMap, false)
 
   // filter out any token that are on active list
@@ -84,6 +89,7 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
 
 export function useUnsupportedTokens(): { [address: string]: Token } {
   const unsupportedTokensMap = useUnsupportedTokenList()
+  console.log("unsupportedTokensMap ", unsupportedTokensMap)
   return useTokensFromMap(unsupportedTokensMap, false)
 }
 

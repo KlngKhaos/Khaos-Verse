@@ -120,7 +120,7 @@ const Hero = () => {
             {t('Trade today on the first bridge between ERC-20 and PulseChain Network.')}
           </Text>
           <Flex>
-            {!account && <ConnectWalletButton mr="8px" />}
+            {/* {!account && <ConnectWalletButton mr="8px" />}
             {account && (
               <Link to="/mygladiators">
                 <Button variant="primary" mr="8px" color="#7645D9">
@@ -134,7 +134,7 @@ const Hero = () => {
                   {t('School')}
                 </Button>
               </Link>
-            )}
+            )} */}
             <Link to="/swap">
               <Button
                 style={{

@@ -125,7 +125,7 @@ const MidPage = () => {
           </Text>
           <Text fontSize="1rem" mb="24px" fontWeight={200} color="#7A6EAA">
             {t(
-              'Khaos Verse is a decentralized crypto ecosystem providing the first bridge between ERC-20 and PulseChain Network',
+              'Khaos is a decentralized crypto ecosystem providing the first bridge between ERC-20 and PulseChain Network',
             )}
           </Text>
           <Flex>

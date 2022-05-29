@@ -51,8 +51,10 @@ export type TokenAddressMap = Readonly<
  * An empty result, useful as a default.
  */
 const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.MAINNET]: {},
-  [ChainId.TESTNET]: {},
+  // [ChainId.MAINNET]: {},
+  // [ChainId.TESTNET]: {},
+  ["56"]: {},
+  ["941"]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -104,13 +106,14 @@ export function useAllLists(): {
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
     [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
-    [ChainId.TESTNET]: { ...map1[ChainId.TESTNET], ...map2[ChainId.TESTNET] },
+    [941]: { ...map1[941], ...map2[941] },
   }
 }
 
 // merge tokens contained within lists from urls
 function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
+  console.log("lists ", lists)
 
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
@@ -159,6 +162,7 @@ export function useCombinedActiveList(): TokenAddressMap {
 // all tokens from inactive lists
 export function useCombinedInactiveList(): TokenAddressMap {
   const allInactiveListUrls: string[] = useInactiveListUrls()
+  console.log("allInactiveListUrls ",allInactiveListUrls)
   return useCombinedTokenMapFromUrls(allInactiveListUrls)
 }
 
