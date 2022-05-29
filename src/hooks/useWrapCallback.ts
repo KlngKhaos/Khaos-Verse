@@ -34,11 +34,33 @@ export default function useWrapCallback(
   const addTransaction = useTransactionAdder()
 
   return useMemo(() => {
+    const WRAPPED = {
+      56:{
+        address: "0x466C8f6B901F7C0bbebbb35FA36487C6d9Be4545",
+        chainId: 56,
+        decimals: 18,
+        name: "Wrapped BNB",
+        projectLink: "https://www.binance.org",
+        symbol: "WBNB" 
+      },
+      941:{
+        address: "0x466C8f6B901F7C0bbebbb35FA36487C6d9Be4545",
+        chainId: 941,
+        decimals: 18,
+        name: "Wrapped BNB",
+        projectLink: "https://www.binance.org",
+        symbol: "WBNB" 
+      }
+
+  }
+    console.log("Ether", ETHER)
+    console.log("WETH", WETH)
+    console.log("!wethContract || !chainId || !inputCurrency || !outputCurrency", !wethContract || !chainId || !inputCurrency || !outputCurrency)
     if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency === ETHER && currencyEquals(WETH[chainId], outputCurrency)) {
+    if (inputCurrency === ETHER && currencyEquals(WRAPPED[chainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -57,7 +79,7 @@ export default function useWrapCallback(
         inputError: sufficientBalance ? undefined : 'Insufficient BNB balance',
       }
     }
-    if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
+    if (currencyEquals(WRAPPED[chainId], inputCurrency) && outputCurrency === ETHER) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:

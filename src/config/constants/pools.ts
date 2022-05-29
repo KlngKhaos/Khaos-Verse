@@ -1703,7 +1703,7 @@ const pools: SerializedPoolConfig[] = [
   //   tokenPerBlock: '3.096',
   // },
   // {
-  //   sousId: 941,
+  //   sousId: 97,
   //   stakingToken: serializedTokens.cake,
   //   earningToken: serializedTokens.bondly,
   //   contractAddress: {

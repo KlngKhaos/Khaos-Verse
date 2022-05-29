@@ -646,8 +646,10 @@ export default function Swap({ history }: RouteComponentProps) {
     execute: onWrap,
     inputError: wrapInputError,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
+  console.log("wrapType", wrapType)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const trade = showWrap ? undefined : v2Trade
+  const trade = showWrap ? v2Trade : v2Trade
+  // const trade = showWrap ? undefined : v2Trade
 
   const singleTokenPrice = useSingleTokenSwapInfo()
 
@@ -680,7 +682,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // modal and loading
   const [{ tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
-    tradeToConfirm: Trade | undefined
+    tradeToConfirm,
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
@@ -699,9 +701,15 @@ export default function Swap({ history }: RouteComponentProps) {
   }
 
   const route = trade?.route
+  console.log("trade", trade)
+  console.log("trade?.route", trade?.route)
+  console.log("route", route)
+
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0)),
   )
+  console.log("currencies[Field.INPUT]", currencies[Field.INPUT])
+  console.log("currencies[Field.OUTPUT]", currencies[Field.OUTPUT])
   const noRoute = !route
 
   // check whether the user has approved the router on the input token

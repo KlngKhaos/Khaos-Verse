@@ -9,9 +9,9 @@ const farms: SerializedFarmConfig[] = [
    */
   {
     pid: 0,
-    lpSymbol: 'Dena',
+    lpSymbol: 'KHAOS LP',
     lpAddresses: {
-      941: '0x7250d0e5ea41e9502c07560e7fdc70c83c3c7cf4',
+      941: '0xe3fdade8023cE0c66eA0c9D8423e5A47a9559801',
       // 56 PID address is not geniune jut to avoid errors
       56: '0xB56fF089c8b44B42763F9867Dc5964C62096cd8E',
     },
@@ -20,31 +20,41 @@ const farms: SerializedFarmConfig[] = [
   },
   {
     pid: 1,
-    lpSymbol: 'NRT-BNB LP',
+    lpSymbol: 'NRT LP',
     lpAddresses: {
-      941: '0x7250d0e5ea41e9502c07560e7fdc70c83c3c7cf4',
+      941: '0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D',
       // 56 PID address is not geniune jut to avoid errors
       56: '0x1bd72D5015bb1C8303235d1Da1542D887C8fcFB8',
     },
     token: serializedTokens.nrt,
     quoteToken: serializedTokens.wbnb,
   },
-  {
-    pid: 2,
-    lpSymbol: 'DENA-BNB LP',
-    lpAddresses: {
-      941: '0xD68D81aF97036f773329B1E79f6D418e94e7a6ad',
-      // 56 PID address is not geniune jut to avoid errors
-      56: '0x64ca41d5b48979dab1d5990d2cb1e8245cd860d3',
-    },
-    token: serializedTokens.dena,
-    quoteToken: serializedTokens.wbnb
-  },
+  // {
+  //   pid: 2,
+  //   lpSymbol: 'DENA-BNB LP',
+  //   lpAddresses: {
+  //     941: '0x0a0554ed9d75dd0475d3295953ff7455ff3cb098',
+  //     // 56 PID address is not geniune jut to avoid errors
+  //     56: '0x64ca41d5b48979dab1d5990d2cb1e8245cd860d3',
+  //   },
+  //   token: serializedTokens.dena,
+  //   quoteToken: serializedTokens.wbnb
+  // },
+  // {
+  //   pid: 3,
+  //   lpSymbol: 'BUSD-BNB LP',
+  //   lpAddresses: {
+  //     941: '0x60fbAd46F86939498316D04A508E958cD0AEF45d',
+  //     56: '0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
+  //   },
+  //   token: serializedTokens.busd,
+  //   quoteToken: serializedTokens.wbnb
+  // },
   {
     pid: 3,
-    lpSymbol: 'BUSD-BNB LP',
+    lpSymbol: 'DENA LP',
     lpAddresses: {
-      941: '0x85EcDcdd01EbE0BfD0Aba74B81Ca6d7F4A53582b',
+      941: '0xdc0bdCdeEA4B0eC6BeB15cC42EE4581a9d08E37B',
       56: '0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
     },
     token: serializedTokens.busd,
@@ -3620,7 +3630,7 @@ const farms: SerializedFarmConfig[] = [
   //   quoteToken: serializedTokens.busd,
   // },
   // {
-  //   pid: 941,
+  //   pid: 97,
   //   lpSymbol: 'COS-BNB LP',
   //   lpAddresses: {
   //     941: '',

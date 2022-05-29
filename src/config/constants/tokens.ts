@@ -2,8 +2,9 @@ import { ChainId, Token } from '@pancakeswap/sdk'
 import { serializeToken } from 'state/user/hooks/helpers'
 import { SerializedToken } from './types'
 
-const { MAINNET, TESTNET } = ChainId
+const { MAINNET } = ChainId
 
+const TESTNET = 941;
 interface TokenList {
   [symbol: string]: Token
 }
@@ -1658,14 +1659,14 @@ export const mainnetTokens = {
 
 export const testnetTokens = {
   wbnb: new Token(
-    TESTNET,
-    '0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F',
+    TESTNET,  
+    '0x466C8f6B901F7C0bbebbb35FA36487C6d9Be4545',
     18,
     'WBNB',
     'Wrapped BNB',
     'https://www.binance.com/',
   ),
-  cake: new Token(
+  dena: new Token(
     TESTNET,
     '0x618bE0EF9958A95055948c024A63152376099Fab',
     18,
@@ -1691,7 +1692,7 @@ export const testnetTokens = {
   // ),
   nrt: new Token(
     TESTNET,
-    '0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D',
+    '0x85EcDcdd01EbE0BfD0Aba74B81Ca6d7F4A53582b',
     18,
     'NRT',
     'NRT',
@@ -1705,7 +1706,8 @@ export const testnetTokens = {
     'Binance USD',
     'https://www.paxos.com/busd/',
   ),
-  syrup: new Token(
+  cake: new Token(
+    // syrup: new Token(
     TESTNET,
     '0x3CDAD33b31D4a4bFBCca5e7308D027C3D9BD35Ef',
     18,
@@ -1739,15 +1741,19 @@ export const testnetTokens = {
   ),
 }
 
-const tokens = (): TokenList => {
+const tokens = () => {
   const chainId = process.env.REACT_APP_CHAIN_ID
 
   // If testnet - return list comprised of testnetTokens wherever they exist, and mainnetTokens where they don't
-  if (parseInt(chainId, 10) === ChainId.TESTNET) {
-    return Object.keys(mainnetTokens).reduce((accum, key) => {
-      return { ...accum, [key]: testnetTokens[key] || mainnetTokens[key] }
-    }, {})
+  if (chainId == "941") {
+    console.log("testnetTokens", testnetTokens)
+    return testnetTokens
+    // if (parseInt(chainId, 10) === ChainId.TESTNET) {
+    // return Object.keys(mainnetTokens).reduce((accum, key) => {
+      // return { ...accum, [key]: testnetTokens[key] || mainnetTokens[key] }
+    // }, {})
   }
+
 
   return mainnetTokens
 }

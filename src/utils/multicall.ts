@@ -20,12 +20,16 @@ const multicall = async <T = any>(abi: any[], calls: Call[]): Promise<T> => {
     target: call.address.toLowerCase(),
     callData: itf.encodeFunctionData(call.name, call.params),
   }))
-  // console.log("calldatacalldata", calldata)
-  const { returnData } = await multi.aggregate(calldata)
+  console.log("calldatacalldata", calldata)
+  console.log("multicall aggregate 2");
 
-  const res = returnData.map((call, i) => itf.decodeFunctionResult(calls[i].name, call))
-
-  return res as any
+  try{
+    const { returnData } = await multi.aggregate(calldata)
+    const res = returnData.map((call, i) => itf.decodeFunctionResult(calls[i].name, call))
+    return res as any
+  } catch(e){
+      console.error("error in multicall aggregate", calldata)
+  }
 }
 
 /**
@@ -49,6 +53,7 @@ export const multicallv2 = async <T = any>(
     callData: itf.encodeFunctionData(call.name, call.params),
   }))
   // console.log("calldatacalldatacalldatacalldata", calldata)
+  console.log("tryAggregate ")
   const returnData = await multi.tryAggregate(requireSuccess, calldata)
   // console.log("returnDatareturnDatareturnData", returnData)
 

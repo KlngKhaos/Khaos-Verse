@@ -1,4 +1,4 @@
-import {  Token } from '@pancakeswap/sdk'
+import { ChainId, Token } from '@pancakeswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -12,10 +12,7 @@ type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
   id: string
 }
-const ChainId  = {
-  MAINNET: 56,
-  TESTNET: 941
-}
+
 // use ordering of default list of lists to assign priority
 function sortByListPriority(urlA: string, urlB: string) {
   const first = DEFAULT_LIST_OF_LISTS.includes(urlA) ? DEFAULT_LIST_OF_LISTS.indexOf(urlA) : Number.MAX_SAFE_INTEGER
@@ -31,11 +28,11 @@ function sortByListPriority(urlA: string, urlB: string) {
  * Token instances created from token info.
  */
 export class WrappedTokenInfo extends Token {
-  public readonly tokenInfo: any
+  public readonly tokenInfo: TokenInfo
 
-  public readonly tags: any[]
+  public readonly tags: TagInfo[]
 
-  constructor(tokenInfo: any, tags: any[]) {
+  constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
     super(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
     this.tokenInfo = tokenInfo
     this.tags = tags
@@ -46,29 +43,27 @@ export class WrappedTokenInfo extends Token {
   }
 }
 
-// export type TokenAddressMap = Readonly<
-//   { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
-// >
+export type TokenAddressMap = Readonly<
+  { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
+>
 
 /**
  * An empty result, useful as a default.
  */
-const EMPTY_LIST: any = {
+const EMPTY_LIST: TokenAddressMap = {
   [ChainId.MAINNET]: {},
-  [ChainId.TESTNET]: {},
+  [941]: {},
 }
 
-const listCache: WeakMap<TokenList, any> | null =
-  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, any>() : null
+const listCache: WeakMap<TokenList, TokenAddressMap> | null =
+  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
-export function listToTokenMap(list: TokenList): any {
+export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)
   if (result) return result
-console.log("listlistlist", list)
-  const map = list.tokens.reduce<any>(
+
+  const map = list.tokens.reduce<TokenAddressMap>(
     (tokenMap, tokenInfo) => {
-      console.log("tokenInfotokenInfo", tokenInfo)
-      console.log("tokenMaptokenMap", tokenMap)
       const tags: TagInfo[] =
         tokenInfo.tags
           ?.map((tagId) => {
@@ -76,9 +71,7 @@ console.log("listlistlist", list)
             return { ...list.tags[tagId], id: tagId }
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
-          console.log("tagstags", tags)
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      console.log("tokentokentoken", token)
       if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
       return {
         ...tokenMap,
@@ -108,28 +101,26 @@ export function useAllLists(): {
   return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
 }
 
-function combineMaps(map1: any, map2: any): any {
+function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
     [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
-    [ChainId.TESTNET]: { ...map1[ChainId.TESTNET], ...map2[ChainId.TESTNET] },
+    [941]: { ...map1[941], ...map2[941] },
   }
 }
 
 // merge tokens contained within lists from urls
-function useCombinedTokenMapFromUrls(urls: string[] | undefined): any {
+function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
-console.log("lists", lists)
+
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
-console.log("urls", urls.slice())
-console.log("EMPTY_LIST", EMPTY_LIST)
+
     return (
       urls
         .slice()
         // sort by priority so top priority goes last
         .sort(sortByListPriority)
         .reduce((allTokens, currentUrl) => {
-          console.log("allTokens", allTokens)
           const current = lists[currentUrl]?.current
           if (!current) return allTokens
           try {
@@ -158,7 +149,7 @@ export function useInactiveListUrls(): string[] {
 }
 
 // get all the tokens from active lists, combine with local default tokens
-export function useCombinedActiveList(): any {
+export function useCombinedActiveList(): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
   const defaultTokenMap = listToTokenMap(DEFAULT_TOKEN_LIST)
@@ -166,19 +157,18 @@ export function useCombinedActiveList(): any {
 }
 
 // all tokens from inactive lists
-export function useCombinedInactiveList(): any {
+export function useCombinedInactiveList(): TokenAddressMap {
   const allInactiveListUrls: string[] = useInactiveListUrls()
-  console.log("allInactiveListUrls", allInactiveListUrls)
   return useCombinedTokenMapFromUrls(allInactiveListUrls)
 }
 
 // used to hide warnings on import for default tokens
-export function useDefaultTokenList(): any {
+export function useDefaultTokenList(): TokenAddressMap {
   return listToTokenMap(DEFAULT_TOKEN_LIST)
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds
-export function useUnsupportedTokenList(): any {
+export function useUnsupportedTokenList(): TokenAddressMap {
   // get hard coded unsupported tokens
   const localUnsupportedListMap = listToTokenMap(UNSUPPORTED_TOKEN_LIST)
 

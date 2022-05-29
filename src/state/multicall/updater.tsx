@@ -35,6 +35,8 @@ async function fetchChunk(
   let returnData
   try {
     // prettier-ignore
+    console.log("multicall aggregate 1");
+    console.log("chunk1" , chunk);
     [resultsBlockNumber, returnData] = await multicallContract.aggregate(
       chunk.map((obj) => [obj.address, obj.callData])
     )

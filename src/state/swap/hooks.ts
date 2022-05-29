@@ -120,7 +120,7 @@ const BAD_RECIPIENT_ADDRESSES: string[] = [
  * @param trade to check for the given address
  * @param checksummedAddress address to check in the pairs and tokens
  */
-function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
+function involvesAddress(trade, checksummedAddress: string): boolean {
   return (
     trade.route.path.some((token) => token.address === checksummedAddress) ||
     trade.route.pairs.some((pair) => pair.liquidityToken.address === checksummedAddress)
@@ -160,7 +160,7 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined
+  v2Trade,
   inputError?: string
 } {
   const { account } = useActiveWeb3React()
@@ -183,12 +183,21 @@ export function useDerivedSwapInfo(): {
     inputCurrency ?? undefined,
     outputCurrency ?? undefined,
   ])
+  
+
+  console.log("independentField ", independentField)
+  console.log("Field.INPUT ", Field.INPUT)
 
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  console.log("parsedAmount ", parsedAmount)
 
   const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  console.log("bestTradeExactIn ", bestTradeExactIn)
+
   const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  console.log("bestTradeExactOut ", bestTradeExactOut)
+
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
@@ -237,8 +246,12 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+    console.log("balanceIn", balanceIn)
+    console.log("amountIn", amountIn)
     inputError = t('Insufficient %symbol% balance', { symbol: amountIn.currency.symbol })
   }
+
+  console.log("v2Trade ", v2Trade)
 
   return {
     currencies,

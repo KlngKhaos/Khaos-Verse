@@ -35,7 +35,7 @@ export interface GladiatorProfileInterface extends utils.Interface {
     "getTeamProfile(uint256)": FunctionFragment;
     "getUserProfile(address)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
-    "hasRegistered(address)": FunctionFragment;
+    // "hasRegistered(address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "increaseTeamPoints(uint256,uint256,uint256)": FunctionFragment;
     "increaseUserPoints(address,uint256,uint256)": FunctionFragment;
@@ -560,7 +560,7 @@ export interface GladiatorProfile extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    hasRegistered(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
+    // hasRegistered(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     hasRole(
       role: BytesLike,
@@ -746,7 +746,7 @@ export interface GladiatorProfile extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  hasRegistered(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+  // hasRegistered(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   hasRole(
     role: BytesLike,
@@ -929,7 +929,7 @@ export interface GladiatorProfile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    hasRegistered(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+    // hasRegistered(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     hasRole(
       role: BytesLike,
@@ -1245,7 +1245,7 @@ export interface GladiatorProfile extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    hasRegistered(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+    // hasRegistered(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     hasRole(
       role: BytesLike,
@@ -1437,10 +1437,10 @@ export interface GladiatorProfile extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    hasRegistered(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    // hasRegistered(
+    //   arg0: string,
+    //   overrides?: CallOverrides
+    // ): Promise<PopulatedTransaction>;
 
     hasRole(
       role: BytesLike,
