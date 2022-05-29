@@ -11,20 +11,20 @@ const farms: SerializedFarmConfig[] = [
     pid: 0,
     lpSymbol: 'KHAOS LP',
     lpAddresses: {
-      941: '0xe3fdade8023cE0c66eA0c9D8423e5A47a9559801',
+      941: '0x7250D0e5EA41e9502C07560e7fDC70C83c3C7cF4',
       // 56 PID address is not geniune jut to avoid errors
-      56: '0xB56fF089c8b44B42763F9867Dc5964C62096cd8E',
+      56: '0x7250D0e5EA41e9502C07560e7fDC70C83c3C7cF4',
     },
     token: serializedTokens.syrup,
     quoteToken: serializedTokens.wbnb,
   },
   {
     pid: 1,
-    lpSymbol: 'NRT LP',
+    lpSymbol: 'KHAOS LP',
     lpAddresses: {
-      941: '0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D',
+      941: '0x7250D0e5EA41e9502C07560e7fDC70C83c3C7cF4',
       // 56 PID address is not geniune jut to avoid errors
-      56: '0x1bd72D5015bb1C8303235d1Da1542D887C8fcFB8',
+      56: '0x7250D0e5EA41e9502C07560e7fDC70C83c3C7cF4',
     },
     token: serializedTokens.nrt,
     quoteToken: serializedTokens.wbnb,
@@ -54,7 +54,7 @@ const farms: SerializedFarmConfig[] = [
     pid: 3,
     lpSymbol: 'DENA LP',
     lpAddresses: {
-      941: '0xdc0bdCdeEA4B0eC6BeB15cC42EE4581a9d08E37B',
+      941: '0xD68D81aF97036f773329B1E79f6D418e94e7a6ad',
       56: '0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
     },
     token: serializedTokens.busd,
