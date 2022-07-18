@@ -12,8 +12,8 @@
 				"type": "address"
 			},
 			{
-				"internalType": "contract WBNB",
-				"name": "_wbnb",
+				"internalType": "contract WTPLS",
+				"name": "_wtpls",
 				"type": "address"
 			},
 			{
@@ -566,19 +566,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "wbnb",
-		"outputs": [
-			{
-				"internalType": "contract WBNB",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -594,6 +581,19 @@
 		"name": "withdraw",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "wtpls",
+		"outputs": [
+			{
+				"internalType": "contract WTPLS",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

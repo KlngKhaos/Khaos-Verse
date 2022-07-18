@@ -8,6 +8,7 @@ export const getAddress = (address: Address): string => {
 }
 
 export const getMasterChefAddress = () => {
+  console.log("fetch chain id from node_modules", ChainId)
   return getAddress(addresses.masterChef)
 }
 export const getMulticallAddress = () => {

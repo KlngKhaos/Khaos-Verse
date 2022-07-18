@@ -11,9 +11,9 @@ describe('getAddress', () => {
     const expected = address[56]
     expect(getAddress(address)).toEqual(expected)
   })
-  it(`get address for testnet (chainId 941)`, () => {
-    process.env.REACT_APP_CHAIN_ID = '941'
-    const expected = address[941]
+  it(`get address for testnet (chainId 97)`, () => {
+    process.env.REACT_APP_CHAIN_ID = '97'
+    const expected = address[97]
     expect(getAddress(address)).toEqual(expected)
   })
   it(`get address for any other network (chainId 31337)`, () => {

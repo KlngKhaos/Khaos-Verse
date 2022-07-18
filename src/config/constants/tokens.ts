@@ -2,8 +2,7 @@ import { ChainId, Token } from '@pancakeswap/sdk'
 import { serializeToken } from 'state/user/hooks/helpers'
 import { SerializedToken } from './types'
 
-const { MAINNET } = ChainId
-const TESTNET = 941
+const { MAINNET, TESTNET } = ChainId
 interface TokenList {
   [symbol: string]: Token
 }
@@ -1659,7 +1658,7 @@ export const mainnetTokens = {
 export const testnetTokens = {
   wbnb: new Token(
     TESTNET,
-    '0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F',
+    '0x466C8f6B901F7C0bbebbb35FA36487C6d9Be4545',
     18,
     'WBNB',
     'Wrapped BNB',
@@ -1667,10 +1666,10 @@ export const testnetTokens = {
   ),
   cake: new Token(
     TESTNET,
-    '0x618bE0EF9958A95055948c024A63152376099Fab',
+    '0x7250D0e5EA41e9502C07560e7fDC70C83c3C7cF4',
     18,
-    'DENA',
-    'DENA Token',
+    'KHAOS',
+    'KHAOS TOKEN',
     'https://gladiators.finance/',
   ),
   // dena: new Token(
@@ -1691,7 +1690,7 @@ export const testnetTokens = {
   // ),
   nrt: new Token(
     TESTNET,
-    '0xE17B02E14e309Db34eE8F7F78ccEDccC1BE6976D',
+    '0xc12f73aa00f5ff1323CB88aB20e6AF0e416FAb38',
     18,
     'NRT',
     'NRT',
@@ -1699,43 +1698,51 @@ export const testnetTokens = {
   ),
   busd: new Token(
     TESTNET,
-    '0x78867bbeef44f2326bf8ddd1941a4439382ef2a7',
+    '0x994B3BC94E16ec3D22A820876b8d1fbe15457D13',
     18,
     'BUSD',
     'Binance USD',
     'https://www.paxos.com/busd/',
   ),
-  syrup: new Token(
-    TESTNET,
-    '0x3CDAD33b31D4a4bFBCca5e7308D027C3D9BD35Ef',
-    18,
-    'SYRUP',
-    'SyrupBar Token',
-    'https://pancakeswap.finance/',
-  ),
-  bake: new Token(
-    TESTNET,
-    '0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5',
-    18,
-    'BAKE',
-    'Bakeryswap Token',
-    'https://www.bakeryswap.org/',
-  ),
-  khaos: new Token(
-    TESTNET,
-    '0xe3fdade8023cE0c66eA0c9D8423e5A47a9559801',
-    18,
-    'KHAOS',
-    'Khaos Token',
-    'https://www.khaos.org/',
-  ),
+  // syrup: new Token(
+  //   TESTNET,
+  //   '0x3CDAD33b31D4a4bFBCca5e7308D027C3D9BD35Ef',
+  //   18,
+  //   'SYRUP',
+  //   'SyrupBar Token',
+  //   'https://pancakeswap.finance/',
+  // ),
+  // bake: new Token(
+  //   TESTNET,
+  //   '0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5',
+  //   18,
+  //   'BAKE',
+  //   'Bakeryswap Token',
+  //   'https://www.bakeryswap.org/',
+  // ),
+  // khaos: new Token(
+  //   TESTNET,
+  //   '0xe3fdade8023cE0c66eA0c9D8423e5A47a9559801',
+  //   18,
+  //   'KHAOS',
+  //   'Khaos Token',
+  //   'https://www.khaos.org/',
+  // ),
   governance: new Token(
     TESTNET,
-    '0xA2F3Cd8217823751feb2cCC1df1FBF39aD2874Fe',
+    '0x7924A1743287beE0B3d1Bf07eC9C993635a64153',
     18,
     'GIVERNANCE',
     'GIVERNANCE Token',
     'https://www.khaos.org/',
+  ),
+  dena: new Token(
+    TESTNET,
+    '0xD68D81aF97036f773329B1E79f6D418e94e7a6ad',
+    18,
+    'DENA',
+    'Denarius Token',
+    'https://dev.gladiators.finance/',
   ),
 }
 

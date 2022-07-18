@@ -42,6 +42,7 @@
   "dependencies": {
     "@binance-chain/bsc-connector": "^1.0.0",
     "@ethersproject/experimental": "^5.0.1",
+    "@khaos-finance/sdk": "^2.4.6",
     "@pancakeswap/uikit": "file:../toolkit/packages/pancake-uikit",
     "@pinata/sdk": "^1.1.23",
     "@react-three/drei": "^7.5.0",
