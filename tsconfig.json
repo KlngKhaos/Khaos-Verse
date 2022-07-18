@@ -1,25 +1,17 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
+    "declaration": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": true,
-    "downlevelIteration": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "es2020",
+    "strict": true,
+    "outDir": "dist",
+    "typeRoots": ["node_modules/@types","typings"]
   },
-  "exclude": ["node_modules", "cypress"],
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.js"]
+  "include": ["./src", "./test", "./typechain"],
+  "files": ["./hardhat.config.ts"]
 }
