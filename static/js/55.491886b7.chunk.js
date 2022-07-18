@@ -1,0 +1,2 @@
+(this["webpackJsonpkhaos-frontend"]=this["webpackJsonpkhaos-frontend"]||[]).push([[55],{1727:function(t,e,c){"use strict";c.r(e);c(1);var s=c(2),n=c(14),a=c(225),r=c(442),i=c(1349),j=c(0);e.default=function(){var t=Object(n.b)().t;return Object(j.jsxs)(j.Fragment,{children:[Object(j.jsx)(r.a,{children:Object(j.jsx)(s.ab,{as:"h1",scale:"xxl",color:"secondary","data-test":"nft-activity-title",children:t("Activity")})}),Object(j.jsx)(a.b,{children:Object(j.jsx)(s.x,{children:Object(j.jsx)(i.a,{})})})]})}}}]);
+//# sourceMappingURL=55.491886b7.chunk.js.map
